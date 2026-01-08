@@ -677,6 +677,200 @@ export type Database = {
           },
         ]
       }
+      tax_records: {
+        Row: {
+          created_at: string
+          id: string
+          national_insurance: number | null
+          notes: string | null
+          profit: number | null
+          status: string | null
+          tax_due_estimate: number | null
+          tax_year: string
+          total_expenses: number | null
+          total_income: number | null
+          total_vat_collected: number | null
+          total_vat_paid: number | null
+          updated_at: string
+          user_id: string
+          vat_liability: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          national_insurance?: number | null
+          notes?: string | null
+          profit?: number | null
+          status?: string | null
+          tax_due_estimate?: number | null
+          tax_year: string
+          total_expenses?: number | null
+          total_income?: number | null
+          total_vat_collected?: number | null
+          total_vat_paid?: number | null
+          updated_at?: string
+          user_id: string
+          vat_liability?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          national_insurance?: number | null
+          notes?: string | null
+          profit?: number | null
+          status?: string | null
+          tax_due_estimate?: number | null
+          tax_year?: string
+          total_expenses?: number | null
+          total_income?: number | null
+          total_vat_collected?: number | null
+          total_vat_paid?: number | null
+          updated_at?: string
+          user_id?: string
+          vat_liability?: number | null
+        }
+        Relationships: []
+      }
+      trade_jobs: {
+        Row: {
+          completion_date: string | null
+          created_at: string
+          customer_address: string | null
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          customer_price: number | null
+          id: string
+          job_date: string | null
+          job_description: string | null
+          job_type: string
+          labour_hours: number | null
+          labour_rate: number | null
+          materials: Json | null
+          materials_cost: number | null
+          notes: string | null
+          profit_margin: number | null
+          status: string | null
+          total_cost: number | null
+          trade: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completion_date?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          customer_price?: number | null
+          id?: string
+          job_date?: string | null
+          job_description?: string | null
+          job_type: string
+          labour_hours?: number | null
+          labour_rate?: number | null
+          materials?: Json | null
+          materials_cost?: number | null
+          notes?: string | null
+          profit_margin?: number | null
+          status?: string | null
+          total_cost?: number | null
+          trade: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completion_date?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          customer_price?: number | null
+          id?: string
+          job_date?: string | null
+          job_description?: string | null
+          job_type?: string
+          labour_hours?: number | null
+          labour_rate?: number | null
+          materials?: Json | null
+          materials_cost?: number | null
+          notes?: string | null
+          profit_margin?: number | null
+          status?: string | null
+          total_cost?: number | null
+          trade?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trade_receipts: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          gross_amount: number
+          id: string
+          is_claimable: boolean | null
+          job_id: string | null
+          net_amount: number
+          payment_method: string | null
+          receipt_date: string
+          receipt_image_url: string | null
+          receipt_type: string
+          supplier: string | null
+          tax_year: string | null
+          user_id: string
+          vat_amount: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          gross_amount: number
+          id?: string
+          is_claimable?: boolean | null
+          job_id?: string | null
+          net_amount: number
+          payment_method?: string | null
+          receipt_date: string
+          receipt_image_url?: string | null
+          receipt_type?: string
+          supplier?: string | null
+          tax_year?: string | null
+          user_id: string
+          vat_amount?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          gross_amount?: number
+          id?: string
+          is_claimable?: boolean | null
+          job_id?: string | null
+          net_amount?: number
+          payment_method?: string | null
+          receipt_date?: string
+          receipt_image_url?: string | null
+          receipt_type?: string
+          supplier?: string | null
+          tax_year?: string | null
+          user_id?: string
+          vat_amount?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_receipts_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "trade_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

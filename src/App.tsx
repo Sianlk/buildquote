@@ -17,6 +17,9 @@ import Compliance from "./pages/Compliance";
 import Invoices from "./pages/Invoices";
 import Materials from "./pages/Materials";
 import Settings from "./pages/Settings";
+import TradeJobs from "./pages/TradeJobs";
+import Receipts from "./pages/Receipts";
+import TaxReturns from "./pages/TaxReturns";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +43,9 @@ const App = () => (
             <Route path="/dashboard/compliance" element={<ProtectedRoute><Compliance /></ProtectedRoute>} />
             <Route path="/dashboard/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
             <Route path="/dashboard/materials" element={<ProtectedRoute><Materials /></ProtectedRoute>} />
+            <Route path="/dashboard/trade-jobs" element={<ProtectedRoute><TradeJobs /></ProtectedRoute>} />
+            <Route path="/dashboard/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
+            <Route path="/dashboard/tax-returns" element={<ProtectedRoute><TaxReturns /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
