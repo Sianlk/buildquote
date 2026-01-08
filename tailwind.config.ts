@@ -69,6 +69,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        display: ['Playfair Display', 'serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -88,16 +89,23 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        shimmer: "shimmer 2s linear infinite",
+        shimmer: "shimmer 2.5s linear infinite",
+        "fade-in": "fade-in 0.5s ease-out forwards",
       },
       backgroundImage: {
-        "gold-gradient": "linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(28 85% 45%) 100%)",
-        "dark-gradient": "linear-gradient(180deg, hsl(220 20% 7%) 0%, hsl(220 18% 10%) 100%)",
-        "card-gradient": "linear-gradient(135deg, hsl(220 18% 10%) 0%, hsl(220 18% 14%) 100%)",
+        "emerald-gradient": "linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(160 84% 30%) 100%)",
+        "gold-gradient": "linear-gradient(135deg, hsl(45 93% 58%) 0%, hsl(35 90% 50%) 100%)",
+        "dark-gradient": "linear-gradient(180deg, hsl(222 47% 6%) 0%, hsl(222 44% 9%) 100%)",
+        "card-gradient": "linear-gradient(135deg, hsl(222 44% 9%) 0%, hsl(222 44% 12%) 100%)",
+        "premium-gradient": "linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(45 93% 58%) 100%)",
       },
     },
   },
