@@ -6,67 +6,67 @@
 
 @layer base {
   :root {
-    /* Premium Deep Navy & Emerald Theme */
-    --background: 222 47% 6%;
-    --foreground: 60 9% 98%;
+    /* Premium FTSE-100 Corporate Theme - Deep Slate & Warm Gold */
+    --background: 220 25% 7%;
+    --foreground: 40 15% 95%;
 
-    --card: 222 44% 9%;
-    --card-foreground: 60 9% 98%;
+    --card: 220 22% 10%;
+    --card-foreground: 40 15% 95%;
 
-    --popover: 222 44% 11%;
-    --popover-foreground: 60 9% 98%;
+    --popover: 220 22% 12%;
+    --popover-foreground: 40 15% 95%;
 
-    /* Emerald Primary */
-    --primary: 160 84% 39%;
-    --primary-foreground: 222 47% 6%;
+    /* Warm Gold Primary - Classic Investment Banking */
+    --primary: 38 92% 50%;
+    --primary-foreground: 220 25% 7%;
 
-    --secondary: 222 35% 14%;
-    --secondary-foreground: 60 9% 90%;
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 40 15% 85%;
 
-    --muted: 222 30% 18%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 220 18% 20%;
+    --muted-foreground: 220 12% 55%;
 
-    /* Gold Accent */
-    --accent: 45 93% 58%;
-    --accent-foreground: 222 47% 6%;
+    /* Rich Copper Accent */
+    --accent: 25 85% 55%;
+    --accent-foreground: 220 25% 7%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 60 9% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 40 15% 95%;
 
-    --success: 160 84% 39%;
-    --success-foreground: 222 47% 6%;
+    --success: 142 71% 45%;
+    --success-foreground: 220 25% 7%;
 
-    --warning: 45 93% 58%;
-    --warning-foreground: 222 47% 6%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 25% 7%;
 
-    --border: 222 30% 18%;
-    --input: 222 35% 14%;
-    --ring: 160 84% 39%;
+    --border: 220 18% 18%;
+    --input: 220 20% 15%;
+    --ring: 38 92% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 222 47% 7%;
-    --sidebar-foreground: 60 9% 90%;
-    --sidebar-primary: 160 84% 39%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 222 35% 14%;
-    --sidebar-accent-foreground: 60 9% 90%;
-    --sidebar-border: 222 30% 15%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-background: 220 25% 8%;
+    --sidebar-foreground: 40 15% 85%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 220 25% 7%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 40 15% 85%;
+    --sidebar-border: 220 18% 14%;
+    --sidebar-ring: 38 92% 50%;
 
-    /* Custom premium tokens */
-    --emerald-glow: 0 0 60px hsl(160 84% 39% / 0.25);
-    --gold-glow: 0 0 40px hsl(45 93% 58% / 0.2);
-    --card-glow: 0 0 80px hsl(160 84% 39% / 0.08);
-    --surface-elevated: 222 44% 11%;
-    --surface-overlay: 222 44% 13%;
-    --text-dim: 220 15% 50%;
-    --grid-line: 222 30% 12%;
+    /* Premium tokens */
+    --gold-glow: 0 0 60px hsl(38 92% 50% / 0.25);
+    --copper-glow: 0 0 40px hsl(25 85% 55% / 0.2);
+    --card-glow: 0 0 80px hsl(38 92% 50% / 0.08);
+    --surface-elevated: 220 22% 13%;
+    --surface-overlay: 220 22% 16%;
+    --text-dim: 220 12% 50%;
+    --grid-line: 220 18% 12%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 60 9% 98%;
+    --background: 220 25% 7%;
+    --foreground: 40 15% 95%;
   }
 }
 
@@ -92,7 +92,7 @@
 @layer components {
   .glass-card {
     @apply bg-card/90 backdrop-blur-xl border border-border/50 rounded-xl;
-    box-shadow: var(--card-glow), 0 4px 24px -4px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--card-glow), 0 4px 24px -4px rgba(0, 0, 0, 0.5);
   }
 
   .premium-border {
@@ -100,11 +100,11 @@
   }
 
   .glow-text {
-    text-shadow: 0 0 40px hsl(160 84% 39% / 0.6);
+    text-shadow: 0 0 40px hsl(38 92% 50% / 0.6);
   }
 
-  .gold-text {
-    text-shadow: 0 0 30px hsl(45 93% 58% / 0.5);
+  .copper-text {
+    text-shadow: 0 0 30px hsl(25 85% 55% / 0.5);
   }
 
   .grid-pattern {
@@ -123,7 +123,7 @@
   }
 
   .luxury-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(160 84% 30%) 50%, hsl(var(--accent)) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(30 80% 45%) 50%, hsl(var(--accent)) 100%);
   }
 
   .tier-free {
@@ -132,29 +132,29 @@
 
   .tier-pro {
     @apply border-primary/60;
-    box-shadow: var(--emerald-glow);
+    box-shadow: var(--gold-glow);
   }
 
   .tier-business {
     @apply border-accent;
-    box-shadow: var(--gold-glow);
+    box-shadow: var(--copper-glow);
   }
 
   .tier-enterprise {
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(222 44% 12%) 100%);
-    @apply border-2 border-accent;
-    box-shadow: 0 0 80px hsl(45 93% 58% / 0.2), 0 0 120px hsl(160 84% 39% / 0.1);
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(220 22% 14%) 100%);
+    @apply border-2 border-primary;
+    box-shadow: 0 0 80px hsl(38 92% 50% / 0.2), 0 0 120px hsl(25 85% 55% / 0.1);
   }
 
   .btn-premium {
     @apply relative overflow-hidden;
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(160 84% 30%) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(30 80% 45%) 100%);
   }
 
   .btn-premium::before {
     content: '';
     @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(45 93% 48%) 100%);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(20 80% 50%) 100%);
   }
 
   .btn-premium:hover::before {
@@ -163,6 +163,11 @@
 
   .nav-link-active {
     @apply bg-primary/15 text-primary border-l-2 border-primary;
+  }
+
+  .feature-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl p-6;
+    @apply hover:border-primary/40 hover:bg-card transition-all duration-300;
   }
 }
 
@@ -173,10 +178,10 @@
 
   @keyframes glow-pulse {
     0%, 100% { 
-      box-shadow: 0 0 20px hsl(160 84% 39% / 0.2);
+      box-shadow: 0 0 20px hsl(38 92% 50% / 0.2);
     }
     50% { 
-      box-shadow: 0 0 40px hsl(160 84% 39% / 0.4);
+      box-shadow: 0 0 40px hsl(38 92% 50% / 0.4);
     }
   }
 
