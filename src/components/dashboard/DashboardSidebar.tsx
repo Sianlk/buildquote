@@ -1,12 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
+  FolderPlus,
   FolderOpen,
-  Calculator,
+  PenTool,
+  ShieldCheck,
+  Receipt,
+  Package,
   Settings,
+  Wrench,
+  FileText,
+  Calculator,
   LogOut,
   Building2,
   PenTool,
