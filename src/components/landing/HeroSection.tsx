@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Shield, Zap, Calculator } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function HeroSection() {
   return (
@@ -33,13 +34,17 @@ export function HeroSection() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-slide-up delay-300">
-            <Button variant="hero" size="xl">
-              Start Free Project
-              <ArrowRight className="ml-2 h-5 w-5" />
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/signup">
+                Start Free Project
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
-            <Button variant="hero-outline" size="xl">
-              <Play className="mr-2 h-5 w-5" />
-              Watch Demo
+            <Button variant="hero-outline" size="xl" asChild>
+              <a href="#demo">
+                <Play className="mr-2 h-5 w-5" />
+                Watch Demo
+              </a>
             </Button>
           </div>
 
