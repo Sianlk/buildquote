@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   FolderOpen,
   Calculator,
-  FileText,
   Settings,
   LogOut,
   Building2,
@@ -16,6 +15,10 @@ import {
   Package,
   Users,
   HelpCircle,
+  Calendar,
+  Scale,
+  Hammer,
+  Home,
 } from "lucide-react";
 
 const mainNavItems = [
@@ -26,16 +29,19 @@ const mainNavItems = [
 
 const moduleNavItems = [
   { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
-  { icon: FileText, label: "Cost Breakdown", href: "/dashboard/costs" },
-  { icon: ClipboardCheck, label: "Compliance", href: "/dashboard/compliance" },
+  { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
+  { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
+  { icon: Hammer, label: "Structural Calcs", href: "/dashboard/structural" },
   { icon: Receipt, label: "Invoices", href: "/dashboard/invoices" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
+  { icon: Home, label: "Tenancy & Legal", href: "/dashboard/tenancy" },
+  { icon: Scale, label: "Renters Rights", href: "/dashboard/renters-rights" },
 ];
 
 const bottomNavItems = [
   { icon: Users, label: "Team", href: "/dashboard/team" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-  { icon: HelpCircle, label: "Help & Support", href: "/dashboard/support" },
+  { icon: HelpCircle, label: "Help", href: "/dashboard/support" },
 ];
 
 export function DashboardSidebar() {
@@ -54,8 +60,8 @@ export function DashboardSidebar() {
             : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
         )}
       >
-        <Icon className="h-4 w-4" />
-        {label}
+        <Icon className="h-4 w-4 flex-shrink-0" />
+        <span className="truncate">{label}</span>
       </Link>
     );
   };
@@ -108,7 +114,7 @@ export function DashboardSidebar() {
       {/* User & Logout */}
       <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
