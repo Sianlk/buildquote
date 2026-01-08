@@ -7,6 +7,7 @@ import {
   Package,
   ArrowRight
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -14,42 +15,61 @@ const features = [
     title: "AI CAD Generation",
     description: "BS 1192 compliant technical drawings generated from parametric inputs. SVG exports ready for planning submissions.",
     tag: "AI-Powered",
+    link: "/dashboard/cad",
+    section: "cad",
   },
   {
     icon: Calculator,
     title: "Instant Cost Engine",
     description: "BCIS-aligned rates with regional multipliers. Line-by-line breakdowns with profit margins and contingencies.",
     tag: "Deterministic",
+    link: "/dashboard/projects/new",
+    section: "demo",
   },
   {
     icon: Calendar,
     title: "Auto Scheduler",
     description: "Trade sequencing with realistic durations. Critical path analysis and resource allocation.",
     tag: "Logic-Based",
+    link: "/dashboard/projects",
+    section: "workflow",
   },
   {
     icon: Shield,
     title: "Compliance Checks",
     description: "Building regs, fire safety, and Renters Rights Act compliance. Automated risk flagging.",
     tag: "UK Standards",
+    link: "/dashboard/compliance",
+    section: "compliance",
   },
   {
     icon: FileText,
     title: "JCT Invoicing",
     description: "Professional invoices with retention logic, VAT handling, and payment milestone tracking.",
     tag: "Financial",
+    link: "/dashboard/invoices",
+    section: "invoicing",
   },
   {
     icon: Package,
     title: "Material Ordering",
     description: "Supplier mapping, waste factors, and lead-time calculations. Direct ordering integration.",
     tag: "Procurement",
+    link: "/dashboard/materials",
+    section: "materials",
   },
 ];
 
 export function FeaturesSection() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="py-24 relative">
+    <section id="features" className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
       
       <div className="container relative z-10 px-4">
@@ -70,8 +90,9 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className="group glass-card p-6 rounded-xl hover:border-primary/30 transition-all duration-300 cursor-pointer"
+              className="group feature-card cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => scrollToSection(feature.section)}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
@@ -89,10 +110,14 @@ export function FeaturesSection() {
                 {feature.description}
               </p>
               
-              <div className="flex items-center text-primary text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link 
+                to={feature.link}
+                className="flex items-center text-primary text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => e.stopPropagation()}
+              >
                 Learn more
                 <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
+              </Link>
             </div>
           ))}
         </div>
