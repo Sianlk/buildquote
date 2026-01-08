@@ -259,22 +259,45 @@ export default function NewProject() {
   const qualityMultiplier = BUILD_QUALITIES.find(q => q.value === buildQuality)?.multiplier || 1;
   const regionMultiplier = REGIONS.find(r => r.value === region)?.multiplier || 1;
 
-  // Detailed material calculations
-  const bricksRequired = calculateBricksRequired(netWallArea, 0);
-  const blocksRequired = calculateBlocksRequired(netWallArea, 0);
-  const foundationConcrete = calculateFoundationConcrete(perimeter, foundationType as any);
-  const floorConcrete = totalFloorArea * 0.15; // 150mm slab
+  // Determine if project is internal-only (renovation, HMO, office conversion, garage conversion)
+  const isInternalOnly = selectedTypes.every(type => 
+    ["renovation", "hmo_conversion", "office_conversion", "garage_integral", "garage_detached"].includes(type)
+  );
+  
+  // Determine if project needs foundations (new builds and extensions need them, conversions don't)
+  const needsFoundations = selectedTypes.some(type => 
+    ["single_storey_rear", "single_storey_side", "double_storey_rear", "double_storey_side", 
+     "wrap_around", "new_build", "basement_conversion"].includes(type)
+  );
+  
+  // Determine if project needs external walls
+  const needsExternalWalls = selectedTypes.some(type =>
+    ["single_storey_rear", "single_storey_side", "double_storey_rear", "double_storey_side",
+     "wrap_around", "new_build"].includes(type)
+  );
+  
+  // Determine if project needs roofing
+  const needsRoofing = selectedTypes.some(type =>
+    ["single_storey_rear", "single_storey_side", "double_storey_rear", "double_storey_side",
+     "wrap_around", "new_build", "loft_dormer", "loft_hip_to_gable", "loft_mansard"].includes(type)
+  );
 
-  // Material costs (Jan 2026 prices)
+  // Detailed material calculations - only if needed
+  const bricksRequired = needsExternalWalls ? calculateBricksRequired(netWallArea, 0) : 0;
+  const blocksRequired = needsExternalWalls ? calculateBlocksRequired(netWallArea, 0) : 0;
+  const foundationConcrete = needsFoundations ? calculateFoundationConcrete(perimeter, foundationType as any) : 0;
+  const floorConcrete = needsFoundations ? totalFloorArea * 0.15 : 0; // 150mm slab only for new floor
+
+  // Material costs (Jan 2026 prices) - adjusted based on project type
   const materialCosts = {
     bricks: bricksRequired * MATERIALS_2026.bricks.facing.rate,
     blocks: blocksRequired * MATERIALS_2026.blocks.aerated.rate,
     concrete: (foundationConcrete + floorConcrete) * MATERIALS_2026.concrete.c25.rate,
     rebar: ((foundationConcrete + floorConcrete) * 80) / 1000 * MATERIALS_2026.rebar.rate, // 80kg/m³
-    insulation: netWallArea * MATERIALS_2026.insulation.pir_100.rate,
-    roofing: totalFloorArea * (roofType === "flat" ? MATERIALS_2026.roofing.epdm.rate : MATERIALS_2026.roofing.tiles_concrete.rate),
-    plasterboard: netWallArea * 2 * MATERIALS_2026.plasterboard.rate, // Both sides
-    windows: windows.reduce((sum, w) => {
+    insulation: needsExternalWalls ? netWallArea * MATERIALS_2026.insulation.pir_100.rate : 0,
+    roofing: needsRoofing ? totalFloorArea * (roofType === "flat" ? MATERIALS_2026.roofing.epdm.rate : MATERIALS_2026.roofing.tiles_concrete.rate) : 0,
+    plasterboard: netWallArea * 2 * MATERIALS_2026.plasterboard.rate, // Both sides - always needed for finishes
+    windows: isInternalOnly ? 0 : windows.reduce((sum, w) => {
       const area = w.width * w.height;
       const rate = MATERIALS_2026.windows[`${w.frame}_${w.type}` as keyof typeof MATERIALS_2026.windows]?.rate ||
         MATERIALS_2026.windows.upvc_double.rate;
@@ -283,7 +306,7 @@ export default function NewProject() {
     doors: doors.reduce((sum, d) => {
       if (d.type === "bifold") return sum + MATERIALS_2026.doors.bifold_3m.rate;
       if (d.type === "sliding") return sum + MATERIALS_2026.doors.sliding_3m.rate;
-      if (d.type === "external") return sum + MATERIALS_2026.doors.external_composite.rate;
+      if (d.type === "external") return sum + (isInternalOnly ? 0 : MATERIALS_2026.doors.external_composite.rate);
       return sum + MATERIALS_2026.doors.internal.rate;
     }, 0),
     electrical: parseInt(electricalPoints) * (MATERIALS_2026.electrical.socket.rate + MATERIALS_2026.electrical.cable_twin.rate * 10),
@@ -291,14 +314,14 @@ export default function NewProject() {
     heating: parseInt(heatingRadiators) * MATERIALS_2026.plumbing.radiator_600x1000.rate,
   };
 
-  // Labour calculations (hours)
+  // Labour calculations (hours) - adjusted based on project type
   const labourHours = {
-    groundwork: (foundationConcrete / 2) * 8, // 2m³ per day
-    bricklaying: (bricksRequired / 450) * 8,
-    blockwork: (blocksRequired / 80) * 8,
-    carpentry: totalFloorArea * 0.8, // 0.8 hrs per m²
-    roofing: totalFloorArea * 0.6,
-    plastering: (netWallArea * 2) / 60 * 8,
+    groundwork: needsFoundations ? (foundationConcrete / 2) * 8 : 0, // 2m³ per day
+    bricklaying: needsExternalWalls ? (bricksRequired / 450) * 8 : 0,
+    blockwork: needsExternalWalls ? (blocksRequired / 80) * 8 : 0,
+    carpentry: totalFloorArea * (isInternalOnly ? 0.4 : 0.8), // Less for internal-only
+    roofing: needsRoofing ? totalFloorArea * 0.6 : 0,
+    plastering: (netWallArea * 2) / 60 * 8, // Always needed
     electrical: parseInt(electricalPoints) * 1.2,
     plumbing: parseInt(plumbingPoints) * 2.5,
     heating: parseInt(heatingRadiators) * 1.5,
@@ -318,11 +341,11 @@ export default function NewProject() {
     decoration: labourHours.decoration * LABOUR_RATES_2026.decorator.rate,
   };
 
-  // Plant costs
+  // Plant costs - adjusted based on project type
   const plantCosts = {
-    excavator: 5 * PLANT_RATES_2026.mini_digger_3t.rate,
-    scaffold: (perimeter * 6) * PLANT_RATES_2026.scaffold.rate, // 6 weeks
-    skip: 3 * PLANT_RATES_2026.skip_8yd.rate,
+    excavator: needsFoundations ? 5 * PLANT_RATES_2026.mini_digger_3t.rate : 0,
+    scaffold: needsExternalWalls ? (perimeter * 6) * PLANT_RATES_2026.scaffold.rate : 0, // 6 weeks
+    skip: (needsFoundations ? 3 : 1) * PLANT_RATES_2026.skip_8yd.rate, // Less for internal
   };
 
   // Bathroom/kitchen specific costs

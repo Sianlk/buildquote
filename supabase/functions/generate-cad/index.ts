@@ -19,12 +19,16 @@ serve(async (req) => {
 
     const { projectId, drawingType, geometry } = await req.json();
 
-    if (!projectId || !drawingType || !geometry) {
+    // Allow standalone drawings without projectId
+    if (!drawingType || !geometry) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: projectId, drawingType, geometry' }),
+        JSON.stringify({ error: 'Missing required fields: drawingType, geometry' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    
+    // Determine if this is a standalone drawing
+    const isStandalone = !projectId || projectId.startsWith('standalone-');
 
     const { length_m, width_m, height_m, floor_area_sqm, wall_type, roof_type, foundation_type, windows, doors, rooms } = geometry;
 
@@ -224,15 +228,18 @@ Return ONLY valid SVG code, no explanation.`;
     // Generate geometry hash for caching
     const geometryHash = btoa(JSON.stringify({ length_m, width_m, height_m, wall_type, roof_type })).substring(0, 32);
 
-    // Store in database
+    // Store in database (only if not standalone or if we want to save standalone too)
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { data: drawing, error: dbError } = await supabase
+    let drawing = null;
+    
+    // Always save the drawing - for standalone, project_id will be null
+    const { data: savedDrawing, error: dbError } = await supabase
       .from('cad_drawings')
       .insert({
-        project_id: projectId,
+        project_id: isStandalone ? null : projectId,
         drawing_type: drawingType,
         svg_content: svgContent,
         geometry_hash: geometryHash,
@@ -241,7 +248,8 @@ Return ONLY valid SVG code, no explanation.`;
         metadata: {
           generated_at: new Date().toISOString(),
           dimensions: { length_m, width_m, height_m },
-          model: 'google/gemini-2.5-flash'
+          model: 'google/gemini-2.5-flash',
+          standalone: isStandalone
         }
       })
       .select()
@@ -250,6 +258,8 @@ Return ONLY valid SVG code, no explanation.`;
     if (dbError) {
       console.error('Database error:', dbError);
       // Still return the SVG even if DB save fails
+    } else {
+      drawing = savedDrawing;
     }
 
     console.log(`Successfully generated ${drawingType} drawing`);
