@@ -10,6 +10,10 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import NewProject from "./pages/NewProject";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import CAD from "./pages/CAD";
+import Compliance from "./pages/Compliance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +31,10 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/new-project" element={<ProtectedRoute><NewProject /></ProtectedRoute>} />
+            <Route path="/dashboard/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+            <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+            <Route path="/dashboard/cad" element={<ProtectedRoute><CAD /></ProtectedRoute>} />
+            <Route path="/dashboard/compliance" element={<ProtectedRoute><Compliance /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
