@@ -282,6 +282,9 @@ export default function NewProject() {
      "wrap_around", "new_build", "loft_dormer", "loft_hip_to_gable", "loft_mansard"].includes(type)
   );
 
+  // Pricing type - trade for contractors, retail for customers
+  const pricingType: "trade" | "retail" = "retail"; // Could be made configurable
+  
   // Detailed material calculations - only if needed
   const bricksRequired = needsExternalWalls ? calculateBricksRequired(netWallArea, 0) : 0;
   const blocksRequired = needsExternalWalls ? calculateBlocksRequired(netWallArea, 0) : 0;
@@ -290,28 +293,28 @@ export default function NewProject() {
 
   // Material costs (Jan 2026 prices) - adjusted based on project type
   const materialCosts = {
-    bricks: bricksRequired * MATERIALS_2026.bricks.facing.rate,
-    blocks: blocksRequired * MATERIALS_2026.blocks.aerated.rate,
-    concrete: (foundationConcrete + floorConcrete) * MATERIALS_2026.concrete.c25.rate,
-    rebar: ((foundationConcrete + floorConcrete) * 80) / 1000 * MATERIALS_2026.rebar.rate, // 80kg/m³
-    insulation: needsExternalWalls ? netWallArea * MATERIALS_2026.insulation.pir_100.rate : 0,
-    roofing: needsRoofing ? totalFloorArea * (roofType === "flat" ? MATERIALS_2026.roofing.epdm.rate : MATERIALS_2026.roofing.tiles_concrete.rate) : 0,
-    plasterboard: netWallArea * 2 * MATERIALS_2026.plasterboard.rate, // Both sides - always needed for finishes
+    bricks: bricksRequired * MATERIALS_2026.bricks.facing[pricingType],
+    blocks: blocksRequired * MATERIALS_2026.blocks.aerated[pricingType],
+    concrete: (foundationConcrete + floorConcrete) * MATERIALS_2026.concrete.c25[pricingType],
+    rebar: ((foundationConcrete + floorConcrete) * 80) / 1000 * MATERIALS_2026.rebar[pricingType], // 80kg/m³
+    insulation: needsExternalWalls ? netWallArea * MATERIALS_2026.insulation.pir_100[pricingType] : 0,
+    roofing: needsRoofing ? totalFloorArea * (roofType === "flat" ? MATERIALS_2026.roofing.epdm[pricingType] : MATERIALS_2026.roofing.tiles_concrete[pricingType]) : 0,
+    plasterboard: netWallArea * 2 * MATERIALS_2026.plasterboard[pricingType], // Both sides - always needed for finishes
     windows: isInternalOnly ? 0 : windows.reduce((sum, w) => {
       const area = w.width * w.height;
-      const rate = MATERIALS_2026.windows[`${w.frame}_${w.type}` as keyof typeof MATERIALS_2026.windows]?.rate ||
-        MATERIALS_2026.windows.upvc_double.rate;
-      return sum + area * rate;
+      const windowKey = `${w.frame}_${w.type}` as keyof typeof MATERIALS_2026.windows;
+      const windowRate = MATERIALS_2026.windows[windowKey]?.[pricingType] || MATERIALS_2026.windows.upvc_double[pricingType];
+      return sum + area * windowRate;
     }, 0),
     doors: doors.reduce((sum, d) => {
-      if (d.type === "bifold") return sum + MATERIALS_2026.doors.bifold_3m.rate;
-      if (d.type === "sliding") return sum + MATERIALS_2026.doors.sliding_3m.rate;
-      if (d.type === "external") return sum + (isInternalOnly ? 0 : MATERIALS_2026.doors.external_composite.rate);
-      return sum + MATERIALS_2026.doors.internal.rate;
+      if (d.type === "bifold") return sum + MATERIALS_2026.doors.bifold_3m[pricingType];
+      if (d.type === "sliding") return sum + MATERIALS_2026.doors.sliding_3m[pricingType];
+      if (d.type === "external") return sum + (isInternalOnly ? 0 : MATERIALS_2026.doors.external_composite[pricingType]);
+      return sum + MATERIALS_2026.doors.internal[pricingType];
     }, 0),
-    electrical: parseInt(electricalPoints) * (MATERIALS_2026.electrical.socket.rate + MATERIALS_2026.electrical.cable_twin.rate * 10),
+    electrical: parseInt(electricalPoints) * (MATERIALS_2026.electrical.socket[pricingType] + MATERIALS_2026.electrical.cable_twin[pricingType] * 10),
     plumbing: parseInt(plumbingPoints) * 150,
-    heating: parseInt(heatingRadiators) * MATERIALS_2026.plumbing.radiator_600x1000.rate,
+    heating: parseInt(heatingRadiators) * MATERIALS_2026.plumbing.radiator_600x1000[pricingType],
   };
 
   // Labour calculations (hours) - adjusted based on project type
@@ -329,23 +332,23 @@ export default function NewProject() {
   };
 
   const labourCosts = {
-    groundwork: labourHours.groundwork * LABOUR_RATES_2026.groundworker.rate,
-    bricklaying: labourHours.bricklaying * LABOUR_RATES_2026.bricklayer.rate,
-    blockwork: labourHours.blockwork * LABOUR_RATES_2026.bricklayer.rate * 0.5 + labourHours.blockwork * LABOUR_RATES_2026.labourer.rate * 0.5,
-    carpentry: labourHours.carpentry * LABOUR_RATES_2026.carpenter_1st.rate,
-    roofing: labourHours.roofing * LABOUR_RATES_2026.roofer.rate,
-    plastering: labourHours.plastering * LABOUR_RATES_2026.plasterer.rate,
-    electrical: labourHours.electrical * LABOUR_RATES_2026.electrician.rate,
-    plumbing: labourHours.plumbing * LABOUR_RATES_2026.plumber.rate,
-    heating: labourHours.heating * LABOUR_RATES_2026.plumber.rate,
-    decoration: labourHours.decoration * LABOUR_RATES_2026.decorator.rate,
+    groundwork: labourHours.groundwork * LABOUR_RATES_2026.groundworker[pricingType],
+    bricklaying: labourHours.bricklaying * LABOUR_RATES_2026.bricklayer[pricingType],
+    blockwork: labourHours.blockwork * LABOUR_RATES_2026.bricklayer[pricingType] * 0.5 + labourHours.blockwork * LABOUR_RATES_2026.labourer[pricingType] * 0.5,
+    carpentry: labourHours.carpentry * LABOUR_RATES_2026.carpenter_1st[pricingType],
+    roofing: labourHours.roofing * LABOUR_RATES_2026.roofer[pricingType],
+    plastering: labourHours.plastering * LABOUR_RATES_2026.plasterer[pricingType],
+    electrical: labourHours.electrical * LABOUR_RATES_2026.electrician[pricingType],
+    plumbing: labourHours.plumbing * LABOUR_RATES_2026.plumber[pricingType],
+    heating: labourHours.heating * LABOUR_RATES_2026.plumber[pricingType],
+    decoration: labourHours.decoration * LABOUR_RATES_2026.decorator[pricingType],
   };
 
   // Plant costs - adjusted based on project type
   const plantCosts = {
-    excavator: needsFoundations ? 5 * PLANT_RATES_2026.mini_digger_3t.rate : 0,
-    scaffold: needsExternalWalls ? (perimeter * 6) * PLANT_RATES_2026.scaffold.rate : 0, // 6 weeks
-    skip: (needsFoundations ? 3 : 1) * PLANT_RATES_2026.skip_8yd.rate, // Less for internal
+    excavator: needsFoundations ? 5 * PLANT_RATES_2026.mini_digger_3t[pricingType] : 0,
+    scaffold: needsExternalWalls ? (perimeter * 6) * PLANT_RATES_2026.scaffold[pricingType] : 0, // 6 weeks
+    skip: (needsFoundations ? 3 : 1) * PLANT_RATES_2026.skip_8yd[pricingType], // Less for internal
   };
 
   // Bathroom/kitchen specific costs
@@ -888,7 +891,7 @@ export default function NewProject() {
                     Electrical Points
                   </Label>
                   <Input type="number" value={electricalPoints} onChange={(e) => setElectricalPoints(e.target.value)} className="mt-1 font-mono" />
-                  <p className="text-xs text-muted-foreground mt-1">@ £{(MATERIALS_2026.electrical.socket.rate + 28).toFixed(0)}/point</p>
+                  <p className="text-xs text-muted-foreground mt-1">@ £{(MATERIALS_2026.electrical.socket.retail + 28).toFixed(0)}/point</p>
                 </div>
                 <div>
                   <Label className="flex items-center gap-2">
@@ -904,7 +907,7 @@ export default function NewProject() {
                     Radiators
                   </Label>
                   <Input type="number" value={heatingRadiators} onChange={(e) => setHeatingRadiators(e.target.value)} className="mt-1 font-mono" />
-                  <p className="text-xs text-muted-foreground mt-1">@ £{MATERIALS_2026.plumbing.radiator_600x1000.rate}/unit</p>
+                  <p className="text-xs text-muted-foreground mt-1">@ £{MATERIALS_2026.plumbing.radiator_600x1000.retail}/unit</p>
                 </div>
               </div>
 
