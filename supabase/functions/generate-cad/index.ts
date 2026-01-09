@@ -6,6 +6,41 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Architectural symbols and drawing helpers
+const ELECTRICAL_SYMBOLS = {
+  socket_double: '⊠⊠',
+  socket_single: '⊠',
+  switch_1g: '○',
+  switch_2g: '○○',
+  switch_dimmer: '◐',
+  ceiling_rose: '⊕',
+  downlight: '●',
+  smoke_detector: '⊗SD',
+  co_detector: '⊗CO',
+  consumer_unit: '▣CU',
+  thermostat: '◎T',
+  extractor_fan: '⊛F',
+  tv_point: '⊠TV',
+  data_point: '⊠D',
+  usb_socket: '⊠U',
+  outside_light: '○E',
+  pir_sensor: '◐PIR',
+};
+
+const PLUMBING_SYMBOLS = {
+  basin: 'oval basin symbol',
+  wc: 'WC plan symbol',
+  bath: 'rectangular bath',
+  shower_tray: 'shower tray square',
+  radiator: 'radiator rectangle',
+  boiler: 'boiler symbol',
+  hot_water_cylinder: 'cylinder symbol',
+  kitchen_sink: 'double sink symbol',
+  washing_machine: 'WM square',
+  dishwasher: 'DW square',
+  underfloor_heating: 'UFH zone hatching',
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -19,7 +54,6 @@ serve(async (req) => {
 
     const { projectId, drawingType, geometry } = await req.json();
 
-    // Allow standalone drawings without projectId
     if (!drawingType || !geometry) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: drawingType, geometry' }),
@@ -27,153 +61,384 @@ serve(async (req) => {
       );
     }
     
-    // Determine if this is a standalone drawing
     const isStandalone = !projectId || projectId.startsWith('standalone-');
+    const { 
+      length_m, width_m, height_m, floor_area_sqm, wall_type, wall_thickness,
+      roof_type, foundation_type, foundation_details, windows, doors, rooms,
+      electrical, plumbing, buildingRegs, structural 
+    } = geometry;
 
-    const { length_m, width_m, height_m, floor_area_sqm, wall_type, roof_type, foundation_type, windows, doors, rooms } = geometry;
+    // Enhanced system prompt for professional architectural drawings
+    const systemPrompt = `You are an expert UK architectural CAD draughtsman with 20+ years experience creating construction drawings to BS 1192:2007+A2:2016 and BS EN ISO 7200 standards.
 
-    // Create detailed prompt based on drawing type
-    let systemPrompt = `You are an expert architectural CAD draughtsman following UK BS 1192 standards. Generate clean, accurate SVG drawings for construction projects. 
-    
-Key requirements:
-- Use proper architectural symbols and conventions
-- Include dimensions in meters
-- Follow UK Building Regulations conventions
-- Include scale reference (1:100 or as appropriate)
-- Use proper line weights: thick for walls, medium for doors/windows, thin for dimensions
-- Include a title block with project details
-- Add North arrow for floor plans
-- Include section markers where appropriate
+CRITICAL REQUIREMENTS:
+1. Generate ONLY valid, complete SVG code - no text explanations
+2. Use proper architectural line weights: 
+   - Walls: 0.5mm (stroke-width: 3)
+   - Doors/Windows: 0.35mm (stroke-width: 2)  
+   - Dimensions: 0.25mm (stroke-width: 1)
+   - Hidden lines: dashed
+3. Standard symbols per BS 1635 and BS 8541
+4. Dimensions in millimeters, text at 2.5mm height (scaled)
+5. North arrow (↑N) on floor plans
+6. Scale bar with 1m increments
+7. Title block bottom right: drawing title, scale, date, revision
 
-The SVG must be self-contained with embedded styles. Use a viewBox appropriate for A3/A4 printing.`;
+DOOR REPRESENTATION:
+- Show door leaf as arc (90° swing)
+- Door frame as thick line
+- Indicate swing direction
+- Standard widths: 826mm, 926mm internal; 838mm, 914mm external
+
+WINDOW REPRESENTATION:
+- Double lines for frame
+- Glazing bars as thin lines
+- Opening direction indicator
+- Sill line on elevations
+
+ELECTRICAL SYMBOLS (BS EN 60617):
+- Double socket: ⊠⊠ with label "2G"
+- Single socket: ⊠
+- Light switch: ○ (1G), ○○ (2G)
+- Ceiling rose: ⊕
+- Downlight: ● with Ø dimension
+- Smoke detector: ⊗ with "SD"
+- Consumer unit: rectangle with "CU"
+
+PLUMBING (BS EN 806):
+- WC: standard plan symbol
+- Basin: oval/rectangular with waste
+- Bath: 1700x700 rectangle
+- Radiator: rectangle with fins pattern
+- Pipework: HW (red), CW (blue), W (green)
+
+STRUCTURAL ANNOTATIONS:
+- Steel beam sizes (e.g., "152x89 UB")
+- Foundation depths
+- DPC line at 150mm above FFL
+- Insulation hatching
+
+U-VALUES TO ANNOTATE (Part L 2021):
+- Walls: ≤0.18 W/m²K
+- Floor: ≤0.13 W/m²K  
+- Roof: ≤0.11 W/m²K
+- Windows: ≤1.2 W/m²K
+
+SVG SPECIFICATIONS:
+- viewBox appropriate for A3 landscape (420x297mm at 1:50)
+- Use <defs> for reusable symbols
+- Group elements logically (<g> with id)
+- Include embedded stylesheet
+- Clean, well-organized code`;
 
     let userPrompt = '';
+    const scale = 50; // 1:50 scale
+    const svgWidth = 1200;
+    const svgHeight = 800;
+    const margin = 100;
+
+    // Build room details string
+    const roomDetails = rooms?.map((r: any) => 
+      `- ${r.name}: ${r.length}m x ${r.width}m (${(r.length * r.width).toFixed(1)}m²)
+        Windows: ${r.windows?.map((w: any) => `${w.type} ${w.width}x${w.height}m x${w.quantity}`).join(', ') || 'none'}
+        Doors: ${r.doors?.map((d: any) => `${d.type} ${d.width}m ${d.swing}-swing`).join(', ') || 'none'}
+        Electrical: ${r.electrical?.map((e: any) => `${e.type} x${e.quantity}`).join(', ') || 'none'}
+        Plumbing: ${r.plumbing?.map((p: any) => `${p.type} x${p.quantity}`).join(', ') || 'none'}
+        Flooring: ${r.flooring || 'not specified'}
+        Heating: ${r.heating || 'radiator'}`
+    ).join('\n') || 'Single open-plan space';
 
     if (drawingType === 'floor_plan') {
-      userPrompt = `Generate a detailed floor plan SVG for an extension with these specifications:
+      userPrompt = `Generate a professional floor plan SVG drawing for a UK ${geometry.project_type?.replace(/_/g, ' ')} extension.
 
-DIMENSIONS:
-- Length: ${length_m}m
-- Width: ${width_m}m  
+OVERALL DIMENSIONS:
+- External Length: ${length_m}m (${length_m * 1000}mm)
+- External Width: ${width_m}m (${width_m * 1000}mm)
 - Floor Area: ${floor_area_sqm}m²
 - Ceiling Height: ${height_m}m
 
-CONSTRUCTION:
-- Wall Type: ${wall_type} (typically 300mm cavity wall with insulation)
-- Foundation: ${foundation_type}
+CONSTRUCTION SPECIFICATION:
+- Wall Construction: ${wall_type} (${wall_thickness}mm thickness, U-value ${structural?.wall_uValue || 0.18} W/m²K)
+- Foundation: ${foundation_type} (${foundation_details?.depth || '1000mm'} deep, ${foundation_details?.width || '600mm'} wide)
 
-OPENINGS:
-- Windows: ${JSON.stringify(windows || [])}
-- Doors: ${JSON.stringify(doors || [])}
+ROOM LAYOUT:
+${roomDetails}
 
-${rooms ? `ROOMS: ${JSON.stringify(rooms)}` : ''}
+DRAWING REQUIREMENTS:
+1. Show all walls with correct thickness - external ${wall_type === 'cavity' ? '300mm' : '200mm'}, internal 100mm
+2. Each door with 90° swing arc showing opening direction
+3. Windows with double-line frame and glazing indication
+4. All electrical symbols positioned correctly:
+   - Sockets at appropriate positions
+   - Light switches beside doors (handle side)
+   - Ceiling lights centered or as specified
+   - Smoke detectors in circulation areas
+5. Plumbing fixtures with standard BS symbols
+6. Dimension strings:
+   - Overall external dimensions
+   - Internal room dimensions
+   - Window/door positions from corners
+7. Room labels with area in m²
+8. North arrow top-left
+9. Scale bar showing 0-1-2-3m
+10. Title block: "FLOOR PLAN - ${geometry.project_type?.replace(/_/g, ' ').toUpperCase()}", Scale 1:50
+11. Grid lines A-B-C and 1-2-3 for reference
+12. DPC line indication
 
-Create a professional floor plan showing:
-1. All walls with proper thickness (outer walls 300mm, inner walls 100mm)
-2. Window openings with glazing indication
-3. Door swings with proper arcs
-4. Room labels if applicable
-5. Overall dimensions and internal dimensions
-6. Scale bar (1:50)
-7. North arrow
-8. Title block with "Floor Plan - ${floor_area_sqm}m² Extension"
+BUILDING REGS ANNOTATIONS:
+${buildingRegs?.passes?.join('\n') || 'Standard compliance'}
 
-Return ONLY valid SVG code, no explanation.`;
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".
+Return ONLY the SVG code, no explanation.`;
+
     } else if (drawingType === 'elevation_front') {
-      userPrompt = `Generate a front elevation SVG for an extension with these specifications:
+      userPrompt = `Generate a professional front elevation SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
 
 DIMENSIONS:
 - Width: ${width_m}m
-- Height to eaves: ${height_m}m
+- Height to Eaves: ${height_m}m
 - Roof Type: ${roof_type}
 
 OPENINGS:
-- Windows: ${JSON.stringify(windows || [])}
-- Doors: ${JSON.stringify(doors || [])}
+${windows?.map((w: any) => `- Window: ${w.width}x${w.height}m ${w.type || 'casement'}`).join('\n') || '- Standard windows'}
+${doors?.filter((d: any) => d.room).map((d: any) => `- ${d.type} door: ${d.width}x${d.height}m`).join('\n') || '- External door 900x2100mm'}
 
-Create a professional front elevation showing:
-1. Ground level with hatching
-2. Wall finish (rendered/brick indication)
-3. All windows with glazing bars
-4. External doors
-5. Roof profile with ${roof_type} design
-6. Gutters and downpipes
-7. DPC line indication
-8. Vertical dimensions (floor to ceiling, overall height)
-9. Horizontal dimensions
-10. Scale bar (1:50)
-11. Title block with "Front Elevation"
+DRAWING REQUIREMENTS:
+1. Ground level with hatch pattern
+2. DPC line at 150mm
+3. Wall finish indication (render/brick texture)
+4. Windows with:
+   - Frame profile
+   - Glazing bars (if applicable)
+   - Opening lights indicated
+   - Cill and lintel
+5. External door with:
+   - Frame detail
+   - Panel indication
+   - Threshold
+6. Roof:
+   - ${roof_type} profile at correct pitch
+   - Ridge line
+   - Eaves detail with gutter
+   - Fascia and soffit
+7. Rainwater goods:
+   - Gutter (half-round or square)
+   - Downpipe position
+8. Dimensions:
+   - Overall height
+   - Floor to window head/cill
+   - Eaves height
+   - Window widths
+9. Material annotations
+10. Title block: "FRONT ELEVATION", Scale 1:50
 
-Return ONLY valid SVG code, no explanation.`;
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
     } else if (drawingType === 'elevation_side') {
-      userPrompt = `Generate a side elevation SVG for an extension with these specifications:
+      userPrompt = `Generate a professional side elevation SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
 
 DIMENSIONS:
 - Length: ${length_m}m
-- Height to eaves: ${height_m}m
-- Roof Type: ${roof_type}
+- Height: ${height_m}m
+- Roof: ${roof_type}
 
-OPENINGS:
-- Windows: ${JSON.stringify(windows || [])}
+Show junction with existing building, roof slope, windows if any, and full dimensions.
+Title block: "SIDE ELEVATION", Scale 1:50
 
-Create a professional side elevation showing:
-1. Ground level with hatching
-2. Wall finish indication
-3. Any side windows
-4. Roof profile meeting existing building
-5. Dimensions
-6. Scale bar (1:50)
-7. Title block with "Side Elevation"
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
 
-Return ONLY valid SVG code, no explanation.`;
     } else if (drawingType === 'section') {
-      userPrompt = `Generate a building section SVG for an extension with these specifications:
+      userPrompt = `Generate a professional building section SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
 
 DIMENSIONS:
 - Width: ${width_m}m
 - Height: ${height_m}m
 - Foundation: ${foundation_type}
-- Wall Type: ${wall_type}
-- Roof Type: ${roof_type}
+- Wall: ${wall_type}
+- Roof: ${roof_type}
 
-Create a professional building section showing:
-1. Foundation detail (${foundation_type})
-2. Floor construction (typical 150mm concrete slab with insulation)
-3. Wall construction layers (inner leaf, insulation, outer leaf)
-4. Wall plate and roof structure
-5. Insulation zones hatched
-6. Ventilation paths
-7. DPC and DPM positions
-8. Dimensions for all elements
-9. Building Regs Part L U-values annotation:
-   - Floor: 0.18 W/m²K
-   - Wall: 0.18 W/m²K
-   - Roof: 0.13 W/m²K
-10. Scale bar (1:20)
-11. Title block with "Section A-A"
+SECTION REQUIREMENTS:
+1. Foundation detail:
+   - ${foundation_type} at ${foundation_details?.depth || '1000mm'} depth
+   - Concrete specification
+   - DPM indication
+2. Floor construction:
+   - 150mm concrete slab
+   - 100mm insulation (U-value annotation)
+   - 65mm screed
+   - Floor finish
+3. Wall construction (cut through):
+   - Inner leaf (block)
+   - Cavity with insulation
+   - Outer leaf
+   - Wall ties indication
+   - DPC at 150mm
+4. Roof construction:
+   - Rafters/joists
+   - Insulation between/over
+   - Ceiling
+   - Ventilation path
+   - Fascia/soffit
+5. Annotations:
+   - U-values for each element
+   - Material specifications
+   - Dimension strings
+6. Insulation zones with hatching
+7. Ventilation arrows
 
-Return ONLY valid SVG code, no explanation.`;
+BUILDING REGS U-VALUES:
+- Floor: ${structural?.floor_uValue || 0.13} W/m²K
+- Wall: ${structural?.wall_uValue || 0.18} W/m²K  
+- Roof: ${structural?.roof_uValue || 0.11} W/m²K
+
+Title block: "SECTION A-A", Scale 1:20
+
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
+    } else if (drawingType === 'electrical_layout') {
+      userPrompt = `Generate a professional electrical layout plan SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
+
+FLOOR PLAN BASE:
+- Length: ${length_m}m, Width: ${width_m}m
+- Rooms: ${rooms?.map((r: any) => r.name).join(', ') || 'Open plan'}
+
+ELECTRICAL REQUIREMENTS:
+${rooms?.map((r: any) => 
+  `${r.name}:\n${r.electrical?.map((e: any) => `  - ${e.type}: ${e.quantity} no.`).join('\n') || '  Standard provisions'}`
+).join('\n') || 'Standard domestic installation'}
+
+DRAWING REQUIREMENTS:
+1. Floor plan outline (thin line)
+2. All electrical symbols per BS EN 60617:
+   - Socket outlets with "2G" label
+   - Light switches with gang indication
+   - Ceiling roses/downlights
+   - Smoke/CO detectors with "SD"/"CO"
+   - Consumer unit position
+3. Circuit indication:
+   - Lighting circuit (dashed)
+   - Ring main (solid)
+   - Radials (dot-dash)
+4. Cable routes
+5. Switch-to-light connections
+6. Legend/key for all symbols
+7. Notes:
+   - "All work to BS 7671"
+   - "RCD protection to all circuits"
+   - Socket heights 450mm AFL (Part M)
+8. Title block: "ELECTRICAL LAYOUT", Scale 1:50
+
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
+    } else if (drawingType === 'plumbing_layout') {
+      userPrompt = `Generate a professional plumbing/heating layout SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
+
+FLOOR PLAN BASE:
+- Length: ${length_m}m, Width: ${width_m}m
+
+PLUMBING FIXTURES:
+${rooms?.map((r: any) => 
+  `${r.name}:\n${r.plumbing?.map((p: any) => `  - ${p.type}: ${p.quantity} no.`).join('\n') || '  No plumbing'}\n  Heating: ${r.heating || 'radiator'}`
+).join('\n') || 'Standard provisions'}
+
+DRAWING REQUIREMENTS:
+1. Floor plan outline
+2. Sanitary fixtures with BS symbols:
+   - WC with cistern
+   - Basin with waste
+   - Bath/shower
+3. Pipework:
+   - Hot water (red, 15/22mm)
+   - Cold water (blue, 15/22mm)
+   - Waste (green, 32/40/110mm)
+4. Heating:
+   - Radiator positions with sizes
+   - UFH zones (if applicable)
+   - Boiler position
+   - Flow/return
+5. Annotations:
+   - Pipe sizes
+   - Falls on waste
+   - Valve positions
+6. Legend for pipe types
+7. Notes:
+   - "Hot water 48°C max (TMV)"
+   - "All to Building Regs Part G/H"
+8. Title block: "PLUMBING & HEATING LAYOUT", Scale 1:50
+
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
+    } else if (drawingType === 'structural_details') {
+      userPrompt = `Generate a professional structural details sheet SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
+
+PROJECT DATA:
+- Span: ${length_m}m x ${width_m}m
+- Foundation: ${foundation_type}
+- Walls: ${wall_type}
+- Roof: ${roof_type}
+- Steel Required: ${structural?.steelRequired ? 'Yes' : 'No'}
+- Load Bearing Walls: ${structural?.loadBearing ? 'Yes' : 'No'}
+
+DETAILS TO SHOW:
+1. Foundation Section (1:20):
+   - ${foundation_type} detail
+   - Depth: ${foundation_details?.depth || '1000mm'}
+   - Width: ${foundation_details?.width || '600mm'}
+   - Reinforcement if required
+   
+2. Wall-Floor Junction (1:10):
+   - DPM/DPC detail
+   - Cavity tray
+   - Insulation continuity
+
+3. Lintel Detail (1:10):
+   - Steel lintel for openings >1200mm
+   - Bearing 150mm each end
+   - Cavity closer
+
+4. ${structural?.steelRequired ? `Steel Beam Detail (1:10):
+   - Preliminary size: 152x89 UB (verify with engineer)
+   - Padstones 215x215x215
+   - Fire protection if required` : 'Timber joist span tables reference'}
+
+5. Eaves Detail (1:10):
+   - Rafter to wall plate
+   - Soffit ventilation
+   - Insulation
+
+ANNOTATIONS:
+- All dimensions in mm
+- Material specifications
+- Reference to structural engineer's calculations
+- Building Regs compliance notes
+
+Title block: "STRUCTURAL DETAILS", Various Scales
+
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
     } else if (drawingType === 'site_plan') {
-      userPrompt = `Generate a site plan SVG showing the extension position:
+      userPrompt = `Generate a professional site plan SVG for a UK ${geometry.project_type?.replace(/_/g, ' ')}.
 
-DIMENSIONS:
-- Extension: ${length_m}m x ${width_m}m (${floor_area_sqm}m²)
+EXTENSION SIZE:
+- ${length_m}m x ${width_m}m = ${floor_area_sqm}m²
 
-Create a professional site plan showing:
-1. Outline of existing dwelling (indicative rectangle)
-2. Extension position with hatching
-3. Boundary lines
-4. North arrow
-5. Access path indication
-6. Dimension to boundaries (typical 1m minimum)
-7. Scale bar (1:200)
-8. Title block with "Site Plan"
+REQUIREMENTS:
+1. Existing dwelling outline (hatched)
+2. Extension position (solid fill)
+3. Site boundaries
+4. North arrow (prominent)
+5. Distance to boundaries (minimum 1m)
+6. Access paths
+7. Drainage routes
+8. Scale bar (1:200)
 9. Key/legend
+10. Title block: "SITE PLAN", Scale 1:200
 
-Return ONLY valid SVG code, no explanation.`;
+Generate complete SVG with viewBox="0 0 ${svgWidth} ${svgHeight}".`;
+
     } else {
       return new Response(
-        JSON.stringify({ error: 'Invalid drawingType. Use: floor_plan, elevation_front, elevation_side, section, site_plan' }),
+        JSON.stringify({ error: 'Invalid drawingType' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -192,7 +457,7 @@ Return ONLY valid SVG code, no explanation.`;
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        max_tokens: 8000,
+        max_tokens: 16000,
       }),
     });
 
@@ -202,13 +467,13 @@ Return ONLY valid SVG code, no explanation.`;
       
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
+          JSON.stringify({ error: 'Rate limit exceeded. Please try again.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: 'AI credits exhausted. Please add credits to continue.' }),
+          JSON.stringify({ error: 'AI credits exhausted.' }),
           { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -219,23 +484,20 @@ Return ONLY valid SVG code, no explanation.`;
     const data = await response.json();
     let svgContent = data.choices?.[0]?.message?.content || '';
     
-    // Clean up the response - extract just the SVG
+    // Extract SVG
     const svgMatch = svgContent.match(/<svg[\s\S]*<\/svg>/i);
     if (svgMatch) {
       svgContent = svgMatch[0];
     }
 
-    // Generate geometry hash for caching
-    const geometryHash = btoa(JSON.stringify({ length_m, width_m, height_m, wall_type, roof_type })).substring(0, 32);
+    // Generate hash
+    const geometryHash = btoa(JSON.stringify({ length_m, width_m, height_m, wall_type, roof_type, drawingType })).substring(0, 32);
 
-    // Store in database (only if not standalone or if we want to save standalone too)
+    // Save to database
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    let drawing = null;
-    
-    // Always save the drawing - for standalone, project_id will be null
     const { data: savedDrawing, error: dbError } = await supabase
       .from('cad_drawings')
       .insert({
@@ -248,8 +510,11 @@ Return ONLY valid SVG code, no explanation.`;
         metadata: {
           generated_at: new Date().toISOString(),
           dimensions: { length_m, width_m, height_m },
-          model: 'google/gemini-2.5-flash',
-          standalone: isStandalone
+          rooms: rooms?.length || 0,
+          electrical_points: electrical?.length || 0,
+          plumbing_fixtures: plumbing?.length || 0,
+          building_regs: buildingRegs,
+          model: 'google/gemini-2.5-flash'
         }
       })
       .select()
@@ -257,9 +522,6 @@ Return ONLY valid SVG code, no explanation.`;
 
     if (dbError) {
       console.error('Database error:', dbError);
-      // Still return the SVG even if DB save fails
-    } else {
-      drawing = savedDrawing;
     }
 
     console.log(`Successfully generated ${drawingType} drawing`);
@@ -268,7 +530,7 @@ Return ONLY valid SVG code, no explanation.`;
       JSON.stringify({ 
         success: true, 
         svgContent,
-        drawingId: drawing?.id,
+        drawingId: savedDrawing?.id,
         drawingType,
         geometryHash
       }),
