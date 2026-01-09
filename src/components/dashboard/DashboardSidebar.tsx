@@ -1,22 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  FolderPlus,
   FolderOpen,
   PenTool,
-  ShieldCheck,
   Receipt,
   Package,
   Settings,
   Wrench,
-  FileText,
   Calculator,
   LogOut,
   Building2,
-  PenTool,
   ClipboardCheck,
-  Receipt,
-  Package,
   Users,
   HelpCircle,
   Calendar,
@@ -24,6 +18,9 @@ import {
   Hammer,
   Home,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const mainNavItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
@@ -32,17 +29,19 @@ const mainNavItems = [
 ];
 
 const moduleNavItems = [
+  { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
   { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
   { icon: Hammer, label: "Structural Calcs", href: "/dashboard/structural" },
-  { icon: Receipt, label: "Invoices", href: "/dashboard/invoices" },
+  { icon: Receipt, label: "Receipts", href: "/dashboard/receipts" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
   { icon: Home, label: "Tenancy & Legal", href: "/dashboard/tenancy" },
   { icon: Scale, label: "Renters Rights", href: "/dashboard/renters-rights" },
 ];
 
 const bottomNavItems = [
+  { icon: Calculator, label: "Tax Returns", href: "/dashboard/tax-returns" },
   { icon: Users, label: "Team", href: "/dashboard/team" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
   { icon: HelpCircle, label: "Help", href: "/dashboard/support" },
