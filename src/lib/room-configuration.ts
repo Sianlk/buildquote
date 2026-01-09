@@ -103,6 +103,163 @@ export type RoomFeature =
   | 'tv_wall_mount' | 'home_cinema' | 'surround_sound'
   | 'wall_panelling' | 'wainscoting';
 
+// Exported arrays for UI selection - using id/name for backwards compatibility with CAD.tsx
+export const ROOM_TYPES: { id: RoomType; name: string; category: string }[] = [
+  // Bedrooms
+  { id: 'master_bedroom', name: 'Master Bedroom', category: 'Bedrooms' },
+  { id: 'bedroom_double', name: 'Double Bedroom', category: 'Bedrooms' },
+  { id: 'bedroom_single', name: 'Single Bedroom', category: 'Bedrooms' },
+  { id: 'box_room', name: 'Box Room', category: 'Bedrooms' },
+  { id: 'dressing_room', name: 'Dressing Room', category: 'Bedrooms' },
+  { id: 'walk_in_wardrobe', name: 'Walk-in Wardrobe', category: 'Bedrooms' },
+  // Bathrooms
+  { id: 'ensuite', name: 'En-Suite', category: 'Bathrooms' },
+  { id: 'bathroom', name: 'Bathroom', category: 'Bathrooms' },
+  { id: 'shower_room', name: 'Shower Room', category: 'Bathrooms' },
+  { id: 'wc', name: 'WC/Cloakroom', category: 'Bathrooms' },
+  { id: 'wetroom', name: 'Wetroom', category: 'Bathrooms' },
+  // Living Areas
+  { id: 'living_room', name: 'Living Room', category: 'Living Areas' },
+  { id: 'lounge', name: 'Lounge', category: 'Living Areas' },
+  { id: 'sitting_room', name: 'Sitting Room', category: 'Living Areas' },
+  { id: 'family_room', name: 'Family Room', category: 'Living Areas' },
+  { id: 'dining_room', name: 'Dining Room', category: 'Living Areas' },
+  { id: 'breakfast_room', name: 'Breakfast Room', category: 'Living Areas' },
+  { id: 'open_plan', name: 'Open Plan Living', category: 'Living Areas' },
+  // Kitchen & Utility
+  { id: 'kitchen', name: 'Kitchen', category: 'Kitchen & Utility' },
+  { id: 'kitchen_diner', name: 'Kitchen-Diner', category: 'Kitchen & Utility' },
+  { id: 'utility', name: 'Utility Room', category: 'Kitchen & Utility' },
+  { id: 'pantry', name: 'Pantry', category: 'Kitchen & Utility' },
+  // Circulation
+  { id: 'hallway', name: 'Hallway', category: 'Circulation' },
+  { id: 'landing', name: 'Landing', category: 'Circulation' },
+  { id: 'entrance_hall', name: 'Entrance Hall', category: 'Circulation' },
+  { id: 'corridor', name: 'Corridor', category: 'Circulation' },
+  // Work & Study
+  { id: 'home_office', name: 'Home Office', category: 'Work & Study' },
+  { id: 'study', name: 'Study', category: 'Work & Study' },
+  { id: 'library', name: 'Library', category: 'Work & Study' },
+  // Other
+  { id: 'garage', name: 'Garage', category: 'Other' },
+  { id: 'workshop', name: 'Workshop', category: 'Other' },
+  { id: 'plant_room', name: 'Plant Room', category: 'Other' },
+  { id: 'conservatory', name: 'Conservatory', category: 'Other' },
+  { id: 'orangery', name: 'Orangery', category: 'Other' },
+  { id: 'garden_room', name: 'Garden Room', category: 'Other' },
+  { id: 'loft_room', name: 'Loft Room', category: 'Other' },
+  { id: 'attic', name: 'Attic', category: 'Other' },
+  { id: 'basement', name: 'Basement', category: 'Other' },
+  { id: 'extension', name: 'Extension', category: 'Other' },
+];
+
+export const ELECTRICAL_POINTS: { id: string; name: string; symbol: string; category: string }[] = [
+  // Sockets
+  { id: 'socket_single', name: 'Single Socket', symbol: '⊡', category: 'Sockets' },
+  { id: 'socket_double', name: 'Double Socket', symbol: '⊡⊡', category: 'Sockets' },
+  { id: 'socket_usb', name: 'USB Socket', symbol: '⊡U', category: 'Sockets' },
+  { id: 'fused_spur', name: 'Fused Spur', symbol: 'FS', category: 'Sockets' },
+  { id: 'cooker_outlet', name: 'Cooker Outlet', symbol: 'CO', category: 'Sockets' },
+  // Switches
+  { id: 'switch_1g', name: '1-Gang Switch', symbol: 'S1', category: 'Switches' },
+  { id: 'switch_2g', name: '2-Gang Switch', symbol: 'S2', category: 'Switches' },
+  { id: 'switch_dimmer', name: 'Dimmer Switch', symbol: 'SD', category: 'Switches' },
+  // Lighting
+  { id: 'ceiling_rose', name: 'Ceiling Rose', symbol: '⊙', category: 'Lighting' },
+  { id: 'downlight', name: 'Downlight', symbol: '◉', category: 'Lighting' },
+  { id: 'wall_light', name: 'Wall Light', symbol: '◐', category: 'Lighting' },
+  { id: 'pendant', name: 'Pendant', symbol: '⊛', category: 'Lighting' },
+  { id: 'spotlight', name: 'Spotlight', symbol: '◈', category: 'Lighting' },
+  // Data & AV
+  { id: 'tv_point', name: 'TV Point', symbol: 'TV', category: 'Data & AV' },
+  { id: 'data_point', name: 'Data Point (Cat6)', symbol: 'D', category: 'Data & AV' },
+  { id: 'telephone', name: 'Telephone Point', symbol: 'T', category: 'Data & AV' },
+  // Safety
+  { id: 'smoke_detector', name: 'Smoke Detector', symbol: 'SD', category: 'Safety' },
+  { id: 'heat_detector', name: 'Heat Detector', symbol: 'HD', category: 'Safety' },
+  { id: 'co_detector', name: 'CO Detector', symbol: 'CO', category: 'Safety' },
+  // Other
+  { id: 'consumer_unit', name: 'Consumer Unit', symbol: 'CU', category: 'Other' },
+  { id: 'extractor_fan', name: 'Extractor Fan', symbol: 'EF', category: 'Other' },
+];
+
+export const PLUMBING_FIXTURES: { id: string; name: string; connections: string; category: string }[] = [
+  // Heating
+  { id: 'radiator', name: 'Radiator', connections: 'HW/CW', category: 'Heating' },
+  { id: 'towel_rail', name: 'Towel Rail', connections: 'HW/CW', category: 'Heating' },
+  { id: 'underfloor_manifold', name: 'UFH Manifold', connections: 'HW/CW', category: 'Heating' },
+  // Sanitaryware
+  { id: 'basin', name: 'Basin', connections: 'HW/CW/W', category: 'Sanitaryware' },
+  { id: 'wc', name: 'WC', connections: 'CW/W', category: 'Sanitaryware' },
+  { id: 'bath', name: 'Bath', connections: 'HW/CW/W', category: 'Sanitaryware' },
+  { id: 'shower', name: 'Shower', connections: 'HW/CW/W', category: 'Sanitaryware' },
+  { id: 'bidet', name: 'Bidet', connections: 'HW/CW/W', category: 'Sanitaryware' },
+  // Kitchen
+  { id: 'kitchen_sink', name: 'Kitchen Sink', connections: 'HW/CW/W', category: 'Kitchen' },
+  { id: 'dishwasher', name: 'Dishwasher', connections: 'HW/CW/W', category: 'Kitchen' },
+  { id: 'washing_machine', name: 'Washing Machine', connections: 'HW/CW/W', category: 'Kitchen' },
+  // Hot Water
+  { id: 'boiler', name: 'Boiler', connections: 'Gas/HW/CW', category: 'Hot Water' },
+  { id: 'hot_water_cylinder', name: 'Hot Water Cylinder', connections: 'HW/CW', category: 'Hot Water' },
+  { id: 'cold_water_tank', name: 'Cold Water Tank', connections: 'CW', category: 'Hot Water' },
+  // Drainage
+  { id: 'waste_stack', name: 'Waste Stack', connections: 'W', category: 'Drainage' },
+  { id: 'soil_pipe', name: 'Soil Pipe', connections: 'SVP', category: 'Drainage' },
+  { id: 'svp', name: 'Soil Vent Pipe', connections: 'SVP', category: 'Drainage' },
+  { id: 'aco_drain', name: 'ACO Drain', connections: 'W', category: 'Drainage' },
+  // Other
+  { id: 'outside_tap', name: 'Outside Tap', connections: 'CW', category: 'Other' },
+  { id: 'gas_meter', name: 'Gas Meter', connections: 'Gas', category: 'Other' },
+  { id: 'stopcock', name: 'Stopcock', connections: 'CW', category: 'Other' },
+];
+
+export const FLOORING_TYPES: { id: FlooringType; name: string; costPerSqm: number }[] = [
+  { id: 'carpet', name: 'Carpet', costPerSqm: 25 },
+  { id: 'hardwood', name: 'Solid Hardwood', costPerSqm: 85 },
+  { id: 'engineered_wood', name: 'Engineered Wood', costPerSqm: 55 },
+  { id: 'laminate', name: 'Laminate', costPerSqm: 22 },
+  { id: 'lvt', name: 'Luxury Vinyl Tile (LVT)', costPerSqm: 45 },
+  { id: 'vinyl', name: 'Vinyl Sheet', costPerSqm: 18 },
+  { id: 'tiles_ceramic', name: 'Ceramic Tiles', costPerSqm: 40 },
+  { id: 'tiles_porcelain', name: 'Porcelain Tiles', costPerSqm: 60 },
+  { id: 'natural_stone', name: 'Natural Stone', costPerSqm: 120 },
+  { id: 'concrete_polished', name: 'Polished Concrete', costPerSqm: 95 },
+  { id: 'resin', name: 'Resin Flooring', costPerSqm: 75 },
+  { id: 'rubber', name: 'Rubber Flooring', costPerSqm: 35 },
+];
+
+export const HEATING_SYSTEMS: { id: HeatingType; name: string }[] = [
+  { id: 'radiator', name: 'Radiators' },
+  { id: 'underfloor_water', name: 'Underfloor Heating (Wet)' },
+  { id: 'underfloor_electric', name: 'Underfloor Heating (Electric)' },
+  { id: 'towel_rail', name: 'Heated Towel Rail' },
+  { id: 'fan_coil', name: 'Fan Coil Unit' },
+  { id: 'air_source', name: 'Air Source Heat Pump' },
+  { id: 'none', name: 'No Heating' },
+];
+
+export const WINDOW_TYPES: { id: string; name: string }[] = [
+  { id: 'casement', name: 'Casement Window' },
+  { id: 'sash', name: 'Sash Window' },
+  { id: 'fixed', name: 'Fixed Window' },
+  { id: 'tilt_turn', name: 'Tilt & Turn' },
+  { id: 'roof', name: 'Roof Window' },
+  { id: 'bay', name: 'Bay Window' },
+  { id: 'oriel', name: 'Oriel Window' },
+];
+
+export const DOOR_TYPES: { id: string; name: string }[] = [
+  { id: 'single', name: 'Single Door' },
+  { id: 'double', name: 'Double Door' },
+  { id: 'sliding', name: 'Sliding Door' },
+  { id: 'bifold', name: 'Bi-fold Door' },
+  { id: 'french', name: 'French Doors' },
+  { id: 'pocket', name: 'Pocket Door' },
+];
+
+// Re-export RoomConfig as RoomConfiguration for backwards compatibility
+export type RoomConfiguration = RoomConfig;
+
 // Room templates with typical configurations
 export const ROOM_TEMPLATES: Record<RoomType, Partial<RoomConfig>> = {
   master_bedroom: {
