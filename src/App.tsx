@@ -20,6 +20,7 @@ import Settings from "./pages/Settings";
 import TradeJobs from "./pages/TradeJobs";
 import Receipts from "./pages/Receipts";
 import TaxReturns from "./pages/TaxReturns";
+import Electrical from "./pages/Electrical";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/dashboard/trade-jobs" element={<ProtectedRoute><TradeJobs /></ProtectedRoute>} />
             <Route path="/dashboard/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
             <Route path="/dashboard/tax-returns" element={<ProtectedRoute><TaxReturns /></ProtectedRoute>} />
+            <Route path="/dashboard/electrical" element={<ProtectedRoute><Electrical /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
