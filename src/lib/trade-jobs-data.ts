@@ -851,6 +851,262 @@ export const TRADE_CATEGORIES: TradeCategory[] = [
           'Required for new builds and material alterations',
           'One per floor minimum, interlinked'
         ]
+      },
+      {
+        id: 'ev_charger_installation',
+        name: 'EV Charger Installation (7kW)',
+        description: 'Install domestic EV charger with dedicated circuit and earthing',
+        labourHours: 6,
+        skillLevel: 'master',
+        materials: [
+          { name: 'EV Charger 7kW (Untethered)', unit: 'nr', quantity: 1, unitCostTrade: 485, unitCostRetail: 650, wasteFactor: 0 },
+          { name: '6mm SWA Cable', unit: 'm', quantity: 20, unitCostTrade: 5.80, unitCostRetail: 7.50, wasteFactor: 0.10 },
+          { name: 'SWA Glands & Shrouds', unit: 'set', quantity: 2, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: '32A Type A RCBO', unit: 'nr', quantity: 1, unitCostTrade: 45, unitCostRetail: 65, wasteFactor: 0 },
+          { name: 'IP65 Isolator', unit: 'nr', quantity: 1, unitCostTrade: 28, unitCostRetail: 42, wasteFactor: 0 },
+          { name: '10mm Earth Cable', unit: 'm', quantity: 5, unitCostTrade: 3.50, unitCostRetail: 4.80, wasteFactor: 0.10 },
+          { name: 'Earth Rod & Clamp', unit: 'set', quantity: 1, unitCostTrade: 25, unitCostRetail: 38, wasteFactor: 0 },
+        ],
+        tools: ['SDS drill', 'SWA stripper', 'Multimeter', 'Earth loop tester', 'Cable detector', 'Spirit level'],
+        instructions: [
+          '1. Survey installation site and route',
+          '2. Check consumer unit capacity (32A spare way)',
+          '3. Install earth rod near charger location',
+          '4. Run SWA cable from consumer unit',
+          '5. Install isolator switch at charger',
+          '6. Mount charger to wall (1m from ground)',
+          '7. Terminate SWA at both ends',
+          '8. Connect PME earth and additional earth rod',
+          '9. Install 32A Type A RCBO',
+          '10. Commission charger and configure',
+          '11. Full electrical testing',
+          '12. Register with DNO if required',
+          '13. Issue EIC and OLEV certificate'
+        ],
+        safetyNotes: [
+          'PME earthing requires additional earth electrode',
+          'Type A RCD/RCBO required for EV charging',
+          'IP65 rated equipment for outdoor',
+          'DNO notification may be required'
+        ],
+        buildingRegsNotes: [
+          'Part P - Notifiable work',
+          'BS 7671 AMD2 - Additional earthing requirements',
+          'OZEV grant registration if applicable',
+          'DNO notification for >13.8kW'
+        ]
+      },
+      {
+        id: 'solar_pv_connection',
+        name: 'Solar PV Array Connection',
+        description: 'Connect solar PV panels to inverter and grid with AC/DC isolators',
+        labourHours: 8,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Solar Inverter 5kW', unit: 'nr', quantity: 1, unitCostTrade: 1250, unitCostRetail: 1650, wasteFactor: 0 },
+          { name: 'DC Isolator', unit: 'nr', quantity: 2, unitCostTrade: 45, unitCostRetail: 65, wasteFactor: 0 },
+          { name: 'AC Isolator', unit: 'nr', quantity: 1, unitCostTrade: 28, unitCostRetail: 42, wasteFactor: 0 },
+          { name: '4mm Solar Cable', unit: 'm', quantity: 40, unitCostTrade: 2.20, unitCostRetail: 3.20, wasteFactor: 0.10 },
+          { name: 'MC4 Connectors', unit: 'pack', quantity: 2, unitCostTrade: 12, unitCostRetail: 18, wasteFactor: 0 },
+          { name: '10mm T&E Cable', unit: 'm', quantity: 10, unitCostTrade: 4.50, unitCostRetail: 6.20, wasteFactor: 0.10 },
+          { name: 'Generation Meter', unit: 'nr', quantity: 1, unitCostTrade: 85, unitCostRetail: 120, wasteFactor: 0 },
+          { name: 'Type 2 SPD', unit: 'nr', quantity: 1, unitCostTrade: 95, unitCostRetail: 135, wasteFactor: 0 },
+        ],
+        tools: ['MC4 crimper', 'Multimeter', 'Clamp meter', 'IR tester', 'Cable detector', 'SDS drill'],
+        instructions: [
+          '1. Verify panel installation and string configuration',
+          '2. Plan cable routes - DC and AC',
+          '3. Install DC isolator at array',
+          '4. Run DC cables from panels to inverter',
+          '5. Mount inverter in suitable location',
+          '6. Connect panel strings to inverter',
+          '7. Install AC isolator near inverter',
+          '8. Run AC cable to consumer unit',
+          '9. Install generation meter if required',
+          '10. Install Type 2 SPD',
+          '11. Commission inverter system',
+          '12. Perform DC and AC testing',
+          '13. Register with DNO (G99/G98)',
+          '14. Issue EIC and MCS certificate'
+        ],
+        safetyNotes: [
+          'DC voltage always live in daylight',
+          'Never disconnect under load',
+          'Arc flash risk - appropriate PPE',
+          'Work from ladders/scaffolding safely'
+        ],
+        buildingRegsNotes: [
+          'Part P - Notifiable work',
+          'Part L - May require EPCs',
+          'MCS certification required for FIT/SEG',
+          'G99/G98 DNO notification mandatory'
+        ]
+      },
+      {
+        id: 'smart_home_wiring',
+        name: 'Smart Home Wiring System',
+        description: 'Install structured cabling for smart home including Cat6, HDMI, and control wiring',
+        labourHours: 12,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Cat6A Cable (305m box)', unit: 'box', quantity: 1, unitCostTrade: 185, unitCostRetail: 250, wasteFactor: 0.10 },
+          { name: 'Cat6 Keystones', unit: 'nr', quantity: 20, unitCostTrade: 4.50, unitCostRetail: 6.50, wasteFactor: 0 },
+          { name: 'Face Plates (2-port)', unit: 'nr', quantity: 10, unitCostTrade: 3, unitCostRetail: 5, wasteFactor: 0 },
+          { name: '24-Port Patch Panel', unit: 'nr', quantity: 1, unitCostTrade: 85, unitCostRetail: 120, wasteFactor: 0 },
+          { name: 'Network Cabinet 6U', unit: 'nr', quantity: 1, unitCostTrade: 125, unitCostRetail: 175, wasteFactor: 0 },
+          { name: 'HDMI 2.1 Cable', unit: 'm', quantity: 30, unitCostTrade: 3.50, unitCostRetail: 5, wasteFactor: 0.10 },
+          { name: 'Control Cable (4-core)', unit: 'm', quantity: 50, unitCostTrade: 0.85, unitCostRetail: 1.20, wasteFactor: 0.10 },
+          { name: 'Smart Switch Module', unit: 'nr', quantity: 5, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+        ],
+        tools: ['Cable tester', 'Punch down tool', 'Crimping tool', 'Cable detector', 'Fish tape', 'Drill'],
+        instructions: [
+          '1. Design structured cabling layout',
+          '2. Identify central hub/cabinet location',
+          '3. Run Cat6A to each room (star topology)',
+          '4. Install network cabinet and patch panel',
+          '5. Terminate cables at patch panel',
+          '6. Install face plates in each room',
+          '7. Run HDMI cables to TV locations',
+          '8. Install control wiring for automation',
+          '9. Test all data cables (Fluke test)',
+          '10. Configure network switch',
+          '11. Install smart switch modules',
+          '12. Commission and test all systems',
+          '13. Provide network documentation'
+        ],
+        safetyNotes: ['Low voltage systems - minimal electrical risk', 'Ladder/access safety', 'Do not mix with power cables'],
+        buildingRegsNotes: ['Generally not notifiable', 'Separate from power cabling by 50mm minimum', 'Fire stopping at penetrations']
+      },
+      {
+        id: 'full_house_rewire',
+        name: 'Full House Rewire (3-Bed Semi)',
+        description: 'Complete rewire including new consumer unit, all circuits, and testing',
+        labourHours: 40,
+        skillLevel: 'master',
+        materials: [
+          { name: '18-Way Consumer Unit', unit: 'nr', quantity: 1, unitCostTrade: 220, unitCostRetail: 280, wasteFactor: 0 },
+          { name: 'MCB/RCBO Pack', unit: 'set', quantity: 1, unitCostTrade: 145, unitCostRetail: 195, wasteFactor: 0 },
+          { name: '2.5mm T&E Cable', unit: 'm', quantity: 200, unitCostTrade: 1.95, unitCostRetail: 2.80, wasteFactor: 0.15 },
+          { name: '1.5mm T&E Cable', unit: 'm', quantity: 150, unitCostTrade: 1.50, unitCostRetail: 2.20, wasteFactor: 0.15 },
+          { name: '6mm T&E Cable (cooker)', unit: 'm', quantity: 15, unitCostTrade: 3.80, unitCostRetail: 5.20, wasteFactor: 0.10 },
+          { name: 'Double Sockets', unit: 'nr', quantity: 25, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: 'Single Sockets', unit: 'nr', quantity: 5, unitCostTrade: 5, unitCostRetail: 8, wasteFactor: 0 },
+          { name: 'Light Switches', unit: 'nr', quantity: 12, unitCostTrade: 5, unitCostRetail: 8, wasteFactor: 0 },
+          { name: 'Ceiling Roses', unit: 'nr', quantity: 8, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: 'Metal Backboxes', unit: 'nr', quantity: 45, unitCostTrade: 2.50, unitCostRetail: 4, wasteFactor: 0 },
+          { name: 'Smoke Detectors (mains)', unit: 'nr', quantity: 4, unitCostTrade: 28, unitCostRetail: 38, wasteFactor: 0 },
+        ],
+        tools: ['SDS drill', 'Chasing tool', 'Multimeter', 'IR tester', 'Loop tester', 'RCD tester', 'Cable detector'],
+        instructions: [
+          '1. Survey existing installation',
+          '2. Design new circuit layout',
+          '3. Arrange DNO isolation',
+          '4. Remove old wiring systematically',
+          '5. First fix - chase walls and run cables',
+          '6. Install backboxes',
+          '7. Install new consumer unit',
+          '8. Connect all circuits to CU',
+          '9. Plaster/make good chases',
+          '10. Second fix - fit accessories',
+          '11. Install smoke detectors',
+          '12. Full electrical testing',
+          '13. Issue EIC with schedule',
+          '14. Notify Building Control'
+        ],
+        safetyNotes: [
+          'Asbestos survey essential for pre-1990 properties',
+          'Isolate and prove dead',
+          'Live working certification required',
+          'Dust control for chasing'
+        ],
+        buildingRegsNotes: [
+          'Part P - Major notifiable work',
+          'Must issue EIC',
+          'AMD3 consumer unit requirements',
+          'Building Control notification mandatory'
+        ]
+      },
+      {
+        id: 'garden_lighting',
+        name: 'Garden Lighting Installation',
+        description: 'Install outdoor lighting with transformers, IP-rated fixtures, and control',
+        labourHours: 8,
+        skillLevel: 'qualified',
+        materials: [
+          { name: 'LED Spike Lights (set 6)', unit: 'set', quantity: 2, unitCostTrade: 125, unitCostRetail: 175, wasteFactor: 0 },
+          { name: 'LED Wall Lights IP65', unit: 'nr', quantity: 4, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'LED Deck Lights (set 10)', unit: 'set', quantity: 1, unitCostTrade: 85, unitCostRetail: 120, wasteFactor: 0 },
+          { name: '1.5mm SWA Cable', unit: 'm', quantity: 40, unitCostTrade: 2.80, unitCostRetail: 3.80, wasteFactor: 0.10 },
+          { name: 'IP68 Junction Boxes', unit: 'nr', quantity: 6, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: 'Photocell/PIR Sensor', unit: 'nr', quantity: 1, unitCostTrade: 28, unitCostRetail: 42, wasteFactor: 0 },
+          { name: 'Outdoor Timer', unit: 'nr', quantity: 1, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: '20A RCD Spur', unit: 'nr', quantity: 1, unitCostTrade: 25, unitCostRetail: 38, wasteFactor: 0 },
+        ],
+        tools: ['SWA stripper', 'Cable detector', 'Multimeter', 'Spade', 'Conduit bender', 'SDS drill'],
+        instructions: [
+          '1. Design lighting layout with customer',
+          '2. Plan cable routes (450mm deep)',
+          '3. Install RCD-protected spur indoors',
+          '4. Trench cable routes',
+          '5. Lay SWA cable at correct depth',
+          '6. Install IP68 junction boxes',
+          '7. Position and fix light fittings',
+          '8. Connect lights to junction boxes',
+          '9. Install photocell/timer control',
+          '10. Backfill trenches',
+          '11. Test all circuits',
+          '12. Commission and demonstrate'
+        ],
+        safetyNotes: [
+          'Underground services check essential',
+          'IP65+ rated equipment only',
+          'RCD protection mandatory outdoors',
+          'Cable depth regulations'
+        ],
+        buildingRegsNotes: [
+          'Part P - Outdoor work notifiable',
+          'BS 7671 requirements for outdoor circuits',
+          'SWA or armoured cable required buried'
+        ]
+      },
+      {
+        id: 'eicr_testing',
+        name: 'EICR Testing (3-Bed House)',
+        description: 'Full electrical inspection and testing with report',
+        labourHours: 5,
+        skillLevel: 'master',
+        materials: [
+          { name: 'EICR Forms', unit: 'set', quantity: 1, unitCostTrade: 15, unitCostRetail: 25, wasteFactor: 0 },
+          { name: 'Minor Repair Materials', unit: 'allowance', quantity: 1, unitCostTrade: 50, unitCostRetail: 75, wasteFactor: 0 },
+        ],
+        tools: ['Multifunction tester', 'IR tester', 'RCD tester', 'Voltage tester', 'Torch', 'Access equipment'],
+        instructions: [
+          '1. Review previous reports/certificates',
+          '2. Visual inspection of consumer unit',
+          '3. Visual inspection of all accessories',
+          '4. Check cable routes and protection',
+          '5. Test RCDs (push button and instrument)',
+          '6. Test Ze at origin',
+          '7. Test Zs at each circuit end',
+          '8. Insulation resistance tests',
+          '9. Continuity tests (ring main)',
+          '10. Polarity tests',
+          '11. Complete EICR form',
+          '12. Code observations (C1, C2, C3, FI)',
+          '13. Provide recommendations',
+          '14. Issue report to customer'
+        ],
+        safetyNotes: [
+          'Live testing - GS38 leads required',
+          'Isolate before IR testing',
+          'Advise occupants of power interruptions'
+        ],
+        buildingRegsNotes: [
+          'Mandatory for rental properties',
+          '5-year cycle recommended for domestic',
+          'C1/C2 codes require remedial work',
+          'New regs require landlords hold valid EICR'
+        ]
       }
     ]
   },
@@ -1148,6 +1404,109 @@ export const TRADE_CATEGORIES: TradeCategory[] = [
           '11. Sand smooth when dry'
         ],
         safetyNotes: ['Working at height', 'Dust from cutting plaster']
+      },
+      {
+        id: 'patch_repair',
+        name: 'Plaster Patch Repairs',
+        description: 'Repair damaged plaster patches, cracks, and holes',
+        labourHours: 3,
+        skillLevel: 'qualified',
+        materials: [
+          { name: 'Bonding Coat', unit: 'bag', quantity: 1, unitCostTrade: 8, unitCostRetail: 11, wasteFactor: 0.15 },
+          { name: 'Multi-Finish Plaster', unit: 'bag', quantity: 1, unitCostTrade: 8.50, unitCostRetail: 11, wasteFactor: 0.15 },
+          { name: 'PVA', unit: 'litre', quantity: 1, unitCostTrade: 6, unitCostRetail: 9, wasteFactor: 0 },
+          { name: 'Scrim Tape', unit: 'roll', quantity: 1, unitCostTrade: 5, unitCostRetail: 8, wasteFactor: 0 },
+          { name: 'Angle Bead', unit: 'm', quantity: 2, unitCostTrade: 0.85, unitCostRetail: 1.20, wasteFactor: 0 },
+        ],
+        tools: ['Trowel', 'Hawk', 'Filling knife', 'Hammer', 'Cold chisel', 'Mixing drill', 'Bucket'],
+        instructions: [
+          '1. Assess extent of damage',
+          '2. Remove loose and blown plaster',
+          '3. Cut back to sound edges',
+          '4. Brush out dust and debris',
+          '5. Apply PVA to exposed masonry',
+          '6. Apply bonding coat to build up level',
+          '7. Score surface for key',
+          '8. Apply scrim tape over cracks',
+          '9. Apply finishing skim coat',
+          '10. Trowel to blend with surrounding area',
+          '11. Allow to dry before decoration'
+        ],
+        safetyNotes: ['Dust from removing old plaster', 'Eye protection when chipping out', 'Support heavy patches'],
+        buildingRegsNotes: ['Check for damp source before plastering', 'May indicate structural issues']
+      },
+      {
+        id: 'dry_lining',
+        name: 'Dry Lining Room (Dot & Dab)',
+        description: 'Fix plasterboard to masonry walls using adhesive dabs',
+        labourHours: 8,
+        skillLevel: 'qualified',
+        materials: [
+          { name: '12.5mm Plasterboard', unit: 'm²', quantity: 35, unitCostTrade: 4.80, unitCostRetail: 6.50, wasteFactor: 0.10 },
+          { name: 'Drywall Adhesive', unit: 'bag', quantity: 8, unitCostTrade: 5.50, unitCostRetail: 7.50, wasteFactor: 0.10 },
+          { name: 'Multi-Finish Plaster', unit: 'bag', quantity: 6, unitCostTrade: 8.50, unitCostRetail: 11, wasteFactor: 0.15 },
+          { name: 'Scrim Tape', unit: 'roll', quantity: 2, unitCostTrade: 5, unitCostRetail: 8, wasteFactor: 0 },
+          { name: 'Angle Bead', unit: 'm', quantity: 15, unitCostTrade: 0.85, unitCostRetail: 1.20, wasteFactor: 0 },
+          { name: 'DPC Strip', unit: 'm', quantity: 12, unitCostTrade: 1.50, unitCostRetail: 2.20, wasteFactor: 0 },
+        ],
+        tools: ['Plasterboard saw', 'Stanley knife', 'Spirit level', 'Straight edge', 'Mixing drill', 'Trowels', 'Tape measure'],
+        instructions: [
+          '1. Check walls for damp - treat if necessary',
+          '2. Fix DPC strip at floor level',
+          '3. Mark plumb lines for board edges',
+          '4. Cut boards to height (10mm short of floor)',
+          '5. Mix drywall adhesive',
+          '6. Apply dabs at 450mm centres (3 vertical lines)',
+          '7. Offer board to wall and tap level',
+          '8. Check plumb with spirit level',
+          '9. Continue with adjacent boards (3mm gap)',
+          '10. Cut around sockets and switches',
+          '11. Fix angle beads at corners',
+          '12. Tape all joints',
+          '13. Skim finish entire surface'
+        ],
+        safetyNotes: ['Heavy boards - two person lift', 'Dust from cutting', 'Check for hidden services'],
+        buildingRegsNotes: [
+          'Part L - Thermal insulation may be required',
+          'Part E - Sound insulation considerations',
+          'Fire stopping at penetrations'
+        ]
+      },
+      {
+        id: 'external_render_silicone',
+        name: 'Silicone Render System',
+        description: 'Apply modern silicone render system to external walls',
+        labourHours: 16,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Silicone Render (25kg)', unit: 'tub', quantity: 8, unitCostTrade: 65, unitCostRetail: 85, wasteFactor: 0.10 },
+          { name: 'Base Coat', unit: 'bag', quantity: 6, unitCostTrade: 12, unitCostRetail: 16, wasteFactor: 0.10 },
+          { name: 'Reinforcing Mesh', unit: 'm²', quantity: 25, unitCostTrade: 2.50, unitCostRetail: 3.50, wasteFactor: 0.10 },
+          { name: 'Primer', unit: 'litre', quantity: 5, unitCostTrade: 25, unitCostRetail: 35, wasteFactor: 0 },
+          { name: 'Render Beads', unit: 'm', quantity: 20, unitCostTrade: 2.50, unitCostRetail: 3.50, wasteFactor: 0 },
+          { name: 'Starter Track', unit: 'm', quantity: 10, unitCostTrade: 3.50, unitCostRetail: 5, wasteFactor: 0 },
+        ],
+        tools: ['Rendering trowels', 'Notched trowel', 'Float', 'Scaffolding', 'Mixer', 'Spray gun (optional)'],
+        instructions: [
+          '1. Prepare substrate - clean and repair',
+          '2. Fix starter track at base',
+          '3. Fix render beads at corners/edges',
+          '4. Apply base coat with notched trowel',
+          '5. Embed reinforcing mesh',
+          '6. Smooth over mesh with more base coat',
+          '7. Allow to cure (24-48 hours)',
+          '8. Apply primer coat',
+          '9. Allow primer to dry',
+          '10. Apply silicone render (spray or trowel)',
+          '11. Texture with sponge float',
+          '12. Protect from rain until cured'
+        ],
+        safetyNotes: ['Working at height - scaffolding required', 'Weather dependent', 'Eye protection when mixing'],
+        buildingRegsNotes: [
+          'Part L - Thermal bridging considerations',
+          'BBA/ETA certification for system',
+          'Fire classification for high-rise restrictions'
+        ]
       }
     ]
   },
