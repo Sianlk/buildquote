@@ -31,6 +31,7 @@ const mainNavItems = [
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
   { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
+  { icon: Calculator, label: "Electrical", href: "/dashboard/electrical" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
   { icon: Hammer, label: "Structural Calcs", href: "/dashboard/structural" },
