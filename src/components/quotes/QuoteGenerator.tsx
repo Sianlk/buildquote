@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   FileText,
   Plus,
@@ -28,6 +29,8 @@ import {
   Printer,
   Download,
   Eye,
+  Send,
+  Loader2,
 } from "lucide-react";
 import {
   QuoteDetails,
@@ -36,11 +39,15 @@ import {
   DEFAULT_COMPANY,
   generateQuoteNumber,
   formatCurrency,
-  formatDate,
-  printQuote,
-  downloadQuoteAsHTML,
   generateQuoteHTML,
 } from "@/lib/quote-pdf-generator";
+import {
+  generateQuotePDF,
+  downloadPDF,
+  printPDF,
+  type QuoteData,
+  type CompanyBranding,
+} from "@/lib/pdf-generator";
 
 interface QuoteGeneratorProps {
   initialItems?: QuoteLineItem[];
@@ -61,6 +68,7 @@ export function QuoteGenerator({
 }: QuoteGeneratorProps) {
   const [open, setOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [sending, setSending] = useState(false);
   
   const [company, setCompany] = useState<CompanyDetails>(DEFAULT_COMPANY);
   const [items, setItems] = useState<QuoteLineItem[]>(initialItems);
@@ -120,6 +128,30 @@ export function QuoteGenerator({
     };
   };
 
+  const buildQuoteData = (): QuoteData => {
+    const quoteDate = new Date();
+    const validUntil = new Date();
+    validUntil.setDate(validUntil.getDate() + validDays);
+
+    return {
+      quoteNumber: generateQuoteNumber(),
+      date: quoteDate.toLocaleDateString("en-GB"),
+      validUntil: validUntil.toLocaleDateString("en-GB"),
+      customerName: customer.name,
+      customerAddress: customer.address,
+      customerPhone: customer.phone,
+      customerEmail: customer.email,
+      projectDescription: description,
+      items,
+      subtotal,
+      vatRate,
+      vatAmount,
+      total,
+      notes,
+      paymentTerms: "20% deposit, balance on completion",
+    };
+  };
+
   const handlePrint = () => {
     if (items.length === 0) {
       toast.error("Add at least one line item");
@@ -129,7 +161,18 @@ export function QuoteGenerator({
       toast.error("Customer name is required");
       return;
     }
-    printQuote(buildQuote(), company);
+    const quoteData = buildQuoteData();
+    const branding: CompanyBranding = {
+      name: company.name,
+      address: company.address,
+      phone: company.phone,
+      email: company.email,
+      website: company.website,
+      vatNumber: company.vatNumber,
+      companyNumber: company.companyNumber,
+    };
+    const doc = generateQuotePDF(quoteData, branding);
+    printPDF(doc);
   };
 
   const handleDownload = () => {
@@ -141,8 +184,55 @@ export function QuoteGenerator({
       toast.error("Customer name is required");
       return;
     }
-    downloadQuoteAsHTML(buildQuote(), company);
-    toast.success("Quote downloaded");
+    const quoteData = buildQuoteData();
+    const branding: CompanyBranding = {
+      name: company.name,
+      address: company.address,
+      phone: company.phone,
+      email: company.email,
+      website: company.website,
+      vatNumber: company.vatNumber,
+      companyNumber: company.companyNumber,
+    };
+    const doc = generateQuotePDF(quoteData, branding);
+    downloadPDF(doc, `Quote-${quoteData.quoteNumber}.pdf`);
+    toast.success("Quote PDF downloaded");
+  };
+
+  const handleSendEmail = async () => {
+    if (!customer.email) {
+      toast.error("Customer email is required");
+      return;
+    }
+    if (items.length === 0) {
+      toast.error("Add at least one line item");
+      return;
+    }
+    
+    setSending(true);
+    try {
+      const quote = buildQuote();
+      const html = generateQuoteHTML(quote, company);
+      
+      const { data, error } = await supabase.functions.invoke("send-email", {
+        body: {
+          to: customer.email,
+          subject: `Quote ${quote.quoteNumber} from ${company.name}`,
+          html,
+          replyTo: company.email,
+        },
+      });
+      
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      
+      toast.success(`Quote sent to ${customer.email}`);
+    } catch (error: any) {
+      console.error("Email error:", error);
+      toast.error(error.message || "Failed to send email");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -419,11 +509,23 @@ export function QuoteGenerator({
             </Button>
             <Button variant="outline" onClick={handleDownload}>
               <Download className="h-4 w-4 mr-2" />
-              Download
+              Download PDF
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleSendEmail} 
+              disabled={sending || !customer.email}
+            >
+              {sending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4 mr-2" />
+              )}
+              Send Email
             </Button>
             <Button onClick={handlePrint}>
               <Printer className="h-4 w-4 mr-2" />
-              Print Quote
+              Print
             </Button>
           </div>
         </DialogContent>
