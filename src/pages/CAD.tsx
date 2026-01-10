@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ROOM_TYPES, ELECTRICAL_POINTS, PLUMBING_FIXTURES, FLOORING_TYPES, HEATING_SYSTEMS, WINDOW_TYPES, DOOR_TYPES, RoomConfiguration } from "@/lib/room-configuration";
+import { CADPreviewModal } from "@/components/cad/CADPreviewModal";
 
 type Project = Tables<"projects">;
 type CadDrawing = Tables<"cad_drawings">;
@@ -1015,30 +1016,14 @@ export default function CAD() {
           </div>
         )}
 
-        {/* Drawing Modal */}
-        {selectedDrawing && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setSelectedDrawing(null)}>
-            <div className="w-full max-w-5xl max-h-[90vh] bg-card rounded-xl shadow-xl overflow-hidden" onClick={e => e.stopPropagation()}>
-              <div className="p-4 border-b flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold">{selectedDrawing.drawing_type.replace(/_/g, " ")}</h3>
-                  <p className="text-sm text-muted-foreground">{selectedDrawing.project_type.replace(/_/g, " ")}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => downloadSvg(selectedDrawing)}>
-                    <Download className="h-4 w-4 mr-1" /> Download SVG
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={() => setSelectedDrawing(null)}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <ScrollArea className="h-[calc(90vh-80px)]">
-                <div className="p-4" dangerouslySetInnerHTML={{ __html: selectedDrawing.svg_content || "" }} />
-              </ScrollArea>
-            </div>
-          </div>
-        )}
+        {/* CAD Preview Modal */}
+        <CADPreviewModal
+          open={!!selectedDrawing}
+          onOpenChange={(open) => !open && setSelectedDrawing(null)}
+          svgContent={selectedDrawing?.svg_content || ""}
+          drawingType={selectedDrawing?.drawing_type || "floor_plan"}
+          drawingId={selectedDrawing?.id}
+        />
       </div>
     </DashboardLayout>
   );
