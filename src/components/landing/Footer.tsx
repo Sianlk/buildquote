@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Building2, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
@@ -27,7 +28,7 @@ const footerLinks = {
   ],
 };
 
-export function Footer() {
+export const Footer = forwardRef<HTMLElement>((_, ref) => {
   return (
     <footer className="border-t border-border/50 bg-card/30">
       <div className="container px-4 py-16">
@@ -154,4 +155,6 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+});
+
+Footer.displayName = "Footer";

@@ -25,6 +25,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { ReceiptOCRUpload } from "@/components/receipts/ReceiptOCRUpload";
 import {
   Receipt,
   Plus,
@@ -38,6 +39,7 @@ import {
   Calendar,
   Search,
   Filter,
+  Camera,
 } from "lucide-react";
 
 const EXPENSE_CATEGORIES = [
@@ -70,6 +72,7 @@ export default function Receipts() {
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [showOCRUpload, setShowOCRUpload] = useState(false);
   
   // Form state
   const [receiptType, setReceiptType] = useState("expense");
@@ -141,6 +144,30 @@ export default function Receipts() {
     }
   };
 
+  const handleOCRExtracted = (data: {
+    supplier?: string;
+    date?: string;
+    total?: number;
+    vat?: number;
+    items?: string[];
+    confidence: number;
+  }) => {
+    if (data.supplier) setSupplier(data.supplier);
+    if (data.date) setReceiptDate(data.date);
+    if (data.total && data.vat) {
+      setNetAmount((data.total - data.vat).toFixed(2));
+      setVatAmount(data.vat.toFixed(2));
+    } else if (data.total) {
+      setNetAmount(data.total.toFixed(2));
+    }
+    if (data.items && data.items.length > 0) {
+      setDescription(data.items.join(", ").slice(0, 100));
+    }
+    setShowOCRUpload(false);
+    setDialogOpen(true);
+    toast.success("Receipt data extracted! Please verify and save.");
+  };
+
   const resetForm = () => {
     setReceiptType("expense");
     setCategory("");
@@ -200,7 +227,12 @@ export default function Receipts() {
             </p>
           </div>
           
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowOCRUpload(!showOCRUpload)}>
+              <Camera className="h-4 w-4 mr-2" />
+              Scan Receipt
+            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -330,8 +362,13 @@ export default function Receipts() {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
         
+        {/* OCR Upload Section */}
+        {showOCRUpload && (
+          <ReceiptOCRUpload onExtracted={handleOCRExtracted} />
+        )}
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
