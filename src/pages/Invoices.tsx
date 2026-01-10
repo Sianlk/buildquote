@@ -24,6 +24,13 @@ import { Tables } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import {
+  generateInvoicePDF,
+  downloadPDF,
+  printPDF,
+  type InvoiceData,
+  type CompanyBranding,
+} from "@/lib/pdf-generator";
+import {
   Receipt,
   Plus,
   Download,
@@ -435,10 +442,57 @@ export default function Invoices() {
                             Mark Paid
                           </Button>
                         )}
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            const invoiceData: InvoiceData = {
+                              invoiceNumber: invoice.invoice_number,
+                              date: format(new Date(invoice.created_at!), "dd/MM/yyyy"),
+                              dueDate: invoice.due_date ? format(new Date(invoice.due_date), "dd/MM/yyyy") : undefined,
+                              projectName: getProjectName(invoice.project_id),
+                              customerName: "Customer",
+                              netValue: invoice.net_value,
+                              vatPercent: invoice.vat_percent || 20,
+                              vatValue: invoice.vat_value || 0,
+                              retentionPercent: invoice.retention_percent || 0,
+                              retentionValue: invoice.retention_value || 0,
+                              grossValue: invoice.gross_value,
+                              payableAmount: invoice.gross_value - (invoice.retention_value || 0),
+                              type: invoice.type || "interim",
+                              status: invoice.status || "draft",
+                            };
+                            const doc = generateInvoicePDF(invoiceData);
+                            downloadPDF(doc, `Invoice-${invoice.invoice_number}.pdf`);
+                            toast.success("PDF downloaded");
+                          }}
+                        >
                           <Download className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            const invoiceData: InvoiceData = {
+                              invoiceNumber: invoice.invoice_number,
+                              date: format(new Date(invoice.created_at!), "dd/MM/yyyy"),
+                              dueDate: invoice.due_date ? format(new Date(invoice.due_date), "dd/MM/yyyy") : undefined,
+                              projectName: getProjectName(invoice.project_id),
+                              customerName: "Customer",
+                              netValue: invoice.net_value,
+                              vatPercent: invoice.vat_percent || 20,
+                              vatValue: invoice.vat_value || 0,
+                              retentionPercent: invoice.retention_percent || 0,
+                              retentionValue: invoice.retention_value || 0,
+                              grossValue: invoice.gross_value,
+                              payableAmount: invoice.gross_value - (invoice.retention_value || 0),
+                              type: invoice.type || "interim",
+                              status: invoice.status || "draft",
+                            };
+                            const doc = generateInvoicePDF(invoiceData);
+                            printPDF(doc);
+                          }}
+                        >
                           <Printer className="h-4 w-4" />
                         </Button>
                       </div>

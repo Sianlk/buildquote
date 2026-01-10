@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { DashboardAnalytics } from "@/components/dashboard/DashboardAnalytics";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
@@ -16,6 +18,8 @@ import {
   Building2,
   Home,
   PenTool,
+  BarChart3,
+  LayoutDashboard,
 } from "lucide-react";
 
 type Project = Tables<"projects">;
@@ -106,11 +110,13 @@ export default function Dashboard() {
     { label: "View All Projects", href: "/dashboard/projects", icon: FolderOpen },
   ];
 
+  const [activeTab, setActiveTab] = useState("overview");
+
   return (
     <DashboardLayout>
       <div className="p-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold">Welcome back</h1>
             <p className="text-muted-foreground">
@@ -124,6 +130,25 @@ export default function Dashboard() {
             </Link>
           </Button>
         </div>
+
+        {/* Tabs for Overview and Analytics */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <LayoutDashboard className="h-4 w-4" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="analytics" className="mt-6">
+            <DashboardAnalytics />
+          </TabsContent>
+
+          <TabsContent value="overview" className="mt-6">
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -249,6 +274,8 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );
