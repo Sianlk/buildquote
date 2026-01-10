@@ -21,6 +21,8 @@ import TradeJobs from "./pages/TradeJobs";
 import Receipts from "./pages/Receipts";
 import TaxReturns from "./pages/TaxReturns";
 import Electrical from "./pages/Electrical";
+import Plumbing from "./pages/Plumbing";
+import Carpentry from "./pages/Carpentry";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +50,8 @@ const App = () => (
             <Route path="/dashboard/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
             <Route path="/dashboard/tax-returns" element={<ProtectedRoute><TaxReturns /></ProtectedRoute>} />
             <Route path="/dashboard/electrical" element={<ProtectedRoute><Electrical /></ProtectedRoute>} />
+            <Route path="/dashboard/plumbing" element={<ProtectedRoute><Plumbing /></ProtectedRoute>} />
+            <Route path="/dashboard/carpentry" element={<ProtectedRoute><Carpentry /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

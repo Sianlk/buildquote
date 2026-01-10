@@ -28,6 +28,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -50,9 +51,13 @@ import {
   ChevronRight,
   Printer,
   Download,
+  ShoppingCart,
   Loader2,
 } from "lucide-react";
 import { TRADE_CATEGORIES, calculateJobCost, getJobsForTrade, TradeJob } from "@/lib/trade-jobs-data";
+import { MaterialsShoppingList } from "@/components/materials/MaterialsShoppingList";
+import { QuoteGenerator } from "@/components/quotes/QuoteGenerator";
+import { MaterialItem, consolidateMaterials, generateSupplierOrders } from "@/lib/materials-shopping-list";
 
 const TRADE_ICONS: Record<string, any> = {
   plumbing: Wrench,
@@ -96,6 +101,9 @@ export default function TradeJobs() {
   // Saved jobs
   const [savedJobs, setSavedJobs] = useState<any[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [selectedJobIds, setSelectedJobIds] = useState<string[]>([]);
+  const [showShoppingList, setShowShoppingList] = useState(false);
+  const [showQuoteGenerator, setShowQuoteGenerator] = useState(false);
 
   useEffect(() => {
     if (user) fetchSavedJobs();
@@ -495,6 +503,43 @@ export default function TradeJobs() {
           })}
         </div>
         
+        {/* Action Buttons for Selected Jobs */}
+        {savedJobs.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">
+                    {selectedJobIds.length} job{selectedJobIds.length !== 1 ? 's' : ''} selected
+                  </span>
+                  {selectedJobIds.length > 0 && (
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedJobIds([])}>
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    disabled={selectedJobIds.length === 0}
+                    onClick={() => setShowShoppingList(true)}
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Shopping List
+                  </Button>
+                  <Button 
+                    disabled={selectedJobIds.length === 0}
+                    onClick={() => setShowQuoteGenerator(true)}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Generate Quote
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Saved Jobs */}
         <Tabs defaultValue="active" className="w-full">
           <TabsList>
@@ -508,6 +553,8 @@ export default function TradeJobs() {
               jobs={savedJobs.filter(j => ["quoted", "accepted", "in_progress"].includes(j.status))} 
               loading={loadingJobs}
               onStatusChange={updateJobStatus}
+              selectedIds={selectedJobIds}
+              onSelectionChange={setSelectedJobIds}
             />
           </TabsContent>
           
@@ -516,6 +563,8 @@ export default function TradeJobs() {
               jobs={savedJobs.filter(j => j.status === "completed")} 
               loading={loadingJobs}
               onStatusChange={updateJobStatus}
+              selectedIds={selectedJobIds}
+              onSelectionChange={setSelectedJobIds}
             />
           </TabsContent>
           
@@ -524,15 +573,77 @@ export default function TradeJobs() {
               jobs={savedJobs} 
               loading={loadingJobs}
               onStatusChange={updateJobStatus}
+              selectedIds={selectedJobIds}
+              onSelectionChange={setSelectedJobIds}
             />
           </TabsContent>
         </Tabs>
+
+        {/* Materials Shopping List Dialog */}
+        <Dialog open={showShoppingList} onOpenChange={setShowShoppingList}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Materials Shopping List</DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="flex-1">
+              <MaterialsShoppingList
+                jobMaterials={savedJobs
+                  .filter(j => selectedJobIds.includes(j.id))
+                  .map(j => ({
+                    jobName: j.job_description || j.job_type,
+                    materials: (j.materials || []).map((m: any) => ({
+                      name: m.name,
+                      quantity: m.totalQuantity || m.quantity || 1,
+                      unit: m.unit,
+                      unitCostTrade: m.unitCostTrade || m.unitCost || 0,
+                      unitCostRetail: m.unitCostRetail || m.unitCost || 0
+                    }))
+                  }))
+                }
+                isTradePrice={true}
+              />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+
+        {/* Quote Generator Dialog */}
+        <Dialog open={showQuoteGenerator} onOpenChange={setShowQuoteGenerator}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Generate Customer Quote</DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="flex-1">
+              <QuoteGenerator
+                initialItems={savedJobs
+                  .filter(j => selectedJobIds.includes(j.id))
+                  .map(j => ({
+                    description: j.job_description || j.job_type,
+                    quantity: 1,
+                    unit: "job",
+                    unitPrice: j.customer_price || j.total_cost || 0,
+                    total: j.customer_price || j.total_cost || 0
+                  }))
+                }
+                customerName={savedJobs.find(j => selectedJobIds.includes(j.id))?.customer_name || ""}
+                customerAddress={savedJobs.find(j => selectedJobIds.includes(j.id))?.customer_address || ""}
+                customerEmail={savedJobs.find(j => selectedJobIds.includes(j.id))?.customer_email || ""}
+                customerPhone={savedJobs.find(j => selectedJobIds.includes(j.id))?.customer_phone || ""}
+              />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
 }
 
-function JobsList({ jobs, loading, onStatusChange }: { jobs: any[]; loading: boolean; onStatusChange: (id: string, status: string) => void }) {
+function JobsList({ jobs, loading, onStatusChange, selectedIds, onSelectionChange }: { 
+  jobs: any[]; 
+  loading: boolean; 
+  onStatusChange: (id: string, status: string) => void;
+  selectedIds: string[];
+  onSelectionChange: (ids: string[]) => void;
+}) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -550,17 +661,31 @@ function JobsList({ jobs, loading, onStatusChange }: { jobs: any[]; loading: boo
     );
   }
   
+  const toggleSelection = (jobId: string) => {
+    if (selectedIds.includes(jobId)) {
+      onSelectionChange(selectedIds.filter(id => id !== jobId));
+    } else {
+      onSelectionChange([...selectedIds, jobId]);
+    }
+  };
+
   return (
     <div className="space-y-3">
       {jobs.map((job) => {
         const status = STATUS_CONFIG[job.status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.quoted;
         const StatusIcon = status.icon;
+        const isSelected = selectedIds.includes(job.id);
         
         return (
-          <Card key={job.id}>
+          <Card key={job.id} className={isSelected ? "border-primary" : ""}>
             <CardContent className="p-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
+                  <Checkbox
+                    checked={isSelected}
+                    onCheckedChange={() => toggleSelection(job.id)}
+                    className="mt-1"
+                  />
                   <div className={`p-2 rounded-lg ${status.color}`}>
                     <StatusIcon className="h-5 w-5" />
                   </div>
