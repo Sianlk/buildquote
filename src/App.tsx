@@ -23,8 +23,6 @@ import TaxReturns from "./pages/TaxReturns";
 import Electrical from "./pages/Electrical";
 import Plumbing from "./pages/Plumbing";
 import Carpentry from "./pages/Carpentry";
-import Schedules from "./pages/Schedules";
-import Tenancy from "./pages/Tenancy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,8 +52,6 @@ const App = () => (
             <Route path="/dashboard/electrical" element={<ProtectedRoute><Electrical /></ProtectedRoute>} />
             <Route path="/dashboard/plumbing" element={<ProtectedRoute><Plumbing /></ProtectedRoute>} />
             <Route path="/dashboard/carpentry" element={<ProtectedRoute><Carpentry /></ProtectedRoute>} />
-            <Route path="/dashboard/schedules" element={<ProtectedRoute><Schedules /></ProtectedRoute>} />
-            <Route path="/dashboard/tenancy" element={<ProtectedRoute><Tenancy /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
