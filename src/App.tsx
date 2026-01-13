@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PWAInstallPrompt } from "@/components/shared/PWAInstallPrompt";
+import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
+import { GlobalSearch } from "@/components/shared/GlobalSearch";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -39,6 +42,9 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <PWAInstallPrompt />
+        <OfflineIndicator />
+        <GlobalSearch />
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
