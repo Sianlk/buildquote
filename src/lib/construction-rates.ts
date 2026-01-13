@@ -423,3 +423,209 @@ export const STRUCTURAL_CALCS = {
     "356x171": 7.5,
   },
 };
+
+// ============================================================================
+// ADDITIONAL HELPER FUNCTIONS
+// ============================================================================
+
+// Calculate total project cost with all factors
+export function calculateTotalProjectCost(
+  buildCost: number,
+  region: keyof typeof REGIONAL_MULTIPLIERS,
+  isRenovation: boolean = false
+): {
+  baseCost: number;
+  regionalCost: number;
+  preliminaries: number;
+  contingency: number;
+  total: number;
+} {
+  const regionalMultiplier = REGIONAL_MULTIPLIERS[region];
+  const regionalCost = buildCost * regionalMultiplier;
+  
+  const prelimsRate = PRELIMINARIES.site_setup + PRELIMINARIES.site_management + PRELIMINARIES.insurance;
+  const preliminaries = regionalCost * prelimsRate;
+  
+  const contingencyRate = isRenovation ? PRELIMINARIES.contingency_renovation : PRELIMINARIES.contingency_standard;
+  const contingency = regionalCost * contingencyRate;
+  
+  return {
+    baseCost: buildCost,
+    regionalCost,
+    preliminaries,
+    contingency,
+    total: regionalCost + preliminaries + contingency,
+  };
+}
+
+// Calculate bricklaying costs for a given wall area
+export function calculateBrickworkCosts(
+  wallAreaSqm: number,
+  openingsAreaSqm: number,
+  brickType: keyof typeof MATERIALS_2026.bricks,
+  pricingType: "trade" | "retail" = "retail"
+): {
+  netArea: number;
+  bricksRequired: number;
+  mortarRequired: number;
+  labourHours: number;
+  materialCost: number;
+  labourCost: number;
+  totalCost: number;
+} {
+  const netArea = wallAreaSqm - openingsAreaSqm;
+  const bricksRequired = calculateBricksRequired(wallAreaSqm, openingsAreaSqm);
+  const mortarRequired = calculateMortarRequired(bricksRequired);
+  
+  const labourDays = bricksRequired / TRADE_PRODUCTIVITY.bricklaying.bricks_per_day;
+  const labourHours = labourDays * 8;
+  
+  const brick = MATERIALS_2026.bricks[brickType];
+  const brickCost = calculateMaterialCost(bricksRequired, brick, pricingType);
+  const mortarCost = calculateMaterialCost(mortarRequired, MATERIALS_2026.mortar, pricingType);
+  const materialCost = brickCost + mortarCost;
+  
+  const labourCost = calculateLabourCost(labourHours, 'bricklayer', pricingType);
+  const labourerHours = labourHours * TRADE_PRODUCTIVITY.bricklaying.labourer_ratio;
+  const labourerCost = calculateLabourCost(labourerHours, 'labourer', pricingType);
+  
+  return {
+    netArea,
+    bricksRequired,
+    mortarRequired,
+    labourHours,
+    materialCost,
+    labourCost: labourCost + labourerCost,
+    totalCost: materialCost + labourCost + labourerCost,
+  };
+}
+
+// Calculate roof cost based on type and area
+export function calculateRoofCost(
+  footprintAreaSqm: number,
+  pitchDegrees: number,
+  roofType: keyof typeof MATERIALS_2026.roofing,
+  pricingType: "trade" | "retail" = "retail"
+): {
+  slopeAreaSqm: number;
+  materialCost: number;
+  labourCost: number;
+  totalCost: number;
+} {
+  // Calculate slope area from footprint and pitch
+  const pitchRadians = (pitchDegrees * Math.PI) / 180;
+  const slopeAreaSqm = footprintAreaSqm / Math.cos(pitchRadians);
+  
+  const roofMaterial = MATERIALS_2026.roofing[roofType];
+  const materialCost = calculateMaterialCost(slopeAreaSqm, roofMaterial, pricingType);
+  
+  const labourDays = slopeAreaSqm / TRADE_PRODUCTIVITY.roofing.tiles_m2_per_day;
+  const labourHours = labourDays * 8;
+  const labourCost = calculateLabourCost(labourHours, 'roofer', pricingType);
+  
+  return {
+    slopeAreaSqm,
+    materialCost,
+    labourCost,
+    totalCost: materialCost + labourCost,
+  };
+}
+
+// Calculate heating system cost
+export function calculateHeatingSystemCost(
+  floorAreaSqm: number,
+  systemType: 'radiators' | 'ufh',
+  boilerType: 'combi' | 'system' = 'combi',
+  pricingType: "trade" | "retail" = "retail"
+): {
+  boilerCost: number;
+  emitterCost: number;
+  pipeworkCost: number;
+  controlsCost: number;
+  labourCost: number;
+  totalCost: number;
+} {
+  const boiler = boilerType === 'combi' 
+    ? MATERIALS_2026.plumbing.boiler_combi 
+    : MATERIALS_2026.plumbing.boiler_system;
+  const boilerCost = pricingType === 'trade' ? boiler.trade : boiler.retail;
+  
+  let emitterCost: number;
+  if (systemType === 'ufh') {
+    const ufh = MATERIALS_2026.plumbing.ufh_m2;
+    emitterCost = calculateMaterialCost(floorAreaSqm, ufh, pricingType);
+  } else {
+    // Estimate number of radiators (1 per 10m² roughly)
+    const radCount = Math.ceil(floorAreaSqm / 10);
+    const rad = MATERIALS_2026.plumbing.radiator_600x1000;
+    const trv = MATERIALS_2026.plumbing.trv_valve;
+    emitterCost = radCount * ((pricingType === 'trade' ? rad.trade : rad.retail) + 
+                              (pricingType === 'trade' ? trv.trade : trv.retail));
+  }
+  
+  // Estimate pipework (about 0.8m per m² floor area)
+  const pipeLength = floorAreaSqm * 0.8;
+  const pipe = MATERIALS_2026.plumbing.copper_15;
+  const pipeworkCost = calculateMaterialCost(pipeLength, pipe, pricingType);
+  
+  const controlsCost = 350; // Typical controls package
+  
+  // Labour: about 1 day per 15m² for heating install
+  const labourDays = floorAreaSqm / 15;
+  const labourHours = labourDays * 8;
+  const labourCost = calculateLabourCost(labourHours, 'plumber', pricingType);
+  
+  return {
+    boilerCost,
+    emitterCost,
+    pipeworkCost,
+    controlsCost,
+    labourCost,
+    totalCost: boilerCost + emitterCost + pipeworkCost + controlsCost + labourCost,
+  };
+}
+
+// Calculate electrical installation cost
+export function calculateElectricalCost(
+  floorAreaSqm: number,
+  socketPoints: number,
+  lightingPoints: number,
+  pricingType: "trade" | "retail" = "retail"
+): {
+  materialCost: number;
+  labourCost: number;
+  totalCost: number;
+  costPerPoint: number;
+} {
+  const socket = MATERIALS_2026.electrical.socket;
+  const light = MATERIALS_2026.electrical.downlight;
+  const cu = MATERIALS_2026.electrical.consumer_unit;
+  const cable = MATERIALS_2026.electrical.cable_twin;
+  
+  // Calculate material costs
+  const socketCost = socketPoints * (pricingType === 'trade' ? socket.trade : socket.retail);
+  const lightCost = lightingPoints * (pricingType === 'trade' ? light.trade : light.retail);
+  const cuCost = pricingType === 'trade' ? cu.trade : cu.retail;
+  
+  // Estimate cable length (about 6m per point average)
+  const totalPoints = socketPoints + lightingPoints;
+  const cableLength = totalPoints * 6;
+  const cableCost = calculateMaterialCost(cableLength, cable, pricingType);
+  
+  const materialCost = socketCost + lightCost + cuCost + cableCost;
+  
+  // Labour calculation
+  const firstFixDays = totalPoints / TRADE_PRODUCTIVITY.electrical.first_fix_points;
+  const secondFixDays = totalPoints / TRADE_PRODUCTIVITY.electrical.second_fix_points;
+  const testCertDays = 0.5;
+  const totalDays = firstFixDays + secondFixDays + testCertDays;
+  const labourHours = totalDays * 8;
+  const labourCost = calculateLabourCost(labourHours, 'electrician', pricingType);
+  
+  return {
+    materialCost,
+    labourCost,
+    totalCost: materialCost + labourCost,
+    costPerPoint: (materialCost + labourCost) / totalPoints,
+  };
+}
