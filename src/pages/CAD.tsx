@@ -1023,6 +1023,11 @@ export default function CAD() {
           svgContent={selectedDrawing?.svg_content || ""}
           drawingType={selectedDrawing?.drawing_type || "floor_plan"}
           drawingId={selectedDrawing?.id}
+          dimensions={
+            selectedDrawing?.metadata && typeof selectedDrawing.metadata === 'object' 
+              ? (selectedDrawing.metadata as any).dimensions 
+              : { length: parseFloat(length), width: parseFloat(width), height: parseFloat(height) }
+          }
         />
       </div>
     </DashboardLayout>
