@@ -22,6 +22,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { sanitizeSvg } from "@/lib/svg-sanitizer";
 
 interface CADPreviewModalProps {
   open: boolean;
@@ -439,7 +440,7 @@ ${svgContent}`;
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
               transformOrigin: "0 0",
             }}
-            dangerouslySetInnerHTML={{ __html: svgContent }}
+            dangerouslySetInnerHTML={{ __html: sanitizeSvg(svgContent) }}
           />
 
           {/* Measurements Overlay */}
