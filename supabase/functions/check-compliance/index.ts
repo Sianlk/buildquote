@@ -71,6 +71,33 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check - verify JWT before expensive AI operations
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: authError } = await authClient.auth.getClaims(token);
+    if (authError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized - invalid token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+    console.log(`Authenticated user: ${userId}`);
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     const { projectId, geometry, projectType } = await req.json();
 
@@ -234,10 +261,10 @@ serve(async (req) => {
     const totalChecks = results.filter(r => r.status !== 'info').length;
     const complianceScore = totalChecks > 0 ? Math.round((passCount / totalChecks) * 100) : 100;
 
-    // Save results to database
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Save results to database using service role for write operations
+    const supabaseServiceUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseServiceUrl, supabaseServiceKey);
 
     // Clear old compliance reports for this project
     await supabase.from('compliance_reports').delete().eq('project_id', projectId);

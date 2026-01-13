@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 import { toast } from "sonner";
+import { sanitizeSvg } from "@/lib/svg-sanitizer";
 import {
   ArrowLeft,
   FileText,
@@ -510,7 +511,7 @@ export default function ProjectDetail() {
                       </div>
                       <div
                         className="bg-secondary/30 rounded-lg p-4 aspect-video flex items-center justify-center overflow-hidden"
-                        dangerouslySetInnerHTML={{ __html: drawing.svg_content || "" }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeSvg(drawing.svg_content || "") }}
                       />
                       <p className="text-xs text-muted-foreground mt-2">
                         Generated {new Date(drawing.created_at!).toLocaleDateString()}
@@ -659,7 +660,7 @@ export default function ProjectDetail() {
             </div>
             <div
               className="bg-white rounded-lg p-4"
-              dangerouslySetInnerHTML={{ __html: selectedDrawing.svg_content || "" }}
+              dangerouslySetInnerHTML={{ __html: sanitizeSvg(selectedDrawing.svg_content || "") }}
             />
           </div>
         </div>

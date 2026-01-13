@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { sanitizeSvg } from "@/lib/svg-sanitizer";
 import {
   Select,
   SelectContent,
@@ -990,7 +991,7 @@ export default function CAD() {
                   {drawing.svg_content && (
                     <div
                       className="absolute inset-0 p-2"
-                      dangerouslySetInnerHTML={{ __html: drawing.svg_content }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeSvg(drawing.svg_content) }}
                     />
                   )}
                 </div>
