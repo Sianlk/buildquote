@@ -15,12 +15,15 @@ import {
   ClipboardCheck,
   Receipt,
   Package,
-  Users,
   HelpCircle,
   Calendar,
   Scale,
   Hammer,
   Home,
+  Zap,
+  Droplets,
+  Wrench,
+  Coins,
 } from "lucide-react";
 
 const mainNavItems = [
@@ -30,20 +33,31 @@ const mainNavItems = [
 ];
 
 const moduleNavItems = [
+  { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
   { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
+  { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
+  { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
+  { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
-  { icon: Hammer, label: "Structural Calcs", href: "/dashboard/structural" },
-  { icon: Receipt, label: "Invoices", href: "/dashboard/invoices" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
+  { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
+];
+
+const financeNavItems = [
+  { icon: FileText, label: "Invoices", href: "/dashboard/invoices" },
+  { icon: Receipt, label: "Receipts", href: "/dashboard/receipts" },
+  { icon: Coins, label: "Tax Returns", href: "/dashboard/tax-returns" },
+];
+
+const legalNavItems = [
   { icon: Home, label: "Tenancy & Legal", href: "/dashboard/tenancy" },
   { icon: Scale, label: "Renters Rights", href: "/dashboard/renters-rights" },
 ];
 
 const bottomNavItems = [
-  { icon: Users, label: "Team", href: "/dashboard/team" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-  { icon: HelpCircle, label: "Help", href: "/dashboard/support" },
+  { icon: HelpCircle, label: "Help", href: "/dashboard/settings" },
 ];
 
 interface MobileSidebarProps {
@@ -76,7 +90,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-72 p-0">
+      <SheetContent side="left" className="w-72 p-0 flex flex-col">
         <SheetHeader className="p-4 border-b border-border">
           <SheetTitle className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
@@ -99,6 +113,28 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             </h4>
             <nav className="space-y-1">
               {moduleNavItems.map((item) => (
+                <NavItem key={item.href} {...item} />
+              ))}
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+              Finance
+            </h4>
+            <nav className="space-y-1">
+              {financeNavItems.map((item) => (
+                <NavItem key={item.href} {...item} />
+              ))}
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+              Legal & Tenancy
+            </h4>
+            <nav className="space-y-1">
+              {legalNavItems.map((item) => (
                 <NavItem key={item.href} {...item} />
               ))}
             </nav>
