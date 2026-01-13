@@ -26,6 +26,9 @@ import Carpentry from "./pages/Carpentry";
 import Schedules from "./pages/Schedules";
 import Tenancy from "./pages/Tenancy";
 import RentersRights from "./pages/RentersRights";
+import Calculators from "./pages/Calculators";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,9 +41,15 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Public routes */}
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/calculators" element={<Calculators />} />
+            
+            {/* Protected dashboard routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/new-project" element={<ProtectedRoute><NewProject /></ProtectedRoute>} />
             <Route path="/dashboard/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
@@ -58,7 +67,10 @@ const App = () => (
             <Route path="/dashboard/schedules" element={<ProtectedRoute><Schedules /></ProtectedRoute>} />
             <Route path="/dashboard/tenancy" element={<ProtectedRoute><Tenancy /></ProtectedRoute>} />
             <Route path="/dashboard/renters-rights" element={<ProtectedRoute><RentersRights /></ProtectedRoute>} />
+            <Route path="/dashboard/calculators" element={<ProtectedRoute><Calculators /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            
+            {/* 404 catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

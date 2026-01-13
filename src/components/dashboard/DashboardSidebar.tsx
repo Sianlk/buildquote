@@ -11,12 +11,15 @@ import {
   LogOut,
   Building2,
   ClipboardCheck,
-  Users,
   HelpCircle,
   Calendar,
   Scale,
   Hammer,
   Home,
+  Zap,
+  Droplets,
+  FileText,
+  Coins,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -31,22 +34,29 @@ const mainNavItems = [
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
   { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
-  { icon: Calculator, label: "Electrical", href: "/dashboard/electrical" },
-  { icon: Wrench, label: "Plumbing", href: "/dashboard/plumbing" },
+  { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
+  { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
   { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
-  { icon: Receipt, label: "Receipts", href: "/dashboard/receipts" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
+  { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
+];
+
+const financeNavItems = [
+  { icon: FileText, label: "Invoices", href: "/dashboard/invoices" },
+  { icon: Receipt, label: "Receipts", href: "/dashboard/receipts" },
+  { icon: Coins, label: "Tax Returns", href: "/dashboard/tax-returns" },
+];
+
+const legalNavItems = [
   { icon: Home, label: "Tenancy & Legal", href: "/dashboard/tenancy" },
   { icon: Scale, label: "Renters Rights", href: "/dashboard/renters-rights" },
 ];
 
 const bottomNavItems = [
-  { icon: Calculator, label: "Tax Returns", href: "/dashboard/tax-returns" },
-  { icon: Users, label: "Team", href: "/dashboard/team" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-  { icon: HelpCircle, label: "Help", href: "/dashboard/support" },
+  { icon: HelpCircle, label: "Help", href: "/dashboard/settings" },
 ];
 
 export function DashboardSidebar() {
@@ -99,6 +109,28 @@ export function DashboardSidebar() {
           </h4>
           <nav className="space-y-1">
             {moduleNavItems.map((item) => (
+              <NavItem key={item.href} {...item} />
+            ))}
+          </nav>
+        </div>
+
+        <div>
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+            Finance
+          </h4>
+          <nav className="space-y-1">
+            {financeNavItems.map((item) => (
+              <NavItem key={item.href} {...item} />
+            ))}
+          </nav>
+        </div>
+
+        <div>
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+            Legal & Tenancy
+          </h4>
+          <nav className="space-y-1">
+            {legalNavItems.map((item) => (
               <NavItem key={item.href} {...item} />
             ))}
           </nav>
