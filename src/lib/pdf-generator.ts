@@ -55,7 +55,7 @@ export interface QuoteData {
   paymentTerms: string;
 }
 
-const DEFAULT_BRANDING: CompanyBranding = {
+export const DEFAULT_BRANDING: CompanyBranding = {
   name: "BuildQuote Pro",
   address: "123 Construction Way, London EC1A 1BB",
   phone: "020 1234 5678",
