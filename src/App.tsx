@@ -38,14 +38,14 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <PWAInstallPrompt />
-        <OfflineIndicator />
-        <GlobalSearch />
-        <BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <PWAInstallPrompt />
+      <OfflineIndicator />
+      <BrowserRouter>
+        <AuthProvider>
+          <GlobalSearch />
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
@@ -79,9 +79,9 @@ const App = () => (
             {/* 404 catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
