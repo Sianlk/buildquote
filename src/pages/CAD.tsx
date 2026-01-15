@@ -410,7 +410,7 @@ export default function CAD() {
 
   return (
     <DashboardLayout>
-      <div className="p-4 md:p-8">
+      <div className="p-4 md:p-8 max-w-full overflow-x-hidden">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold">CAD Drawings</h1>
@@ -435,12 +435,12 @@ export default function CAD() {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="dimensions" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="dimensions">Dimensions</TabsTrigger>
-                  <TabsTrigger value="rooms">Rooms ({rooms.length})</TabsTrigger>
-                  <TabsTrigger value="electrical">Electrical</TabsTrigger>
-                  <TabsTrigger value="plumbing">Plumbing</TabsTrigger>
-                  <TabsTrigger value="validation">Validation</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-1">
+                  <TabsTrigger value="dimensions" className="text-xs md:text-sm">Dimensions</TabsTrigger>
+                  <TabsTrigger value="rooms" className="text-xs md:text-sm">Rooms ({rooms.length})</TabsTrigger>
+                  <TabsTrigger value="electrical" className="text-xs md:text-sm">Electrical</TabsTrigger>
+                  <TabsTrigger value="plumbing" className="text-xs md:text-sm">Plumbing</TabsTrigger>
+                  <TabsTrigger value="validation" className="text-xs md:text-sm col-span-2 md:col-span-1">Validation</TabsTrigger>
                 </TabsList>
                 
                 {/* Dimensions Tab */}
