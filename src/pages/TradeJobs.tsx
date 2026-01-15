@@ -207,9 +207,9 @@ export default function TradeJobs() {
     <DashboardLayout>
       <div className="p-4 md:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold">Trade Jobs Calculator</h1>
-            <p className="text-sm text-muted-foreground">
+          <div className="min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold truncate">Trade Jobs Calculator</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Calculate materials, labour, and create customer quotes
             </p>
           </div>
@@ -474,7 +474,7 @@ export default function TradeJobs() {
         </div>
         
         {/* Trade Categories Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
           {TRADE_CATEGORIES.map((trade) => {
             const Icon = TRADE_ICONS[trade.id] || Wrench;
             return (
@@ -486,15 +486,15 @@ export default function TradeJobs() {
                   setDialogOpen(true);
                 }}
               >
-                <CardContent className="p-4 flex flex-col items-center text-center">
-                  <div className="p-3 rounded-lg bg-primary/10 mb-2">
-                    <Icon className="h-6 w-6 text-primary" />
+                <CardContent className="p-3 sm:p-4 flex flex-col items-center text-center">
+                  <div className="p-2 sm:p-3 rounded-lg bg-primary/10 mb-2">
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <p className="font-medium text-sm">{trade.name}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="font-medium text-xs sm:text-sm truncate w-full">{trade.name}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                     {trade.jobs.length} job types
                   </p>
-                  <p className="text-xs text-primary mt-1">
+                  <p className="text-[10px] sm:text-xs text-primary mt-1">
                     £{trade.hourlyRateRetail}/hr
                   </p>
                 </CardContent>
