@@ -112,6 +112,25 @@ export default defineConfig(({ mode }) => ({
       }
     })
   ].filter(Boolean),
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-select', '@radix-ui/react-accordion'],
+          'vendor-charts': ['recharts'],
+          'vendor-pdf': ['jspdf', 'html2canvas'],
+          // Feature chunks
+          'lib-trade': ['./src/lib/trade-jobs-data.ts', './src/lib/detailed-components-data.ts'],
+          'lib-compliance': ['./src/lib/hmo-compliance-data.ts', './src/lib/tenancy-legal-data.ts'],
+          'lib-construction': ['./src/lib/construction-knowledge.ts', './src/lib/construction-rates.ts'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
