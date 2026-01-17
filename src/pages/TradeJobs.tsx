@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,16 +48,22 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  ChevronRight,
   Printer,
-  Download,
   ShoppingCart,
   Loader2,
+  Package,
 } from "lucide-react";
 import { TRADE_CATEGORIES, calculateJobCost, getJobsForTrade, TradeJob } from "@/lib/trade-jobs-data";
 import { MaterialsShoppingList } from "@/components/materials/MaterialsShoppingList";
 import { QuoteGenerator } from "@/components/quotes/QuoteGenerator";
 import { MaterialItem, consolidateMaterials, generateSupplierOrders } from "@/lib/materials-shopping-list";
+import { ComponentSelector } from "@/components/trade/ComponentSelector";
+import { DetailedComponent } from "@/lib/detailed-components-data";
+
+interface SelectedComponent {
+  component: DetailedComponent;
+  quantity: number;
+}
 
 const TRADE_ICONS: Record<string, any> = {
   plumbing: Wrench,
@@ -104,10 +110,34 @@ export default function TradeJobs() {
   const [selectedJobIds, setSelectedJobIds] = useState<string[]>([]);
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showQuoteGenerator, setShowQuoteGenerator] = useState(false);
+  
+  // Component selector state
+  const [selectedComponents, setSelectedComponents] = useState<SelectedComponent[]>([]);
+  
+  // Get trade type for component selector
+  const componentTrade = useMemo(() => {
+    if (selectedTrade === 'plumbing') return 'plumbing';
+    if (selectedTrade === 'electrical') return 'electrical';
+    if (selectedTrade === 'carpentry') return 'carpentry';
+    return 'plumbing'; // default
+  }, [selectedTrade]);
+  
+  // Calculate additional materials cost from component selector
+  const additionalMaterialsCost = useMemo(() => {
+    return selectedComponents.reduce((sum, sc) => {
+      const price = isTradePrice ? sc.component.tradeCost : sc.component.retailCost;
+      return sum + price * sc.quantity;
+    }, 0);
+  }, [selectedComponents, isTradePrice]);
 
   useEffect(() => {
     if (user) fetchSavedJobs();
   }, [user]);
+  
+  // Reset components when trade changes
+  useEffect(() => {
+    setSelectedComponents([]);
+  }, [selectedTrade]);
 
   const fetchSavedJobs = async () => {
     if (!user) return;
@@ -132,7 +162,26 @@ export default function TradeJobs() {
     if (!calculatedCost || !user) return;
     
     setSaving(true);
-    const customerPrice = calculatedCost.totalCost * (1 + markup / 100);
+    
+    // Calculate total including additional components
+    const baseCost = calculatedCost.totalCost;
+    const totalWithComponents = baseCost + additionalMaterialsCost;
+    const customerPrice = totalWithComponents * (1 + markup / 100);
+    
+    // Merge materials with additional components
+    const allMaterials = [
+      ...calculatedCost.materials,
+      ...selectedComponents.map(sc => ({
+        name: sc.component.name,
+        unit: sc.component.unit,
+        quantity: sc.quantity,
+        totalQuantity: sc.quantity,
+        unitCostTrade: sc.component.tradeCost,
+        unitCostRetail: sc.component.retailCost,
+        totalCost: sc.quantity * (isTradePrice ? sc.component.tradeCost : sc.component.retailCost),
+        partCode: sc.component.partCode,
+      }))
+    ];
     
     try {
       const { error } = await supabase.from("trade_jobs").insert({
@@ -144,11 +193,11 @@ export default function TradeJobs() {
         customer_address: customerAddress,
         customer_phone: customerPhone,
         customer_email: customerEmail,
-        materials: calculatedCost.materials,
+        materials: allMaterials,
         labour_hours: calculatedCost.labourHours,
         labour_rate: calculatedCost.labourRate,
-        materials_cost: calculatedCost.materialsCost,
-        total_cost: calculatedCost.totalCost,
+        materials_cost: calculatedCost.materialsCost + additionalMaterialsCost,
+        total_cost: totalWithComponents,
         customer_price: customerPrice,
         profit_margin: markup,
         job_date: jobDate || null,
@@ -180,6 +229,7 @@ export default function TradeJobs() {
     setJobDate("");
     setNotes("");
     setMarkup(20);
+    setSelectedComponents([]);
   };
 
   const updateJobStatus = async (jobId: string, status: string) => {
@@ -316,15 +366,27 @@ export default function TradeJobs() {
                               <p className="text-xs text-muted-foreground">Labour Cost</p>
                               <p className="text-lg font-semibold">£{calculatedCost.labourCost.toFixed(2)}</p>
                             </div>
-                            <div className="p-3 rounded-lg bg-secondary/30">
+                          <div className="p-3 rounded-lg bg-secondary/30">
                               <p className="text-xs text-muted-foreground">Materials Cost</p>
-                              <p className="text-lg font-semibold">£{calculatedCost.materialsCost.toFixed(2)}</p>
+                              <p className="text-lg font-semibold">£{(calculatedCost.materialsCost + additionalMaterialsCost).toFixed(2)}</p>
                             </div>
                             <div className="p-3 rounded-lg bg-primary/10">
                               <p className="text-xs text-muted-foreground">Total Cost</p>
-                              <p className="text-lg font-semibold text-primary">£{calculatedCost.totalCost.toFixed(2)}</p>
+                              <p className="text-lg font-semibold text-primary">£{(calculatedCost.totalCost + additionalMaterialsCost).toFixed(2)}</p>
                             </div>
                           </div>
+                          
+                          {/* Component Selector - Add detailed components */}
+                          {(selectedTrade === 'plumbing' || selectedTrade === 'electrical' || selectedTrade === 'carpentry') && (
+                            <div className="pt-4 border-t">
+                              <ComponentSelector
+                                trade={componentTrade}
+                                selectedComponents={selectedComponents}
+                                onComponentsChange={setSelectedComponents}
+                                useTradePrices={isTradePrice}
+                              />
+                            </div>
+                          )}
                           
                           {/* Materials Breakdown */}
                           <Accordion type="single" collapsible className="w-full">
@@ -449,12 +511,14 @@ export default function TradeJobs() {
                                 className="mt-1"
                               />
                             </div>
-                            <div className="flex-1">
+                          <div className="flex-1">
                               <Label>Customer Price</Label>
                               <div className="mt-1 p-3 bg-primary/10 rounded-lg text-center">
                                 <span className="text-2xl font-bold text-primary">
-                                  £{(calculatedCost.totalCost * (1 + markup / 100)).toFixed(2)}
+                                  £{((calculatedCost.totalCost + additionalMaterialsCost) * (1 + markup / 100)).toFixed(2)}
                                 </span>
+                              </div>
+                            </div>
                               </div>
                             </div>
                           </div>
