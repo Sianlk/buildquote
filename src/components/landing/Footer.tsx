@@ -24,7 +24,7 @@ const footerLinks = {
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Disclaimer", href: "/terms#disclaimer" },
+    { label: "Contact Us", href: "/contact" },
   ],
 };
 
@@ -73,11 +73,11 @@ export const Footer = forwardRef<HTMLElement>((_, ref) => {
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span>London, United Kingdom</span>
+                <span>UK-Wide Service</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>hello@buildquote.co.uk</span>
+                <a href="mailto:hello@buildquote.uk" className="hover:text-foreground">hello@buildquote.uk</a>
               </div>
             </div>
           </div>

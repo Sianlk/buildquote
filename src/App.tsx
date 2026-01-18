@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PWAInstallPrompt } from "@/components/shared/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
 import { GlobalSearch } from "@/components/shared/GlobalSearch";
+import { AIChatWidget } from "@/components/shared/AIChatWidget";
 import { Loader2 } from "lucide-react";
 
 // Eagerly loaded pages (critical path)
@@ -39,6 +40,8 @@ const RentersRights = lazy(() => import("./pages/RentersRights"));
 const Calculators = lazy(() => import("./pages/Calculators"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 const queryClient = new QueryClient();
 
@@ -62,6 +65,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <GlobalSearch />
+          <AIChatWidget />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public routes */}
@@ -70,6 +74,7 @@ const App = () => (
               <Route path="/signup" element={<Signup />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/calculators" element={<Calculators />} />
               
               {/* Protected dashboard routes */}
@@ -92,6 +97,7 @@ const App = () => (
               <Route path="/dashboard/renters-rights" element={<ProtectedRoute><RentersRights /></ProtectedRoute>} />
               <Route path="/dashboard/calculators" element={<ProtectedRoute><Calculators /></ProtectedRoute>} />
               <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/dashboard/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
               
               {/* 404 catch-all */}
               <Route path="*" element={<NotFound />} />

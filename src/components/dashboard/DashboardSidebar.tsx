@@ -20,10 +20,13 @@ import {
   Droplets,
   FileText,
   Coins,
+  Crown,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 
 const mainNavItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
@@ -56,12 +59,20 @@ const legalNavItems = [
 
 const bottomNavItems = [
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-  { icon: HelpCircle, label: "Help", href: "/dashboard/settings" },
+  { icon: HelpCircle, label: "Help & Contact", href: "/contact" },
 ];
 
 export function DashboardSidebar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      supabase.rpc("has_role", { _user_id: user.id, _role: "admin" })
+        .then(({ data }) => setIsAdmin(data === true));
+    }
+  }, [user]);
 
   const NavItem = ({ icon: Icon, label, href }: { icon: any; label: string; href: string }) => {
     const isActive = location.pathname === href;
@@ -144,6 +155,9 @@ export function DashboardSidebar() {
             {bottomNavItems.map((item) => (
               <NavItem key={item.href} {...item} />
             ))}
+            {isAdmin && (
+              <NavItem icon={Crown} label="Admin Panel" href="/dashboard/admin" />
+            )}
           </nav>
         </div>
       </div>
