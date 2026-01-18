@@ -511,14 +511,12 @@ export default function TradeJobs() {
                                 className="mt-1"
                               />
                             </div>
-                          <div className="flex-1">
+                            <div className="flex-1">
                               <Label>Customer Price</Label>
                               <div className="mt-1 p-3 bg-primary/10 rounded-lg text-center">
                                 <span className="text-2xl font-bold text-primary">
                                   £{((calculatedCost.totalCost + additionalMaterialsCost) * (1 + markup / 100)).toFixed(2)}
                                 </span>
-                              </div>
-                            </div>
                               </div>
                             </div>
                           </div>

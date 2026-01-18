@@ -306,6 +306,7 @@ export const HHSRS_HAZARDS = [
 export const EPC_REQUIREMENTS = {
   currentMinimum: 'E',
   proposedMinimum: 'C',
+  proposedDate: 'EPC C required for new tenancies by 2028, all tenancies by 2030',
   proposedDeadlines: {
     newTenancies: '2028',
     existingTenancies: '2030',
@@ -373,6 +374,9 @@ export const AWAABS_LAW = {
     'Criminal prosecution for serious cases',
   ],
 };
+
+// Export alias for DAMP_MOULD_STANDARDS (same as AWAABS_LAW for compatibility)
+export const DAMP_MOULD_STANDARDS = AWAABS_LAW;
 
 // Short-Term Lets & Airbnb Regulations 2026
 export const SHORT_TERM_LET_REGULATIONS = {
@@ -706,12 +710,12 @@ export const COMPLIANCE_PATHWAYS: CompliancePathway[] = [
 // Landlord Risk Protection
 export const LANDLORD_RISK_PROTECTION = {
   insurance: [
-    { type: 'Landlord Buildings Insurance', description: 'Covers structure damage, fire, flood, subsidence', essential: true },
-    { type: 'Landlord Contents Insurance', description: 'For furnished properties - covers your contents', essential: false },
-    { type: 'Rent Guarantee Insurance', description: 'Covers unpaid rent (typically 6-12 months)', essential: true },
-    { type: 'Legal Expenses Insurance', description: 'Covers eviction and legal costs (often bundled with RGI)', essential: true },
-    { type: 'Public Liability Insurance', description: 'Covers injury claims from tenants/visitors', essential: true },
-    { type: 'Pet Damage Insurance', description: 'Required if allowing pets under Renters Rights Act', essential: false },
+    { type: 'Landlord Buildings Insurance', description: 'Covers structure damage, fire, flood, subsidence', essential: true, recommended: true, coverage: '£500k-£2m rebuild cost' },
+    { type: 'Landlord Contents Insurance', description: 'For furnished properties - covers your contents', essential: false, recommended: true, coverage: '£10k-£50k contents value' },
+    { type: 'Rent Guarantee Insurance', description: 'Covers unpaid rent (typically 6-12 months)', essential: true, recommended: true, coverage: '£2,500-£5,000/month for 6-12 months' },
+    { type: 'Legal Expenses Insurance', description: 'Covers eviction and legal costs (often bundled with RGI)', essential: true, recommended: true, coverage: '£50k-£100k legal costs' },
+    { type: 'Public Liability Insurance', description: 'Covers injury claims from tenants/visitors', essential: true, recommended: true, coverage: '£2m-£5m public liability' },
+    { type: 'Pet Damage Insurance', description: 'Required if allowing pets under Renters Rights Act', essential: false, recommended: false, coverage: '£1k-£3k pet damage' },
   ],
   tenantReferencing: [
     'Credit check (Experian/Equifax/TransUnion)',

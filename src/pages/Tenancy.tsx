@@ -650,7 +650,7 @@ export default function Tenancy() {
                   <div>
                     <h4 className="font-medium mb-2">Landlord Requirements</h4>
                     <ul className="space-y-1">
-                      {DAMP_MOULD_STANDARDS.landlordActions.map((action, i) => (
+                      {DAMP_MOULD_STANDARDS.landlordObligations.map((action, i) => (
                         <li key={i} className="flex items-start gap-2">
                           <CheckCircle className="h-3 w-3 text-primary mt-0.5" />
                           <span>{action}</span>
@@ -661,10 +661,10 @@ export default function Tenancy() {
                   <div>
                     <h4 className="font-medium mb-2">Response Timelines</h4>
                     <ul className="space-y-1">
-                      {DAMP_MOULD_STANDARDS.requirements.map((req, i) => (
+                      {Object.entries(DAMP_MOULD_STANDARDS.strictTimelines).map(([key, value], i) => (
                         <li key={i} className="flex items-start gap-2">
                           <Calendar className="h-3 w-3 text-warning mt-0.5" />
-                          <span>{req}</span>
+                          <span><strong>{key.replace(/([A-Z])/g, ' $1').trim()}:</strong> {value}</span>
                         </li>
                       ))}
                     </ul>
