@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { Link } from "react-router-dom";
-import { Building2, Mail, MapPin } from "lucide-react";
+import { Building2, MapPin } from "lucide-react";
 
 const footerLinks = {
   product: [
@@ -19,7 +19,7 @@ const footerLinks = {
     { label: "Building Regs", href: "/dashboard/compliance" },
     { label: "Fire Safety", href: "/dashboard/compliance" },
     { label: "Tenancy & Legal", href: "/dashboard/tenancy" },
-    { label: "Renters Rights", href: "/dashboard/renters-rights" },
+    { label: "Landlord Obligations", href: "/dashboard/landlord-obligations" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
@@ -76,8 +76,8 @@ export const Footer = forwardRef<HTMLElement>((_, ref) => {
                 <span>UK-Wide Service</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <a href="mailto:hello@buildquote.uk" className="hover:text-foreground">hello@buildquote.uk</a>
+                <Building2 className="h-4 w-4" />
+                <span>Enterprise-Grade Platform</span>
               </div>
             </div>
           </div>

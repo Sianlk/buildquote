@@ -12,9 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2, Mail, Phone, MapPin, Send } from "lucide-react";
+import { Loader2, MessageCircle, MapPin, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { SYSTEM_SETTINGS } from "@/lib/system-settings";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -60,8 +61,8 @@ export function ContactForm({ className }: ContactFormProps) {
     try {
       const { error } = await supabase.functions.invoke("send-email", {
         body: {
-          to: "hello@buildquote.uk",
-          subject: `Contact Form: ${formData.subject}`,
+          to: SYSTEM_SETTINGS.adminEmail,
+          subject: `BuildQuote Contact: ${formData.subject}`,
           html: `
             <h2>New Contact Form Submission</h2>
             <p><strong>Name:</strong> ${formData.name}</p>
@@ -71,6 +72,7 @@ export function ContactForm({ className }: ContactFormProps) {
             <h3>Message:</h3>
             <p>${formData.message.replace(/\n/g, "<br>")}</p>
           `,
+          replyTo: formData.email,
         },
       });
 
@@ -93,32 +95,32 @@ export function ContactForm({ className }: ContactFormProps) {
           <div>
             <h2 className="text-3xl font-bold mb-2">Get in Touch</h2>
             <p className="text-muted-foreground">
-              Have questions about BuildQuote? We're here to help landlords, trades, and property professionals.
+              Have questions about BuildQuote? We're here to help landlords, developers, contractors, and property professionals.
             </p>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-primary/10">
-                <Mail className="h-5 w-5 text-primary" />
+                <MessageCircle className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium">Email</p>
-                <a href="mailto:hello@buildquote.uk" className="text-muted-foreground hover:text-primary">
-                  hello@buildquote.uk
-                </a>
+                <p className="font-medium">AI Support</p>
+                <p className="text-muted-foreground">
+                  Use the AI Chat widget for instant help
+                </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-primary/10">
-                <Phone className="h-5 w-5 text-primary" />
+                <Send className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium">Phone</p>
-                <a href="tel:+441onal234567890" className="text-muted-foreground hover:text-primary">
-                  Available via AI Chat
-                </a>
+                <p className="font-medium">Contact Form</p>
+                <p className="text-muted-foreground">
+                  Submit this form for direct admin support
+                </p>
               </div>
             </div>
 
