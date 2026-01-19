@@ -54,7 +54,7 @@ const financeNavItems = [
 
 const legalNavItems = [
   { icon: Home, label: "Tenancy & Legal", href: "/dashboard/tenancy" },
-  { icon: Scale, label: "Renters Rights", href: "/dashboard/renters-rights" },
+  { icon: Scale, label: "Landlord Obligations", href: "/dashboard/landlord-obligations" },
 ];
 
 const bottomNavItems = [

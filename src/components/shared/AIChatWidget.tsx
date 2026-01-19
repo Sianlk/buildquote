@@ -70,7 +70,7 @@ export function AIChatWidget() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data?.response || "I apologize, but I couldn't process your request. Please try again or contact us at hello@buildquote.uk.",
+        content: data?.response || "I apologize, but I couldn't process your request. Please try again or use the Contact Form for direct admin support.",
         timestamp: new Date(),
       };
 
@@ -93,15 +93,16 @@ export function AIChatWidget() {
     const lowerQuery = query.toLowerCase();
 
     if (lowerQuery.includes("hmo") || lowerQuery.includes("licensing")) {
-      return `**HMO Licensing Requirements (2026):**
+      return `**HMO Licensing Requirements (2026) - Landlord Compliance:**
       
 • **Mandatory HMO Licence**: Required for 5+ people from 2+ households
 • **Minimum Room Sizes**: 6.51m² (1 person), 10.22m² (2 persons)
 • **Kitchen**: 7m² for up to 5 people, 10m² for 6-10
 • **Bathrooms**: 1 per 5 tenants minimum
 • **Additional Licensing**: Many councils now require licences for 3-4 tenant properties
+• **Civil Penalties**: Up to £40,000 for non-compliance
 
-Need help with your specific property? Contact us at hello@buildquote.uk`;
+Use our Compliance module for detailed property assessments.`;
     }
 
     if (lowerQuery.includes("renters") || lowerQuery.includes("section 21")) {
@@ -139,15 +140,15 @@ Our pricing uses current 2026 UK trade rates with regional adjustments. Use the 
 Use our Compliance module to check your EPC status and improvement options.`;
     }
 
-    return `Thank you for your question. BuildQuote can help with:
+    return `Thank you for your question. BuildQuote helps landlords, developers, and contractors with:
 
-• **HMO Licensing** - Room sizes, kitchen/bathroom ratios
-• **Renters Rights Act 2025** - Section 21 abolition, new rules
-• **Trade Pricing** - Accurate UK trade & retail rates
-• **EPC & Compliance** - Energy efficiency requirements
-• **Tax & Finance** - Making Tax Digital, SPVs
+• **HMO Licensing** - Room sizes, kitchen/bathroom ratios, council compliance
+• **Landlord Obligations** - Gas safety, electrical, fire safety, HHSRS
+• **Trade Pricing** - Accurate UK trade & retail rates with regional adjustments
+• **EPC & Compliance** - Energy efficiency requirements, retrofit pathways
+• **Property Finance** - BTL, HMO mortgages, development finance, SPVs
 
-For specific help, please contact us at hello@buildquote.uk or try our specialized modules in the dashboard.`;
+Use the specialized modules in the dashboard for detailed guidance.`;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

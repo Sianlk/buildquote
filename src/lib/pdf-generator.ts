@@ -57,10 +57,10 @@ export interface QuoteData {
 
 export const DEFAULT_BRANDING: CompanyBranding = {
   name: "BuildQuote Pro",
-  address: "123 Construction Way, London EC1A 1BB",
-  phone: "020 1234 5678",
-  email: "accounts@buildquotepro.com",
-  website: "www.buildquotepro.com",
+  address: "UK-Wide Service",
+  phone: "Via Platform Support",
+  email: "Contact Form",
+  website: "buildquote.lovable.app",
   primaryColor: "#2563eb",
   accentColor: "#1e40af",
 };

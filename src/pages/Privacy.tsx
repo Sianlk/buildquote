@@ -110,7 +110,7 @@ export default function Privacy() {
                   <li><strong>Object:</strong> Object to certain processing activities</li>
                 </ul>
                 <p className="mt-4">
-                  To exercise these rights, contact us at privacy@buildquote.co.uk
+                  To exercise these rights, use our Contact Form or AI Chat support.
                 </p>
               </div>
             </section>
@@ -150,12 +150,11 @@ export default function Privacy() {
               </h2>
               <div className="prose prose-sm text-muted-foreground">
                 <p>
-                  For privacy-related inquiries:
+                  For privacy-related inquiries, use our Contact Form or AI Chat support.
                 </p>
                 <p className="mt-2">
                   <strong>Data Protection Officer</strong><br />
-                  BuildQuote Limited<br />
-                  Email: privacy@buildquote.co.uk
+                  BuildQuote Limited
                 </p>
                 <p className="mt-4">
                   You also have the right to lodge a complaint with the Information Commissioner's Office (ICO) 

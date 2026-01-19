@@ -194,11 +194,10 @@ export default function Terms() {
               <h2 className="text-2xl font-semibold mb-4">7. Contact</h2>
               <div className="prose prose-sm text-muted-foreground">
                 <p>
-                  For questions about these terms, please contact:
+                  For questions about these terms, please use our Contact Form or AI Chat support.
                 </p>
                 <p className="mt-2">
                   <strong>BuildQuote Limited</strong><br />
-                  Email: legal@buildquote.co.uk<br />
                   Registered in England & Wales
                 </p>
               </div>
