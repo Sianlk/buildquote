@@ -46,6 +46,13 @@ const moduleNavItems = [
   { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
 ];
 
+import { Leaf, PiggyBank } from "lucide-react";
+
+const advancedNavItems = [
+  { icon: Leaf, label: "Renewables & EPC", href: "/dashboard/renewables" },
+  { icon: PiggyBank, label: "Property Finance", href: "/dashboard/finance" },
+];
+
 const financeNavItems = [
   { icon: FileText, label: "Invoices", href: "/dashboard/invoices" },
   { icon: Receipt, label: "Receipts", href: "/dashboard/receipts" },
