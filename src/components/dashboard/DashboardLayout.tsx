@@ -3,6 +3,7 @@ import { DashboardSidebar } from "./DashboardSidebar";
 import { MobileSidebar } from "./MobileSidebar";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -43,6 +44,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="lg:ml-64 min-h-screen pt-14 lg:pt-0">
         {children}
       </main>
+
+      {/* Onboarding (available across dashboard) */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <OnboardingWizard />
+      </div>
     </div>
   );
 }
