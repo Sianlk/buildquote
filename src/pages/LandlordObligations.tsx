@@ -92,10 +92,11 @@ const FIRE_SAFETY_ITEMS = [
 
 // Legal forms
 const LEGAL_FORMS = [
-  { name: "Form 6A - Section 21", link: "https://www.gov.uk/government/publications/form-6a-notice-seeking-possession-of-a-property-let-on-an-assured-shorthold-tenancy", type: "Eviction" },
   { name: "Form 3 - Section 8", link: "https://www.gov.uk/government/publications/form-3-notice-seeking-possession-of-a-property-let-on-an-assured-tenancy-or-assured-agricultural-occupancy", type: "Eviction" },
+  { name: "Form 4 - Section 13 (Rent Increase)", link: "https://www.gov.uk/government/publications/form-4-landlords-notice-proposing-a-new-rent-under-an-assured-periodic-tenancy-or-statutory-periodic-tenancy", type: "Rent" },
   { name: "How to Rent Booklet", link: "https://www.gov.uk/government/publications/how-to-rent", type: "Required" },
   { name: "N5 - Claim for Possession", link: "https://www.gov.uk/government/publications/form-n5-claim-form-for-possession-of-property", type: "Court" },
+  { name: "N119 - Particulars of Claim (Rent Arrears)", link: "https://www.gov.uk/government/publications/form-n119-particulars-of-claim-for-possession-rent-arrears", type: "Court" },
 ];
 
 // Repair timescales
@@ -104,6 +105,25 @@ const REPAIR_OBLIGATIONS = [
   { category: "Urgent", timeframe: "3-7 days", examples: ["Broken heating", "Minor leaks", "Broken locks"] },
   { category: "Routine", timeframe: "28 days", examples: ["Minor plaster", "Non-urgent damp", "Garden"] },
 ];
+
+const LICENSING_APPLICATION = {
+  howTo: [
+    "Identify whether your property needs Mandatory HMO, Additional, or Selective licensing.",
+    "Use your local council's private renting / property licensing page to apply.",
+    "Prepare supporting documents (EICR, gas safety certificate, floor plan/room sizes where required, fire safety evidence, tenancy agreement).",
+    "Pay the application fee and diarise renewal (usually every 5 years).",
+  ],
+  typicalCosts: [
+    { label: "HMO licence (typical)", value: "£500–£1,500" },
+    { label: "Additional licensing (typical)", value: "£350–£1,250" },
+    { label: "Selective licensing (typical)", value: "£300–£1,000" },
+  ],
+  officialLinks: [
+    { label: "Find your local council", href: "https://www.gov.uk/find-local-council" },
+    { label: "HMO licence guidance", href: "https://www.gov.uk/house-in-multiple-occupation-licence" },
+    { label: "Private renting guidance", href: "https://www.gov.uk/private-renting" },
+  ],
+};
 
 export default function LandlordObligations() {
   return (
@@ -178,6 +198,39 @@ export default function LandlordObligations() {
                     </div>
                   ))}
                 </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg border">
+                    <h4 className="font-medium mb-2">How to apply for a licence</h4>
+                    <ol className="text-sm text-muted-foreground space-y-1 list-decimal ml-4">
+                      {LICENSING_APPLICATION.howTo.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ol>
+                  </div>
+                  <div className="p-4 rounded-lg border">
+                    <h4 className="font-medium mb-2">Typical costs (vary by council)</h4>
+                    <div className="space-y-2 text-sm">
+                      {LICENSING_APPLICATION.typicalCosts.map((c) => (
+                        <div key={c.label} className="flex items-center justify-between">
+                          <span className="text-muted-foreground">{c.label}</span>
+                          <span className="font-mono">{c.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {LICENSING_APPLICATION.officialLinks.map((l) => (
+                        <Button key={l.href} variant="outline" size="sm" asChild>
+                          <a href={l.href} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="h-3 w-3 mr-2" />
+                            {l.label}
+                          </a>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <Button variant="outline" asChild>
                   <a href="https://www.gov.uk/house-in-multiple-occupation-licence" target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="h-4 w-4 mr-2" />HMO Licensing Guide

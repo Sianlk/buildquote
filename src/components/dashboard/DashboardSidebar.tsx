@@ -21,6 +21,8 @@ import {
   FileText,
   Coins,
   Crown,
+  Leaf,
+  PiggyBank,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -44,11 +46,6 @@ const moduleNavItems = [
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
   { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
-];
-
-import { Leaf, PiggyBank } from "lucide-react";
-
-const advancedNavItems = [
   { icon: Leaf, label: "Renewables & EPC", href: "/dashboard/renewables" },
   { icon: PiggyBank, label: "Property Finance", href: "/dashboard/finance" },
 ];
