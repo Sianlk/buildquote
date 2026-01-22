@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,12 +23,11 @@ import {
   Car,
 } from "lucide-react";
 import {
+  EPC_BANDS,
+  GRANTS,
   RENEWABLE_TECHNOLOGIES,
-  EPC_BAND_SCORES,
-  calculateEPCUpgradePath,
-  calculateSolarROI,
-  calculateHeatPumpSavings,
-  GRANT_SCHEMES,
+  calculateEPCPathway,
+  type EPCBand,
 } from "@/lib/renewables-module-data";
 
 const TECH_ICONS: Record<string, React.ReactNode> = {
@@ -41,27 +40,67 @@ const TECH_ICONS: Record<string, React.ReactNode> = {
 };
 
 export default function Renewables() {
-  const [currentEPC, setCurrentEPC] = useState("D");
-  const [targetEPC, setTargetEPC] = useState("C");
-  const [propertyType, setPropertyType] = useState("semi_detached");
+  const [currentSAP, setCurrentSAP] = useState<number>(62);
+  const [targetBand, setTargetBand] = useState<EPCBand>("C");
+  const [propertyType, setPropertyType] = useState<"detached" | "semi" | "terraced" | "flat">("semi");
   const [annualElectricity, setAnnualElectricity] = useState(3500);
   const [annualGas, setAnnualGas] = useState(12000);
   const [roofArea, setRoofArea] = useState(30);
 
-  const upgradePath = useMemo(() => 
-    calculateEPCUpgradePath(currentEPC, targetEPC),
-    [currentEPC, targetEPC]
+  const epcPlan = useMemo(
+    () => calculateEPCPathway(currentSAP, targetBand, propertyType),
+    [currentSAP, targetBand, propertyType]
   );
 
-  const solarROI = useMemo(() => 
-    calculateSolarROI(roofArea, annualElectricity),
-    [roofArea, annualElectricity]
+  const solar = useMemo(() => {
+    // Very lightweight, deterministic estimate based on our tech catalogue.
+    const size = roofArea >= 45 ? "solar_pv_6kw" : roofArea >= 30 ? "solar_pv_4kw" : "solar_pv_3kw";
+    const tech = RENEWABLE_TECHNOLOGIES[size];
+    const installCost = {
+      min: tech.typicalCost.min,
+      max: tech.typicalCost.max,
+    };
+    const annualSavings = Math.round((tech.annualSaving.min + tech.annualSaving.max) / 2);
+    const systemSize = size === "solar_pv_6kw" ? 6 : size === "solar_pv_4kw" ? 4 : 3;
+    const annualGeneration = Math.round(Math.min(annualElectricity * 0.9, systemSize * 900));
+    const avgCost = (installCost.min + installCost.max) / 2;
+    const paybackYears = annualSavings > 0 ? Math.round((avgCost / annualSavings) * 10) / 10 : 0;
+
+    return {
+      tech,
+      systemSize,
+      annualGeneration,
+      installCost,
+      annualSavings,
+      paybackYears,
+      carbonSaved: tech.carbonSaving,
+    };
+  }, [roofArea, annualElectricity]);
+
+  const heatPump = useMemo(() => {
+    // Heuristic sizing: average UK home ~ 8kW ASHP; larger heat demand pushes to 12kW.
+    const key = annualGas >= 15000 ? "ashp_12kw" : "ashp_8kw";
+    const tech = RENEWABLE_TECHNOLOGIES[key];
+    const installCost = {
+      min: tech.typicalCost.min,
+      max: tech.typicalCost.max,
+    };
+    const annualSavings = Math.round((tech.annualSaving.min + tech.annualSaving.max) / 2);
+    return {
+      tech,
+      systemSize: key === "ashp_12kw" ? 12 : 8,
+      installCost,
+      annualSavings,
+      carbonSaved: tech.carbonSaving,
+    };
+  }, [annualGas]);
+
+  const grants = useMemo(
+    () => Object.entries(GRANTS).map(([id, g]) => ({ id, ...g })),
+    []
   );
 
-  const heatPumpSavings = useMemo(() => 
-    calculateHeatPumpSavings(annualGas, "ashp"),
-    [annualGas]
-  );
+  const epcBandOptions = useMemo(() => Object.keys(EPC_BANDS) as EPCBand[], []);
 
   return (
     <DashboardLayout>
@@ -100,13 +139,27 @@ export default function Renewables() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Current EPC Rating</Label>
-                    <Select value={currentEPC} onValueChange={setCurrentEPC}>
+                    <Label>Current SAP score</Label>
+                    <Input
+                      type="number"
+                      value={currentSAP}
+                      min={1}
+                      max={100}
+                      onChange={(e) => setCurrentSAP(Number(e.target.value))}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      SAP is the numeric score behind EPC bands.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Target EPC band</Label>
+                    <Select value={targetBand} onValueChange={(v) => setTargetBand(v as EPCBand)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.keys(EPC_BAND_SCORES).map((band) => (
+                        {epcBandOptions.map((band) => (
                           <SelectItem key={band} value={band}>
                             Band {band}
                           </SelectItem>
@@ -116,36 +169,16 @@ export default function Renewables() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Target EPC Rating</Label>
-                    <Select value={targetEPC} onValueChange={setTargetEPC}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.keys(EPC_BAND_SCORES)
-                          .filter((b) => EPC_BAND_SCORES[b as keyof typeof EPC_BAND_SCORES].min > 
-                            EPC_BAND_SCORES[currentEPC as keyof typeof EPC_BAND_SCORES].min)
-                          .map((band) => (
-                            <SelectItem key={band} value={band}>
-                              Band {band}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
                     <Label>Property Type</Label>
-                    <Select value={propertyType} onValueChange={setPropertyType}>
+                    <Select value={propertyType} onValueChange={(v) => setPropertyType(v as any)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="detached">Detached</SelectItem>
-                        <SelectItem value="semi_detached">Semi-Detached</SelectItem>
+                        <SelectItem value="semi">Semi-Detached</SelectItem>
                         <SelectItem value="terraced">Terraced</SelectItem>
                         <SelectItem value="flat">Flat/Apartment</SelectItem>
-                        <SelectItem value="bungalow">Bungalow</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -172,15 +205,15 @@ export default function Renewables() {
 
               <Card className="lg:col-span-2">
                 <CardHeader>
-                  <CardTitle>Upgrade Pathway: {currentEPC} → {targetEPC}</CardTitle>
+                  <CardTitle>Upgrade Pathway: SAP {currentSAP} → EPC {targetBand}</CardTitle>
                   <CardDescription>
                     Recommended measures to reach your target EPC rating
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {upgradePath.measures.length === 0 ? (
+                  {epcPlan.upgrades.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      Select a target rating higher than your current rating
+                      You already meet the selected target.
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -188,47 +221,43 @@ export default function Renewables() {
                         <div className="p-4 rounded-lg bg-muted text-center">
                           <p className="text-sm text-muted-foreground">Total Cost</p>
                           <p className="text-2xl font-bold">
-                            £{upgradePath.totalCost.min.toLocaleString()} - £{upgradePath.totalCost.max.toLocaleString()}
+                            £{epcPlan.totalCost.toLocaleString()}
                           </p>
                         </div>
                         <div className="p-4 rounded-lg bg-muted text-center">
                           <p className="text-sm text-muted-foreground">Annual Savings</p>
                           <p className="text-2xl font-bold text-success">
-                            £{upgradePath.totalSavings.toLocaleString()}
+                            £{epcPlan.annualSavings.toLocaleString()}
                           </p>
                         </div>
                         <div className="p-4 rounded-lg bg-muted text-center">
-                          <p className="text-sm text-muted-foreground">Within £10k Cap</p>
-                          {upgradePath.withinCap ? (
-                            <CheckCircle className="h-8 w-8 text-success mx-auto" />
-                          ) : (
-                            <AlertTriangle className="h-8 w-8 text-warning mx-auto" />
-                          )}
+                          <p className="text-sm text-muted-foreground">Payback</p>
+                          <p className="text-2xl font-bold">{epcPlan.paybackYears}y</p>
                         </div>
                       </div>
 
                       <div className="space-y-3">
-                        {upgradePath.measures.map((measure, i) => (
+                        {epcPlan.upgrades.map((u, i) => (
                           <div key={i} className="p-4 rounded-lg border">
                             <div className="flex items-center justify-between mb-2">
-                              <h4 className="font-medium">{measure.measure}</h4>
-                              <Badge variant="outline">+{measure.epcImpact} points</Badge>
+                              <h4 className="font-medium">{u.technology.name}</h4>
+                              <Badge variant="outline">+{Math.round(u.sapGain)} SAP</Badge>
                             </div>
                             <div className="grid grid-cols-3 gap-4 text-sm">
                               <div>
                                 <p className="text-muted-foreground">Cost</p>
                                 <p className="font-mono">
-                                  £{measure.typicalCost.min.toLocaleString()} - £{measure.typicalCost.max.toLocaleString()}
+                                  £{Math.round(u.cost).toLocaleString()}
                                 </p>
                               </div>
                               <div>
                                 <p className="text-muted-foreground">Annual Savings</p>
-                                <p className="font-mono text-success">£{measure.annualSavings}</p>
+                                <p className="font-mono text-success">£{Math.round(u.savings)}</p>
                               </div>
                               <div>
                                 <p className="text-muted-foreground">Payback</p>
                                 <p className="font-mono">
-                                  {Math.round((measure.typicalCost.min + measure.typicalCost.max) / 2 / measure.annualSavings)} years
+                                  {u.savings > 0 ? Math.round((u.cost / u.savings) * 10) / 10 : "—"} years
                                 </p>
                               </div>
                             </div>
@@ -268,29 +297,29 @@ export default function Renewables() {
                   <div className="p-4 rounded-lg bg-muted space-y-3">
                     <div className="flex justify-between">
                       <span>Recommended System Size</span>
-                      <span className="font-mono font-medium">{solarROI.systemSize} kWp</span>
+                      <span className="font-mono font-medium">{solar.systemSize} kWp</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Annual Generation</span>
-                      <span className="font-mono font-medium">{solarROI.annualGeneration.toLocaleString()} kWh</span>
+                      <span className="font-mono font-medium">{solar.annualGeneration.toLocaleString()} kWh</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Installation Cost</span>
                       <span className="font-mono font-medium">
-                        £{solarROI.installCost.min.toLocaleString()} - £{solarROI.installCost.max.toLocaleString()}
+                        £{solar.installCost.min.toLocaleString()} - £{solar.installCost.max.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between text-success">
                       <span>Annual Savings</span>
-                      <span className="font-mono font-medium">£{solarROI.annualSavings}</span>
+                      <span className="font-mono font-medium">£{solar.annualSavings}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Payback Period</span>
-                      <span className="font-mono font-medium">{solarROI.paybackYears} years</span>
+                      <span className="font-mono font-medium">{solar.paybackYears} years</span>
                     </div>
                     <div className="flex justify-between">
                       <span>CO₂ Saved Annually</span>
-                      <span className="font-mono font-medium">{solarROI.carbonSaved} kg</span>
+                      <span className="font-mono font-medium">{solar.carbonSaved} kg</span>
                     </div>
                   </div>
                 </CardContent>
@@ -357,27 +386,27 @@ export default function Renewables() {
                     </div>
                     <div className="flex justify-between">
                       <span>System Size Needed</span>
-                      <span className="font-mono font-medium">{heatPumpSavings.systemSize} kW</span>
+                      <span className="font-mono font-medium">{heatPump.systemSize} kW</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Installation Cost</span>
                       <span className="font-mono">
-                        £{heatPumpSavings.installCost.min.toLocaleString()} - £{heatPumpSavings.installCost.max.toLocaleString()}
+                        £{heatPump.installCost.min.toLocaleString()} - £{heatPump.installCost.max.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>After BUS Grant</span>
                       <span className="font-mono text-success">
-                        £{Math.max(0, heatPumpSavings.installCost.min - 7500).toLocaleString()} - £{Math.max(0, heatPumpSavings.installCost.max - 7500).toLocaleString()}
+                        £{Math.max(0, heatPump.installCost.min - 7500).toLocaleString()} - £{Math.max(0, heatPump.installCost.max - 7500).toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between text-success">
                       <span>Annual Savings</span>
-                      <span className="font-mono font-medium">£{heatPumpSavings.annualSavings}</span>
+                      <span className="font-mono font-medium">£{heatPump.annualSavings}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>CO₂ Saved Annually</span>
-                      <span className="font-mono">{heatPumpSavings.carbonSaved} kg</span>
+                      <span className="font-mono">{heatPump.carbonSaved} kg</span>
                     </div>
                   </div>
 
@@ -440,8 +469,8 @@ export default function Renewables() {
           {/* Grants Tab */}
           <TabsContent value="grants" className="mt-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {GRANT_SCHEMES.map((grant) => (
-                <Card key={grant.name}>
+              {grants.map((grant) => (
+                <Card key={grant.id}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                       <PoundSterling className="h-5 w-5 text-success" />
@@ -454,25 +483,14 @@ export default function Renewables() {
                       <div className="p-4 rounded-lg bg-success/10 text-center">
                         <p className="text-sm text-muted-foreground">Grant Amount</p>
                         <p className="text-2xl font-bold text-success">
-                          {typeof grant.amount === 'number' 
-                            ? `£${grant.amount.toLocaleString()}`
-                            : grant.amount}
+                          {typeof grant.amount === "number" ? `£${grant.amount.toLocaleString()}` : grant.amount}
                         </p>
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium mb-2">Eligible Technologies:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {grant.eligibleTechnologies.map((tech) => (
-                            <Badge key={tech} variant="outline">{tech}</Badge>
-                          ))}
-                        </div>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium mb-2">Eligibility:</p>
                         <ul className="text-sm text-muted-foreground space-y-1">
-                          {grant.eligibility.map((req, i) => (
+                          {grant.eligibility.map((req: string, i: number) => (
                             <li key={i} className="flex items-start gap-2">
                               <CheckCircle className="h-3 w-3 mt-1 text-success flex-shrink-0" />
                               {req}
@@ -482,9 +500,21 @@ export default function Renewables() {
                       </div>
 
                       <Button className="w-full" asChild>
-                        <a href={grant.link} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={
+                            grant.id === "BUS"
+                              ? "https://www.gov.uk/apply-boiler-upgrade-scheme"
+                              : grant.id === "SEG"
+                                ? "https://www.ofgem.gov.uk/environmental-and-social-schemes/smart-export-guarantee-seg"
+                                : grant.id === "OZEV"
+                                  ? "https://www.gov.uk/guidance/electric-vehicle-chargepoint-grant-for-landlords"
+                                  : "https://www.gov.uk/energy-company-obligation"
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <ExternalLink className="h-4 w-4 mr-2" />
-                          Apply Now
+                          Official scheme page
                         </a>
                       </Button>
                     </div>
@@ -497,11 +527,11 @@ export default function Renewables() {
           {/* All Technologies Tab */}
           <TabsContent value="technologies" className="mt-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {RENEWABLE_TECHNOLOGIES.map((tech) => (
+              {Object.values(RENEWABLE_TECHNOLOGIES).map((tech) => (
                 <Card key={tech.id}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
-                      {TECH_ICONS[tech.id]}
+                      {TECH_ICONS[tech.id] ?? <Leaf className="h-5 w-5" />}
                       {tech.name}
                     </CardTitle>
                   </CardHeader>
@@ -511,24 +541,30 @@ export default function Renewables() {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Cost Range</span>
                         <span className="font-mono">
-                          £{tech.costRange.min.toLocaleString()} - £{tech.costRange.max.toLocaleString()}
+                          £{tech.typicalCost.min.toLocaleString()} - £{tech.typicalCost.max.toLocaleString()}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Typical Savings</span>
-                        <span className="font-mono text-success">£{tech.typicalSavings}/year</span>
+                        <span className="font-mono text-success">
+                          £{Math.round((tech.annualSaving.min + tech.annualSaving.max) / 2)}/year
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">CO₂ Reduction</span>
-                        <span className="font-mono">{tech.carbonReduction} kg/year</span>
+                        <span className="font-mono">{tech.carbonSaving} kg/year</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Payback</span>
-                        <span className="font-mono">{tech.paybackYears} years</span>
+                        <span className="font-mono">{tech.paybackYears.min}-{tech.paybackYears.max} years</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">EPC Impact</span>
-                        <Badge variant="outline">+{tech.epcImpact} points</Badge>
+                        <span className="text-muted-foreground">SAP Impact</span>
+                        <Badge variant="outline">+{tech.sapImpact.min}-{tech.sapImpact.max}</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Category</span>
+                        <Badge variant="secondary">{tech.category}</Badge>
                       </div>
                     </div>
                   </CardContent>
