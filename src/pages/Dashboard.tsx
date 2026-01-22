@@ -17,7 +17,6 @@ import {
   ArrowRight,
   Building2,
   Home,
-  PenTool,
   BarChart3,
   LayoutDashboard,
 } from "lucide-react";
@@ -106,7 +105,6 @@ export default function Dashboard() {
   const quickActions = [
     { label: "New Extension Quote", href: "/dashboard/new-project?type=extension", icon: Home },
     { label: "New Loft Quote", href: "/dashboard/new-project?type=loft", icon: Building2 },
-    { label: "Generate CAD", href: "/dashboard/cad", icon: PenTool },
     { label: "View All Projects", href: "/dashboard/projects", icon: FolderOpen },
   ];
 

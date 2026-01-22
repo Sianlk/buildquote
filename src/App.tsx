@@ -23,7 +23,6 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NewProject = lazy(() => import("./pages/NewProject"));
 const Projects = lazy(() => import("./pages/Projects"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
-const CAD = lazy(() => import("./pages/CAD"));
 const Compliance = lazy(() => import("./pages/Compliance"));
 const Invoices = lazy(() => import("./pages/Invoices"));
 const Materials = lazy(() => import("./pages/Materials"));
@@ -84,7 +83,6 @@ const App = () => (
               <Route path="/dashboard/new-project" element={<ProtectedRoute><NewProject /></ProtectedRoute>} />
               <Route path="/dashboard/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
               <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-              <Route path="/dashboard/cad" element={<ProtectedRoute><CAD /></ProtectedRoute>} />
               <Route path="/dashboard/compliance" element={<ProtectedRoute><Compliance /></ProtectedRoute>} />
               <Route path="/dashboard/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
               <Route path="/dashboard/materials" element={<ProtectedRoute><Materials /></ProtectedRoute>} />

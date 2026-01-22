@@ -12,7 +12,6 @@ import {
 import {
   LayoutDashboard,
   FileText,
-  PenTool,
   Receipt,
   ClipboardCheck,
   Calculator,
@@ -81,13 +80,6 @@ export function GlobalSearch() {
       icon: Receipt,
       shortcut: "⌘I",
       action: () => navigate("/dashboard/invoices"),
-      category: "Navigation",
-    },
-    {
-      id: "cad",
-      label: "Go to CAD Drawings",
-      icon: PenTool,
-      action: () => navigate("/dashboard/cad"),
       category: "Navigation",
     },
     {

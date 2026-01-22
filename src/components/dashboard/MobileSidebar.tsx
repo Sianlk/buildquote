@@ -11,7 +11,6 @@ import {
   Settings,
   LogOut,
   Building2,
-  PenTool,
   ClipboardCheck,
   Receipt,
   Package,
@@ -34,7 +33,6 @@ const mainNavItems = [
 
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
-  { icon: PenTool, label: "CAD Drawings", href: "/dashboard/cad" },
   { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
   { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
   { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
@@ -161,7 +159,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
               <p className="text-sm font-medium truncate">
                 {user?.email}
               </p>
-              <p className="text-xs text-muted-foreground">Free Plan</p>
+              <p className="text-xs text-muted-foreground">Free Trial</p>
             </div>
           </div>
           <Button
