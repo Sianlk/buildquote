@@ -32,7 +32,6 @@ export const SYSTEM_SETTINGS = {
     ],
     premium: [
       "BIM exports",
-      "CAD drawings",
       "Investor reports",
       "Regulatory certificates",
       "Financial models",

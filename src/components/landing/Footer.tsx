@@ -11,7 +11,7 @@ const footerLinks = {
   ],
   resources: [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "CAD Drawings", href: "/dashboard/cad" },
+    { label: "Tenancy & Legal", href: "/dashboard/tenancy" },
     { label: "Building Regs", href: "/dashboard/compliance" },
     { label: "Materials", href: "/dashboard/materials" },
   ],

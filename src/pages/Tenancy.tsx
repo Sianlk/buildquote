@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,9 +63,11 @@ import {
 
 export default function Tenancy() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [checklistStatus, setChecklistStatus] = useState<Record<string, boolean>>({});
   const [astDialogOpen, setAstDialogOpen] = useState(false);
   const [s21DialogOpen, setS21DialogOpen] = useState(false);
+  const [s8DialogOpen, setS8DialogOpen] = useState(false);
 
   // AST form state
   const [astForm, setAstForm] = useState({
@@ -88,28 +90,113 @@ export default function Tenancy() {
     dateServed: new Date().toISOString().split('T')[0],
   });
 
-  const handleGenerateAST = () => {
-    const content = generateASTTemplate(astForm);
-    const blob = new Blob([content], { type: 'text/plain' });
+  // Section 8 form state
+  const [s8Form, setS8Form] = useState({
+    landlordName: "",
+    landlordAddress: "",
+    tenantName: "",
+    propertyAddress: "",
+    grounds: ["8"],
+    dateServed: new Date().toISOString().split("T")[0],
+    arrearsAmount: 0,
+    notes: "",
+  });
+
+  const selectedTemplateMeta = useMemo(
+    () => DOCUMENT_TEMPLATES.find((t) => t.id === selectedTemplate) || null,
+    [selectedTemplate]
+  );
+
+  const downloadTextFile = (filename: string, content: string) => {
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'AST_Agreement.txt';
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleGenerateAST = () => {
+    const content = generateASTTemplate(astForm);
+    downloadTextFile("AST_Agreement.txt", content);
     setAstDialogOpen(false);
   };
 
   const handleGenerateS21 = () => {
     const content = generateSection21Notice(s21Form);
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Section21_Notice.txt';
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadTextFile("Section21_Notice.txt", content);
     setS21DialogOpen(false);
+  };
+
+  const generateSection8Notice = (data: typeof s8Form) => {
+    const served = new Date(data.dateServed).toLocaleDateString("en-GB");
+    const groundsText = data.grounds
+      .map((g) => {
+        const source = [...SECTION_8_GROUNDS.mandatory, ...SECTION_8_GROUNDS.discretionary].find(
+          (x) => String(x.ground) === String(g)
+        );
+        return source ? `Ground ${source.ground}: ${source.description}` : `Ground ${g}`;
+      })
+      .join("\n");
+
+    return `
+SECTION 8 NOTICE (HOUSING ACT 1988)
+
+To: ${data.tenantName}
+Property: ${data.propertyAddress}
+
+From: ${data.landlordName}
+Address: ${data.landlordAddress}
+
+Date served: ${served}
+
+GROUNDS RELIED UPON:
+${groundsText}
+
+RENT ARREARS (if applicable): £${Number(data.arrearsAmount || 0).toFixed(2)}
+
+ADDITIONAL NOTES:
+${data.notes || "(none)"}
+
+---
+IMPORTANT:
+- This template is provided for guidance only.
+- Always verify notice periods and requirements (deposit protection, licensing, prescribed docs).
+- Seek qualified legal advice before service.
+`;
+  };
+
+  const handleGenerateS8 = () => {
+    const content = generateSection8Notice(s8Form);
+    downloadTextFile("Section8_Notice.txt", content);
+    setS8DialogOpen(false);
+  };
+
+  const buildGenericTemplate = (templateId: string) => {
+    const now = new Date().toLocaleDateString("en-GB");
+    switch (templateId) {
+      case "inventory":
+        return `PROPERTY INVENTORY & CONDITION REPORT\nDate: ${now}\n\nProperty Address: [enter]\n\nRooms / Areas:\n- [Room]: Items + condition + notes\n\nPhotos:\n- Attach photos and label by room and item.\n\nSign-off:\nLandlord/Agent: __________  Tenant: __________`;
+      case "deposit_prescribed":
+        return `DEPOSIT PRESCRIBED INFORMATION (SUMMARY)\nDate: ${now}\n\nDeposit Amount: £[enter]\nProtection Scheme: [DPS/TDS/MyDeposits]\nReference: [enter]\n\nLandlord Details: [enter]\nTenant Details: [enter]\nProperty: [enter]\n\nService method + date: [enter]\n\nDisclaimer: Guidance only. Verify scheme wording and deadlines.`;
+      case "gas_safety":
+        return `GAS SAFETY RECORD (CHECKLIST TEMPLATE)\nDate: ${now}\n\nProperty: [enter]\nEngineer Name: [enter]\nGas Safe No: [enter]\n\nAppliances checked:\n- [appliance] result [pass/fail] notes\n\nNext due: [enter]\n\nDisclaimer: This is not a certified certificate; use official engineer-issued record.`;
+      case "eicr":
+        return `EICR SUMMARY (CHECKLIST TEMPLATE)\nDate: ${now}\n\nProperty: [enter]\nElectrician: [enter]\nRegistration No: [enter]\n\nOverall outcome: [Satisfactory / Unsatisfactory]\nObservations: [enter]\nRemedials: [enter]\nNext due: [enter]\n\nDisclaimer: Guidance only; use the official EICR document.`;
+      case "epc":
+        return `EPC RECORD (CHECKLIST TEMPLATE)\nDate: ${now}\n\nProperty: [enter]\nAssessor: [enter]\nRating: [A-G]\nExpiry: [enter]\n\nKey recommendations:\n- [measure]\n\nDisclaimer: Guidance only; attach the official EPC.`;
+      case "how_to_rent":
+        return `HOW TO RENT (SERVICE RECORD)\nDate provided: ${now}\n\nTenant name(s): [enter]\nProperty: [enter]\nVersion/URL: [enter]\nService method: [email / print / portal]\nAcknowledgement: [enter]`;
+      case "right_to_rent":
+        return `RIGHT TO RENT CHECK RECORD\nCheck date: ${now}\n\nTenant: [enter]\nDocument type: [enter]\nDocument number: [enter]\nValid until: [enter]\nChecker: [enter]\nOutcome: [pass/fail]\nNotes: [enter]`;
+      case "rent_increase":
+        return `SECTION 13 RENT INCREASE (SUMMARY TEMPLATE)\nDate: ${now}\n\nTenant: [enter]\nProperty: [enter]\nCurrent rent: £[enter]\nProposed rent: £[enter]\nEffective date: [enter]\n\nNotes:\n- Serve on correct form and observe statutory timelines.\n\nDisclaimer: Guidance only. Verify council/court process if challenged.`;
+      case "licence_occupy":
+        return `LICENCE TO OCCUPY (LODGER)\nDate: ${now}\n\nLicensor: [enter]\nLicensee: [enter]\nRoom/Area: [enter]\nFee: £[enter] per [week/month]\nHouse rules: [enter]\nNotice: [enter]\n\nDisclaimer: Guidance only. Seek legal advice for your circumstances.`;
+      default:
+        return `DOCUMENT TEMPLATE\nDate: ${now}\n\n[This template is available as guidance only. Populate required fields and attach supporting evidence where required.]`;
+    }
   };
 
   const toggleChecklistItem = (id: string) => {
@@ -358,7 +445,10 @@ export default function Tenancy() {
                     <div
                       key={template.id}
                       className="p-4 rounded-lg border hover:border-primary/50 transition-colors cursor-pointer"
-                      onClick={() => setSelectedTemplate(template.id)}
+                      onClick={() => {
+                        setSelectedTemplate(template.id);
+                        setTemplateDialogOpen(true);
+                      }}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <FileText className="h-5 w-5 text-primary" />
@@ -373,6 +463,248 @@ export default function Tenancy() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Template details + download */}
+            <Dialog
+              open={templateDialogOpen}
+              onOpenChange={(v) => {
+                setTemplateDialogOpen(v);
+                if (!v) setSelectedTemplate(null);
+              }}
+            >
+              <DialogContent className="sm:max-w-[720px] max-h-[90vh]">
+                <DialogHeader>
+                  <DialogTitle>Template</DialogTitle>
+                </DialogHeader>
+                <ScrollArea className="max-h-[75vh] pr-4">
+                  {!selectedTemplateMeta ? (
+                    <p className="text-sm text-muted-foreground">Select a template to view details.</p>
+                  ) : (
+                    <div className="space-y-4 py-2">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-lg font-semibold">{selectedTemplateMeta.name}</h3>
+                          <p className="text-sm text-muted-foreground">{selectedTemplateMeta.description}</p>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {selectedTemplateMeta.category}
+                        </Badge>
+                      </div>
+
+                      <Card className="bg-muted/30">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm">How to fill this out</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-sm text-muted-foreground space-y-2">
+                          <ul className="list-disc pl-5 space-y-1">
+                            <li>Gather the required inputs below (use real names/addresses as per tenancy docs).</li>
+                            <li>Attach supporting evidence where needed (EPC, Gas Safety, EICR, licensing).</li>
+                            <li>Keep a dated copy of what you served and how it was served (email/post/hand delivery).</li>
+                            <li>When in doubt, seek qualified legal advice before serving notices.</li>
+                          </ul>
+                        </CardContent>
+                      </Card>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Required fields</CardTitle>
+                          </CardHeader>
+                          <CardContent className="text-sm">
+                            <ul className="space-y-1">
+                              {selectedTemplateMeta.requiredFields.map((f) => (
+                                <li key={f} className="flex items-center gap-2">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                  <span className="text-muted-foreground">{f}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </CardContent>
+                        </Card>
+
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Legal references</CardTitle>
+                          </CardHeader>
+                          <CardContent className="text-sm">
+                            <ul className="space-y-1">
+                              {selectedTemplateMeta.legalReferences.map((r) => (
+                                <li key={r} className="text-muted-foreground">• {r}</li>
+                              ))}
+                            </ul>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {selectedTemplateMeta.id === "ast_agreement" && (
+                          <Button
+                            onClick={() => {
+                              setTemplateDialogOpen(false);
+                              setAstDialogOpen(true);
+                            }}
+                          >
+                            Generate AST
+                          </Button>
+                        )}
+                        {selectedTemplateMeta.id === "section_21" && (
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setTemplateDialogOpen(false);
+                              setS21DialogOpen(true);
+                            }}
+                          >
+                            Generate Section 21
+                          </Button>
+                        )}
+                        {selectedTemplateMeta.id === "section_8" && (
+                          <Button
+                            onClick={() => {
+                              setTemplateDialogOpen(false);
+                              setS8DialogOpen(true);
+                            }}
+                          >
+                            Generate Section 8
+                          </Button>
+                        )}
+
+                        {!["ast_agreement", "section_21", "section_8"].includes(selectedTemplateMeta.id) && (
+                          <Button
+                            onClick={() => {
+                              const content = buildGenericTemplate(selectedTemplateMeta.id);
+                              downloadTextFile(
+                                `${selectedTemplateMeta.name.replace(/[^a-z0-9]+/gi, "_")}.txt`,
+                                content
+                              );
+                            }}
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Download Template
+                          </Button>
+                        )}
+
+                        <Button variant="ghost" onClick={() => setTemplateDialogOpen(false)}>
+                          Close
+                        </Button>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        Disclaimer: Templates are for guidance only and may not be suitable for every tenancy.
+                      </p>
+                    </div>
+                  )}
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
+
+            {/* Section 8 generator */}
+            <Dialog open={s8DialogOpen} onOpenChange={setS8DialogOpen}>
+              <DialogContent className="sm:max-w-[650px] max-h-[90vh]">
+                <DialogHeader>
+                  <DialogTitle>Generate Section 8 Notice</DialogTitle>
+                </DialogHeader>
+                <ScrollArea className="max-h-[70vh] pr-4">
+                  <div className="space-y-4 py-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="md:col-span-2">
+                        <Label>Landlord Name *</Label>
+                        <Input
+                          value={s8Form.landlordName}
+                          onChange={(e) => setS8Form((f) => ({ ...f, landlordName: e.target.value }))}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <Label>Landlord Address *</Label>
+                        <Textarea
+                          value={s8Form.landlordAddress}
+                          onChange={(e) => setS8Form((f) => ({ ...f, landlordAddress: e.target.value }))}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <Label>Tenant Name *</Label>
+                        <Input
+                          value={s8Form.tenantName}
+                          onChange={(e) => setS8Form((f) => ({ ...f, tenantName: e.target.value }))}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <Label>Property Address *</Label>
+                        <Textarea
+                          value={s8Form.propertyAddress}
+                          onChange={(e) => setS8Form((f) => ({ ...f, propertyAddress: e.target.value }))}
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Date Served</Label>
+                        <Input
+                          type="date"
+                          value={s8Form.dateServed}
+                          onChange={(e) => setS8Form((f) => ({ ...f, dateServed: e.target.value }))}
+                        />
+                      </div>
+                      <div>
+                        <Label>Rent arrears (£)</Label>
+                        <Input
+                          type="number"
+                          value={s8Form.arrearsAmount || ""}
+                          onChange={(e) =>
+                            setS8Form((f) => ({ ...f, arrearsAmount: parseFloat(e.target.value) || 0 }))
+                          }
+                        />
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <Label>Grounds (select one or more)</Label>
+                        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {[...SECTION_8_GROUNDS.mandatory, ...SECTION_8_GROUNDS.discretionary].map((g) => {
+                            const id = String(g.ground);
+                            const checked = s8Form.grounds.includes(id);
+                            return (
+                              <label
+                                key={id}
+                                className="flex items-start gap-3 p-3 rounded-lg border bg-background cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={checked}
+                                  onCheckedChange={() => {
+                                    setS8Form((f) => ({
+                                      ...f,
+                                      grounds: checked
+                                        ? f.grounds.filter((x) => x !== id)
+                                        : [...f.grounds, id],
+                                    }));
+                                  }}
+                                />
+                                <div>
+                                  <p className="text-sm font-medium">Ground {id}</p>
+                                  <p className="text-xs text-muted-foreground">{g.description}</p>
+                                  <p className="text-xs text-muted-foreground">Notice: {g.notice}</p>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <Label>Notes (optional)</Label>
+                        <Textarea
+                          value={s8Form.notes}
+                          onChange={(e) => setS8Form((f) => ({ ...f, notes: e.target.value }))}
+                        />
+                      </div>
+                    </div>
+
+                    <Button onClick={handleGenerateS8} className="w-full">
+                      <Download className="h-4 w-4 mr-2" />
+                      Generate & Download
+                    </Button>
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           <TabsContent value="compliance" className="mt-4 space-y-4">

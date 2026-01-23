@@ -28,8 +28,8 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up delay-200">
-            The UK's most advanced construction operating system. Generate CAD drawings, 
-            accurate costings, and compliance reports in minutes — not weeks.
+            The UK's most advanced construction operating system. Generate accurate costings,
+            schedules, and compliance reports in minutes — not weeks.
           </p>
 
           {/* CTA buttons */}
@@ -56,7 +56,7 @@ export function HeroSection() {
             </div>
             <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card/30 border border-border/30">
               <Zap className="h-5 w-5 text-primary" />
-              <span className="text-sm text-muted-foreground">BS 1192 CAD Standard</span>
+              <span className="text-sm text-muted-foreground">Document Pack Ready</span>
             </div>
             <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card/30 border border-border/30">
               <Calculator className="h-5 w-5 text-primary" />

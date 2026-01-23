@@ -1,61 +1,57 @@
 import { Button } from "@/components/ui/button";
-import { Check, X, Sparkles, Building2, Crown } from "lucide-react";
+import { Check, X, Sparkles, CreditCard, Crown } from "lucide-react";
 
 const tiers = [
   {
-    name: "Free",
+    name: "Free Trial",
     icon: Sparkles,
     price: "£0",
-    period: "forever",
-    description: "Perfect for exploring capabilities",
+    period: "for 7 days",
+    description: "Full access to core tools. No credit usage for core features.",
     tierClass: "tier-free",
     features: [
-      { text: "1 active project", included: true },
-      { text: "Basic geometry engine", included: true },
-      { text: "Budget estimate range", included: true },
-      { text: "Watermarked CAD preview", included: true },
-      { text: "Full CAD exports", included: false },
-      { text: "Detailed quotes", included: false },
-      { text: "Compliance reports", included: false },
+      { text: "Projects & quotes", included: true },
+      { text: "Materials lists & procurement", included: true },
+      { text: "Schedules & compliance checks", included: true },
+      { text: "Trade jobs & invoicing", included: true },
+      { text: "Templates & downloads", included: true },
+      { text: "Premium exports (BIM/white-label)", included: false },
     ],
-    cta: "Start Free",
+    cta: "Start Free Trial",
     ctaVariant: "outline" as const,
   },
   {
-    name: "Pro",
-    icon: Building2,
-    price: "£79",
+    name: "Core",
+    icon: CreditCard,
+    price: "£5.99",
     period: "/month",
-    description: "For independent contractors",
+    description: "Affordable, flat pricing for day‑to‑day quoting and delivery.",
     tierClass: "tier-pro",
     popular: true,
     features: [
+      { text: "Everything in Free Trial", included: true },
       { text: "Unlimited projects", included: true },
-      { text: "Full CAD generation", included: true },
-      { text: "Line-by-line costings", included: true },
-      { text: "Auto scheduling", included: true },
-      { text: "Compliance checks", included: true },
-      { text: "JCT invoicing", included: true },
-      { text: "Material ordering", included: true },
+      { text: "Professional PDFs + email delivery", included: true },
+      { text: "No credits for core workflows", included: true },
+      { text: "Priority improvements", included: true },
+      { text: "Premium exports (BIM/white‑label)", included: false },
     ],
-    cta: "Start Pro Trial",
+    cta: "Subscribe £5.99/mo",
     ctaVariant: "premium" as const,
   },
   {
-    name: "Business",
+    name: "Enterprise",
     icon: Crown,
-    price: "£249",
-    period: "/month",
-    description: "For teams and enterprises",
+    price: "Custom",
+    period: "",
+    description: "APIs, multi‑org, SSO, and bespoke integrations.",
     tierClass: "tier-business",
     features: [
-      { text: "Everything in Pro", included: true },
-      { text: "Multi-user organisation", included: true },
-      { text: "HMO conversion module", included: true },
-      { text: "Renters Rights compliance", included: true },
-      { text: "Custom rate templates", included: true },
-      { text: "White-label documents", included: true },
-      { text: "Priority support", included: true },
+      { text: "Multi‑org & advanced roles", included: true },
+      { text: "SSO & audit exports", included: true },
+      { text: "Custom supplier feeds", included: true },
+      { text: "White‑label packs", included: true },
+      { text: "Dedicated support", included: true },
     ],
     cta: "Contact Sales",
     ctaVariant: "hero-outline" as const,
@@ -74,7 +70,7 @@ export function PricingSection() {
             Simple, Transparent Pricing
           </h2>
           <p className="text-muted-foreground text-lg">
-            Start free. Scale as you grow. Cancel anytime.
+            Start with a free trial, then a flat £5.99/month. Cancel anytime.
           </p>
         </div>
 
