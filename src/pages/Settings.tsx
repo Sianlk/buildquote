@@ -79,7 +79,7 @@ export default function Settings() {
                 </div>
                 <div>
                   <h3 className="font-semibold">{user?.email}</h3>
-                  <p className="text-sm text-muted-foreground">Free Plan</p>
+                  <p className="text-sm text-muted-foreground">Free Trial</p>
                   <Button variant="outline" size="sm" className="mt-2">
                     Change Photo
                   </Button>
@@ -198,9 +198,9 @@ export default function Settings() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="font-semibold">Current Plan</h3>
-                    <p className="text-sm text-muted-foreground">Free Plan</p>
+                    <p className="text-sm text-muted-foreground">Free Trial (then £5.99/month)</p>
                   </div>
-                  <Button variant="gold">Upgrade to Pro</Button>
+                  <Button variant="gold">Subscribe £5.99/mo</Button>
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-center p-4 rounded-lg bg-secondary/30">
                   <div>

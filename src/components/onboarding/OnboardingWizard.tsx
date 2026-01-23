@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -127,6 +127,15 @@ export function OnboardingWizard() {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Auto-open once per device/session to make onboarding discoverable.
+    const seen = localStorage.getItem("onboarding_seen_v1");
+    if (!seen) {
+      setOpen(true);
+      localStorage.setItem("onboarding_seen_v1", "1");
+    }
+  }, []);
 
   const step = ONBOARDING_STEPS[currentStep];
   const progress = (completedSteps.length / ONBOARDING_STEPS.length) * 100;
@@ -297,8 +306,8 @@ export function OnboardingWizard() {
               <Lightbulb className="h-4 w-4 text-warning mt-0.5" />
               <div className="text-xs text-muted-foreground">
                 <strong>Tip:</strong> Core calculations, material lists, and compliance checks are 
-                included in the free tier. Premium credits are only used for CAD exports, BIM documents, 
-                investor reports, and AI forecasting.
+                included in the free tier. Premium access is reserved for BIM exports, investor reports,
+                and advanced forecasting.
               </div>
             </div>
           </CardContent>

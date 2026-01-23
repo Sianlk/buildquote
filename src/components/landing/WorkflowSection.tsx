@@ -9,7 +9,7 @@ const steps = [
   {
     number: "02",
     title: "Generate Everything",
-    description: "One click produces CAD drawings, costings, schedules, and compliance checks.",
+    description: "One click produces costings, schedules, compliance checks, and documents.",
   },
   {
     number: "03",

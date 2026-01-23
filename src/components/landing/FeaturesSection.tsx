@@ -1,22 +1,22 @@
-import { 
-  PenTool, 
-  Calculator, 
-  Calendar, 
-  Shield, 
-  FileText, 
+import {
+  Calculator,
+  Calendar,
+  Shield,
+  FileText,
   Package,
-  ArrowRight
+  ArrowRight,
+  ClipboardList,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const features = [
   {
-    icon: PenTool,
-    title: "AI CAD Generation",
-    description: "BS 1192 compliant technical drawings generated from parametric inputs. SVG exports ready for planning submissions.",
-    tag: "AI-Powered",
-    link: "/dashboard/cad",
-    section: "cad",
+    icon: ClipboardList,
+    title: "Templates & Packs",
+    description: "Downloadable tenancy, compliance, and project document templates with guided completion steps.",
+    tag: "Downloadable",
+    link: "/dashboard/tenancy",
+    section: "features",
   },
   {
     icon: Calculator,
