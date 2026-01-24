@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DemoQuoteDialog } from "@/components/landing/DemoQuoteDialog";
 import { 
   Calculator, 
   FileText, 
@@ -104,10 +105,12 @@ export function DemoSection() {
                   </div>
                 </div>
 
-                <Button variant="premium" className="w-full" size="lg">
-                  Generate Full Quote
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <DemoQuoteDialog dimensions={dimensions}>
+                  <Button variant="premium" className="w-full" size="lg">
+                    Generate Full Quote
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </DemoQuoteDialog>
               </div>
             </div>
 
