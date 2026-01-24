@@ -67,24 +67,28 @@ const Plumbing = () => {
         </Alert>
 
         <Tabs defaultValue="gas-safe" className="space-y-4">
-          <TabsList className="grid grid-cols-2 lg:grid-cols-5 gap-2">
-            <TabsTrigger value="gas-safe" className="flex items-center gap-2">
+          {/*
+            Mobile fix: the tab headers were dense and could collide/overlap on small screens.
+            We switch to a horizontally-scrollable row on mobile, and keep a wrapped layout on lg+.
+          */}
+          <TabsList className="w-full justify-start gap-2 overflow-x-auto whitespace-nowrap lg:grid lg:grid-cols-5 lg:gap-2 lg:overflow-visible">
+            <TabsTrigger value="gas-safe" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <Flame className="h-4 w-4" />
               Gas Safe
             </TabsTrigger>
-            <TabsTrigger value="pipe-sizing" className="flex items-center gap-2">
+            <TabsTrigger value="pipe-sizing" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <Calculator className="h-4 w-4" />
               Pipe Sizing
             </TabsTrigger>
-            <TabsTrigger value="boiler-install" className="flex items-center gap-2">
+            <TabsTrigger value="boiler-install" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <FileText className="h-4 w-4" />
               Boiler Install
             </TabsTrigger>
-            <TabsTrigger value="water-regs" className="flex items-center gap-2">
+            <TabsTrigger value="water-regs" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <Shield className="h-4 w-4" />
               Water Regs
             </TabsTrigger>
-            <TabsTrigger value="cylinders" className="flex items-center gap-2">
+            <TabsTrigger value="cylinders" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <Thermometer className="h-4 w-4" />
               Cylinders
             </TabsTrigger>
@@ -217,21 +221,21 @@ const Plumbing = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[760px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Flow Rate (L/min)</th>
-                        <th className="text-left p-2">Copper</th>
-                        <th className="text-left p-2">Plastic</th>
+                        <th className="text-left p-2 whitespace-nowrap">Flow Rate (L/min)</th>
+                        <th className="text-left p-2 whitespace-nowrap">Copper</th>
+                        <th className="text-left p-2 whitespace-nowrap">Plastic</th>
                         <th className="text-left p-2">Application</th>
                       </tr>
                     </thead>
                     <tbody>
                       {PIPE_SIZING_TABLE.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2">{row.flowRate}</td>
-                          <td className="p-2 font-medium">{row.copperSize}</td>
-                          <td className="p-2 font-medium">{row.plasticSize}</td>
+                          <td className="p-2 whitespace-nowrap">{row.flowRate}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.plasticSize}</td>
                           <td className="p-2 text-muted-foreground">{row.application}</td>
                         </tr>
                       ))}
@@ -248,22 +252,22 @@ const Plumbing = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[680px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Pipe Length</th>
-                        <th className="text-left p-2">Max Load</th>
-                        <th className="text-left p-2">Copper</th>
-                        <th className="text-left p-2">CSWA</th>
+                        <th className="text-left p-2 whitespace-nowrap">Pipe Length</th>
+                        <th className="text-left p-2 whitespace-nowrap">Max Load</th>
+                        <th className="text-left p-2 whitespace-nowrap">Copper</th>
+                        <th className="text-left p-2 whitespace-nowrap">CSWA</th>
                       </tr>
                     </thead>
                     <tbody>
                       {GAS_PIPE_SIZING.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2">{row.pipeLength}</td>
-                          <td className="p-2">{row.maxLoad}</td>
-                          <td className="p-2 font-medium">{row.copperSize}</td>
-                          <td className="p-2 font-medium">{row.cswaPipeSize}</td>
+                          <td className="p-2 whitespace-nowrap">{row.pipeLength}</td>
+                          <td className="p-2 whitespace-nowrap">{row.maxLoad}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.cswaPipeSize}</td>
                         </tr>
                       ))}
                     </tbody>
