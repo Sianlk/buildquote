@@ -212,7 +212,7 @@ export default function Dashboard() {
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="font-semibold mb-2">No projects yet</h3>
               <p className="text-muted-foreground mb-4">
-                Create your first project to get started with instant quotes and CAD generation.
+                 Create your first project to get started with instant quotes, schedules, and document packs.
               </p>
               <Button asChild>
                 <Link to="/dashboard/new-project">

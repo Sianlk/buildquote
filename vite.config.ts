@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
       manifest: {
         name: "BuildQuote UK",
         short_name: "BuildQuote",
-        description: "The UK's most advanced construction operating system. Generate accurate quotes, CAD drawings, and compliance reports.",
+        description: "The UK's most advanced construction operating system. Generate accurate quotes, document packs, and compliance reports.",
         theme_color: "#0f172a",
         background_color: "#0f172a",
         display: "standalone",

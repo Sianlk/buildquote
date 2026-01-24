@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,12 +9,12 @@ import { toast } from "sonner";
 
 const benefits = [
   "Free tier includes 1 project",
-  "Instant quotes & CAD generation",
+  "Instant quotes & document packs",
   "BCIS-compliant cost estimates",
   "Building Regs compliance checks",
 ];
 
-export default function Signup() {
+const Signup = forwardRef<HTMLDivElement, Record<string, never>>(function Signup(_props, ref) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -38,7 +38,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div ref={ref} className="min-h-screen bg-background flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-card relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent" />
@@ -155,4 +155,6 @@ export default function Signup() {
       </div>
     </div>
   );
-}
+});
+
+export default Signup;

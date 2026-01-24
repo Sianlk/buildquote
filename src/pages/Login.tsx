@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-export default function Login() {
+const Login = forwardRef<HTMLDivElement, Record<string, never>>(function Login(_props, ref) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div ref={ref} className="min-h-screen bg-background flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-card relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent" />
@@ -129,4 +129,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+});
+
+export default Login;
