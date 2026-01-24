@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ProtectedRouteWithRef } from "@/components/ProtectedRoute";
 import { PWAInstallPrompt } from "@/components/shared/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
 import { GlobalSearch } from "@/components/shared/GlobalSearch";
@@ -79,27 +79,27 @@ const App = () => (
               <Route path="/calculators" element={<Calculators />} />
               
               {/* Protected dashboard routes */}
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/dashboard/new-project" element={<ProtectedRoute><NewProject /></ProtectedRoute>} />
-              <Route path="/dashboard/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-              <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-              <Route path="/dashboard/compliance" element={<ProtectedRoute><Compliance /></ProtectedRoute>} />
-              <Route path="/dashboard/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
-              <Route path="/dashboard/materials" element={<ProtectedRoute><Materials /></ProtectedRoute>} />
-              <Route path="/dashboard/trade-jobs" element={<ProtectedRoute><TradeJobs /></ProtectedRoute>} />
-              <Route path="/dashboard/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
-              <Route path="/dashboard/tax-returns" element={<ProtectedRoute><TaxReturns /></ProtectedRoute>} />
-              <Route path="/dashboard/electrical" element={<ProtectedRoute><Electrical /></ProtectedRoute>} />
-              <Route path="/dashboard/plumbing" element={<ProtectedRoute><Plumbing /></ProtectedRoute>} />
-              <Route path="/dashboard/carpentry" element={<ProtectedRoute><Carpentry /></ProtectedRoute>} />
-              <Route path="/dashboard/schedules" element={<ProtectedRoute><Schedules /></ProtectedRoute>} />
-              <Route path="/dashboard/tenancy" element={<ProtectedRoute><Tenancy /></ProtectedRoute>} />
-              <Route path="/dashboard/landlord-obligations" element={<ProtectedRoute><LandlordObligations /></ProtectedRoute>} />
-              <Route path="/dashboard/renewables" element={<ProtectedRoute><Renewables /></ProtectedRoute>} />
-              <Route path="/dashboard/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
-              <Route path="/dashboard/calculators" element={<ProtectedRoute><Calculators /></ProtectedRoute>} />
-              <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-              <Route path="/dashboard/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRouteWithRef><Dashboard /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/new-project" element={<ProtectedRouteWithRef><NewProject /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/projects" element={<ProtectedRouteWithRef><Projects /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/projects/:id" element={<ProtectedRouteWithRef><ProjectDetail /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/compliance" element={<ProtectedRouteWithRef><Compliance /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/invoices" element={<ProtectedRouteWithRef><Invoices /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/materials" element={<ProtectedRouteWithRef><Materials /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/trade-jobs" element={<ProtectedRouteWithRef><TradeJobs /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/receipts" element={<ProtectedRouteWithRef><Receipts /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/tax-returns" element={<ProtectedRouteWithRef><TaxReturns /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/electrical" element={<ProtectedRouteWithRef><Electrical /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/plumbing" element={<ProtectedRouteWithRef><Plumbing /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/carpentry" element={<ProtectedRouteWithRef><Carpentry /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/schedules" element={<ProtectedRouteWithRef><Schedules /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/tenancy" element={<ProtectedRouteWithRef><Tenancy /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/landlord-obligations" element={<ProtectedRouteWithRef><LandlordObligations /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/renewables" element={<ProtectedRouteWithRef><Renewables /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/finance" element={<ProtectedRouteWithRef><Finance /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/calculators" element={<ProtectedRouteWithRef><Calculators /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/settings" element={<ProtectedRouteWithRef><Settings /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/admin" element={<ProtectedRouteWithRef><Admin /></ProtectedRouteWithRef>} />
               
               {/* 404 catch-all */}
               <Route path="*" element={<NotFound />} />

@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, X, Sparkles, CreditCard, Crown } from "lucide-react";
 
@@ -58,9 +59,9 @@ const tiers = [
   },
 ];
 
-export function PricingSection() {
+export const PricingSection = forwardRef<HTMLElement, Record<string, never>>(function PricingSection(_props, ref) {
   return (
-    <section className="py-24 relative" id="pricing">
+    <section ref={ref} className="py-24 relative" id="pricing">
       <div className="container px-4">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <span className="text-primary text-sm font-semibold tracking-wide uppercase mb-4 block">
@@ -141,4 +142,6 @@ export function PricingSection() {
       </div>
     </section>
   );
-}
+});
+
+PricingSection.displayName = "PricingSection";
