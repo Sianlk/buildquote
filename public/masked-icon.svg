@@ -1,4 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="64" fill="#1e3a8a"/>
-  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="200" fill="white">BQ</text>
+  <rect width="512" height="512" rx="64" fill="#1a1a1a"/>
+  <!-- Hard hat and wrench icon -->
+  <g transform="translate(100, 80)">
+    <!-- Hard hat -->
+    <ellipse cx="156" cy="120" rx="120" ry="45" fill="#D4A017"/>
+    <path d="M36 120 C36 60 276 60 276 120 L276 140 C276 140 156 160 156 160 C156 160 36 140 36 140 Z" fill="#F5C518"/>
+    <rect x="86" y="130" width="140" height="20" rx="5" fill="#D4A017"/>
+    <!-- Wrench -->
+    <g transform="translate(180, 100) rotate(45)">
+      <rect x="0" y="20" width="25" height="160" rx="5" fill="#8B8B8B"/>
+      <path d="M-15 0 L40 0 L40 50 L25 35 L0 35 L-15 50 Z" fill="#A0A0A0"/>
+      <path d="M-15 180 L40 180 L40 130 L25 145 L0 145 L-15 130 Z" fill="#A0A0A0"/>
+    </g>
+  </g>
+  <!-- BQ text -->
+  <text x="50%" y="400" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="bold" font-size="140" fill="#F5C518">BQ</text>
 </svg>
