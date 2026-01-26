@@ -51,14 +51,13 @@ import {
   Printer,
   ShoppingCart,
   Loader2,
-  Package,
 } from "lucide-react";
-import { TRADE_CATEGORIES, calculateJobCost, getJobsForTrade, TradeJob } from "@/lib/trade-jobs-data";
+import { TRADE_CATEGORIES, calculateJobCost, getJobsForTrade } from "@/lib/trade-jobs-data";
 import { MaterialsShoppingList } from "@/components/materials/MaterialsShoppingList";
 import { QuoteGenerator } from "@/components/quotes/QuoteGenerator";
-import { MaterialItem, consolidateMaterials, generateSupplierOrders } from "@/lib/materials-shopping-list";
 import { ComponentSelector } from "@/components/trade/ComponentSelector";
 import { DetailedComponent } from "@/lib/detailed-components-data";
+import { ExportButtons } from "@/components/shared/ExportButtons";
 
 interface SelectedComponent {
   component: DetailedComponent;
@@ -119,6 +118,8 @@ export default function TradeJobs() {
     if (selectedTrade === 'plumbing') return 'plumbing';
     if (selectedTrade === 'electrical') return 'electrical';
     if (selectedTrade === 'carpentry') return 'carpentry';
+    if (selectedTrade === 'glazing') return 'glazing';
+    if (selectedTrade === 'hvac' || selectedTrade === 'heating') return 'hvac';
     return 'plumbing'; // default
   }, [selectedTrade]);
   
@@ -264,13 +265,37 @@ export default function TradeJobs() {
             </p>
           </div>
           
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New Job Quote
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <ExportButtons
+              data={savedJobs.map(j => ({
+                trade: j.trade,
+                job_type: j.job_type,
+                customer_name: j.customer_name || "",
+                total_cost: j.total_cost || 0,
+                customer_price: j.customer_price || 0,
+                profit_margin: j.profit_margin || 0,
+                status: j.status || "quoted",
+                job_date: j.job_date || "",
+              }))}
+              columns={[
+                { key: "trade", label: "Trade", width: 100 },
+                { key: "job_type", label: "Job Type", width: 150 },
+                { key: "customer_name", label: "Customer", width: 120 },
+                { key: "total_cost", label: "Cost (£)", width: 80 },
+                { key: "customer_price", label: "Price (£)", width: 80 },
+                { key: "profit_margin", label: "Margin (%)", width: 60 },
+                { key: "status", label: "Status", width: 80 },
+              ]}
+              filename="trade-jobs"
+              title="Trade Jobs Export"
+            />
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Job Quote
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <DialogHeader>
                 <DialogTitle>Create Job Quote</DialogTitle>
@@ -377,10 +402,10 @@ export default function TradeJobs() {
                           </div>
                           
                           {/* Component Selector - Add detailed components */}
-                          {(selectedTrade === 'plumbing' || selectedTrade === 'electrical' || selectedTrade === 'carpentry') && (
+                          {(selectedTrade === 'plumbing' || selectedTrade === 'electrical' || selectedTrade === 'carpentry' || selectedTrade === 'glazing' || selectedTrade === 'hvac' || selectedTrade === 'heating') && (
                             <div className="pt-4 border-t">
                               <ComponentSelector
-                                trade={componentTrade}
+                                trade={componentTrade as any}
                                 selectedComponents={selectedComponents}
                                 onComponentsChange={setSelectedComponents}
                                 useTradePrices={isTradePrice}
@@ -533,6 +558,7 @@ export default function TradeJobs() {
               </ScrollArea>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
         
         {/* Trade Categories Overview */}

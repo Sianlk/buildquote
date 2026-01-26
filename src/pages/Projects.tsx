@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { ExportButtons } from "@/components/shared/ExportButtons";
 
 type Project = Tables<"projects">;
 
@@ -168,12 +169,37 @@ export default function Projects() {
               Manage all your construction projects
             </p>
           </div>
-          <Button asChild>
-            <Link to="/dashboard/new-project">
-              <Plus className="h-4 w-4 mr-2" />
-              New Project
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <ExportButtons
+              data={filteredProjects.map(p => ({
+                name: p.name,
+                project_type: PROJECT_TYPE_LABELS[p.project_type] || p.project_type,
+                status: p.status || "draft",
+                estimated_cost: p.estimated_cost || 0,
+                estimated_duration_weeks: p.estimated_duration_weeks || 0,
+                address: p.address || "",
+                postcode: p.postcode || "",
+                created_at: p.created_at ? format(new Date(p.created_at), "yyyy-MM-dd") : "",
+              }))}
+              columns={[
+                { key: "name", label: "Project Name", width: 150 },
+                { key: "project_type", label: "Type", width: 100 },
+                { key: "status", label: "Status", width: 80 },
+                { key: "estimated_cost", label: "Cost (£)", width: 80 },
+                { key: "estimated_duration_weeks", label: "Weeks", width: 60 },
+                { key: "address", label: "Address", width: 150 },
+                { key: "created_at", label: "Created", width: 80 },
+              ]}
+              filename="projects"
+              title="Projects Export"
+            />
+            <Button asChild>
+              <Link to="/dashboard/new-project">
+                <Plus className="h-4 w-4 mr-2" />
+                New Project
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
