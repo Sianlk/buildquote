@@ -36,6 +36,7 @@ const Carpentry = lazy(() => import("./pages/Carpentry"));
 const Schedules = lazy(() => import("./pages/Schedules"));
 const Tenancy = lazy(() => import("./pages/Tenancy"));
 const LandlordObligations = lazy(() => import("./pages/LandlordObligations"));
+// Note: Legacy /dashboard/renters-rights route redirects to LandlordObligations
 const Renewables = lazy(() => import("./pages/Renewables"));
 const Finance = lazy(() => import("./pages/Finance"));
 const Calculators = lazy(() => import("./pages/Calculators"));
@@ -100,6 +101,9 @@ const App = () => (
               <Route path="/dashboard/calculators" element={<ProtectedRouteWithRef><Calculators /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/settings" element={<ProtectedRouteWithRef><Settings /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/admin" element={<ProtectedRouteWithRef><Admin /></ProtectedRouteWithRef>} />
+              
+              {/* Legacy redirects */}
+              <Route path="/dashboard/renters-rights" element={<ProtectedRouteWithRef><LandlordObligations /></ProtectedRouteWithRef>} />
               
               {/* 404 catch-all */}
               <Route path="*" element={<NotFound />} />
