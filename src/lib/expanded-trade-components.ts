@@ -764,6 +764,124 @@ export const SAFETY_COMPONENTS: DetailedComponent[] = [
 ];
 
 // ============================================
+// GLAZING COMPONENTS - Windows, Doors, Bifolds, Skylights, Guttering
+// ============================================
+export const GLAZING_COMPONENTS: DetailedComponent[] = [
+  // Windows - uPVC
+  { id: 'upvc_casement_600x900', name: 'uPVC Casement Window 600x900mm', category: 'glazing', unit: 'nr', tradeCost: 185.00, retailCost: 265.00, partCode: 'UPV-C609' },
+  { id: 'upvc_casement_900x1200', name: 'uPVC Casement Window 900x1200mm', category: 'glazing', unit: 'nr', tradeCost: 245.00, retailCost: 350.00, partCode: 'UPV-C912' },
+  { id: 'upvc_casement_1200x1200', name: 'uPVC Casement Window 1200x1200mm', category: 'glazing', unit: 'nr', tradeCost: 295.00, retailCost: 420.00, partCode: 'UPV-C1212' },
+  { id: 'upvc_tilt_turn_1200x1200', name: 'uPVC Tilt & Turn 1200x1200mm', category: 'glazing', unit: 'nr', tradeCost: 385.00, retailCost: 550.00, partCode: 'UPV-TT1212' },
+  { id: 'upvc_bay_2400x1200', name: 'uPVC Bay Window 2400x1200mm', category: 'glazing', unit: 'nr', tradeCost: 1450.00, retailCost: 2100.00, partCode: 'UPV-BAY24' },
+  { id: 'upvc_triple_glazed', name: 'Triple Glazed uPVC 1200x1200mm', category: 'glazing', unit: 'nr', tradeCost: 425.00, retailCost: 620.00, partCode: 'UPV-TG1212' },
+  
+  // Windows - Aluminium
+  { id: 'alu_casement_1200x1200', name: 'Aluminium Casement Window 1200x1200mm', category: 'glazing', unit: 'nr', tradeCost: 485.00, retailCost: 695.00, partCode: 'ALU-C1212' },
+  { id: 'alu_sliding_1800x1200', name: 'Aluminium Sliding Window 1800x1200mm', category: 'glazing', unit: 'nr', tradeCost: 650.00, retailCost: 950.00, partCode: 'ALU-S1812' },
+  
+  // Doors
+  { id: 'upvc_front_door', name: 'uPVC Front Door Composite 2100x900mm', category: 'glazing', unit: 'nr', tradeCost: 685.00, retailCost: 980.00, partCode: 'UPV-FD21' },
+  { id: 'upvc_back_door', name: 'uPVC Back Door Half-Glazed 2100x900mm', category: 'glazing', unit: 'nr', tradeCost: 485.00, retailCost: 695.00, partCode: 'UPV-BD21' },
+  { id: 'upvc_french_doors', name: 'uPVC French Doors 2100x1800mm', category: 'glazing', unit: 'pair', tradeCost: 895.00, retailCost: 1280.00, partCode: 'UPV-FR21' },
+  { id: 'upvc_patio_door_2100', name: 'uPVC Sliding Patio Door 2100x2100mm', category: 'glazing', unit: 'nr', tradeCost: 785.00, retailCost: 1120.00, partCode: 'UPV-PD21' },
+  
+  // Bifold Doors
+  { id: 'alu_bifold_2400', name: 'Aluminium Bifold 2-Pane 2400x2100mm', category: 'glazing', unit: 'nr', tradeCost: 1850.00, retailCost: 2650.00, partCode: 'ALU-BF24' },
+  { id: 'alu_bifold_3000', name: 'Aluminium Bifold 3-Pane 3000x2100mm', category: 'glazing', unit: 'nr', tradeCost: 2450.00, retailCost: 3500.00, partCode: 'ALU-BF30' },
+  { id: 'alu_bifold_4000', name: 'Aluminium Bifold 4-Pane 4000x2100mm', category: 'glazing', unit: 'nr', tradeCost: 3250.00, retailCost: 4650.00, partCode: 'ALU-BF40' },
+  { id: 'alu_bifold_5000', name: 'Aluminium Bifold 5-Pane 5000x2100mm', category: 'glazing', unit: 'nr', tradeCost: 4150.00, retailCost: 5950.00, partCode: 'ALU-BF50' },
+  
+  // Skylights & Roof Windows
+  { id: 'velux_ck02', name: 'VELUX CK02 Roof Window 550x780mm', category: 'glazing', unit: 'nr', tradeCost: 285.00, retailCost: 420.00, partCode: 'VLX-CK02' },
+  { id: 'velux_mk04', name: 'VELUX MK04 Roof Window 780x980mm', category: 'glazing', unit: 'nr', tradeCost: 325.00, retailCost: 480.00, partCode: 'VLX-MK04' },
+  { id: 'velux_mk06', name: 'VELUX MK06 Roof Window 780x1180mm', category: 'glazing', unit: 'nr', tradeCost: 385.00, retailCost: 565.00, partCode: 'VLX-MK06' },
+  { id: 'velux_mk08', name: 'VELUX MK08 Roof Window 780x1400mm', category: 'glazing', unit: 'nr', tradeCost: 450.00, retailCost: 660.00, partCode: 'VLX-MK08' },
+  { id: 'velux_flashing_mk04', name: 'VELUX Flashing Kit MK04', category: 'glazing', unit: 'nr', tradeCost: 85.00, retailCost: 125.00, partCode: 'VLX-FL-MK04' },
+  { id: 'flat_roof_skylight_900', name: 'Flat Roof Skylight 900x900mm', category: 'glazing', unit: 'nr', tradeCost: 520.00, retailCost: 765.00, partCode: 'FRS-9090' },
+  { id: 'sun_tunnel_350', name: 'Sun Tunnel 350mm Rigid', category: 'glazing', unit: 'nr', tradeCost: 320.00, retailCost: 470.00, partCode: 'ST-350R' },
+  
+  // Conservatory Components
+  { id: 'conservatory_lean_to_3x3', name: 'Lean-to Conservatory Kit 3x3m', category: 'glazing', unit: 'kit', tradeCost: 4500.00, retailCost: 6500.00, partCode: 'CON-LT33' },
+  { id: 'polycarbonate_roof_clear', name: 'Polycarbonate Roof Panel 25mm Clear (m²)', category: 'glazing', unit: 'm²', tradeCost: 42.00, retailCost: 62.00, partCode: 'PC-CLR25' },
+  { id: 'glass_roof_self_clean', name: 'Self-Cleaning Glass Roof Panel (m²)', category: 'glazing', unit: 'm²', tradeCost: 185.00, retailCost: 265.00, partCode: 'GR-SC' },
+  
+  // Guttering - uPVC
+  { id: 'gutter_half_round_4m', name: 'Half Round Gutter 4m Length', category: 'glazing', unit: 'length', tradeCost: 12.50, retailCost: 18.50, partCode: 'GT-HR4' },
+  { id: 'gutter_ogee_4m', name: 'Ogee Gutter 4m Length', category: 'glazing', unit: 'length', tradeCost: 16.50, retailCost: 24.00, partCode: 'GT-OG4' },
+  { id: 'gutter_bracket', name: 'Gutter Bracket', category: 'glazing', unit: 'nr', tradeCost: 1.85, retailCost: 2.80, partCode: 'GT-BRK' },
+  { id: 'gutter_union', name: 'Gutter Union Joint', category: 'glazing', unit: 'nr', tradeCost: 3.25, retailCost: 4.80, partCode: 'GT-UNI' },
+  { id: 'gutter_stop_end', name: 'Gutter Stop End', category: 'glazing', unit: 'nr', tradeCost: 2.45, retailCost: 3.60, partCode: 'GT-SE' },
+  { id: 'gutter_running_outlet', name: 'Gutter Running Outlet', category: 'glazing', unit: 'nr', tradeCost: 4.25, retailCost: 6.20, partCode: 'GT-RO' },
+  { id: 'gutter_angle_90', name: 'Gutter 90° Angle', category: 'glazing', unit: 'nr', tradeCost: 4.85, retailCost: 7.20, partCode: 'GT-A90' },
+  { id: 'downpipe_68mm_2.5m', name: 'Downpipe 68mm 2.5m Length', category: 'glazing', unit: 'length', tradeCost: 8.50, retailCost: 12.50, partCode: 'DP-68' },
+  { id: 'downpipe_bracket', name: 'Downpipe Bracket', category: 'glazing', unit: 'nr', tradeCost: 1.65, retailCost: 2.40, partCode: 'DP-BRK' },
+  { id: 'downpipe_shoe', name: 'Downpipe Shoe', category: 'glazing', unit: 'nr', tradeCost: 3.85, retailCost: 5.60, partCode: 'DP-SHO' },
+  { id: 'hopper_head', name: 'Hopper Head', category: 'glazing', unit: 'nr', tradeCost: 12.50, retailCost: 18.50, partCode: 'HP-HD' },
+  
+  // Hardware
+  { id: 'window_handle_chrome', name: 'Espag Window Handle Chrome', category: 'hardware', unit: 'nr', tradeCost: 8.50, retailCost: 12.50, partCode: 'WH-CHR' },
+  { id: 'window_hinge_friction', name: 'Friction Stay Hinge 12" (pair)', category: 'hardware', unit: 'pair', tradeCost: 12.50, retailCost: 18.00, partCode: 'WH-FSH' },
+  { id: 'door_handle_lever', name: 'Door Handle Lever Set Chrome', category: 'hardware', unit: 'set', tradeCost: 18.50, retailCost: 28.00, partCode: 'DH-LEV' },
+  { id: 'door_lock_multipoint', name: 'Multipoint Door Lock', category: 'hardware', unit: 'nr', tradeCost: 45.00, retailCost: 68.00, partCode: 'DL-MP' },
+  { id: 'door_cylinder_euro', name: 'Euro Cylinder Lock 35/35', category: 'hardware', unit: 'nr', tradeCost: 15.50, retailCost: 24.00, partCode: 'DC-EU35' },
+  
+  // Glass & Seals
+  { id: 'dgu_low_e', name: 'Double Glazed Unit Low-E Argon (m²)', category: 'glazing', unit: 'm²', tradeCost: 55.00, retailCost: 82.00, partCode: 'DGU-LE' },
+  { id: 'tgu_triple', name: 'Triple Glazed Unit 4-12-4-12-4 (m²)', category: 'glazing', unit: 'm²', tradeCost: 85.00, retailCost: 125.00, partCode: 'TGU-TRP' },
+  { id: 'window_seal_e_profile', name: 'E-Profile Window Seal 10m', category: 'seal', unit: 'roll', tradeCost: 4.50, retailCost: 6.80, partCode: 'WS-EP10' },
+  { id: 'silicone_glazing_clear', name: 'Low Modulus Glazing Silicone Clear 310ml', category: 'consumable', unit: 'tube', tradeCost: 5.50, retailCost: 8.20, partCode: 'SIL-GCL' },
+  { id: 'frame_fixing_100mm', name: 'Frame Fixing 10x100mm (box 100)', category: 'fixing', unit: 'box', tradeCost: 18.50, retailCost: 28.00, partCode: 'FF-100' },
+  { id: 'packers_mixed', name: 'Window Packers Mixed (bag 200)', category: 'fixing', unit: 'bag', tradeCost: 12.50, retailCost: 18.50, partCode: 'WP-MIX' },
+  { id: 'expanding_foam_window', name: 'Low Expansion Window Foam 750ml', category: 'consumable', unit: 'can', tradeCost: 8.50, retailCost: 12.50, partCode: 'FOM-LEW' },
+];
+
+// ============================================
+// HVAC COMPONENTS - Heating, Ventilation, AC
+// ============================================
+export const HVAC_COMPONENTS: DetailedComponent[] = [
+  // Radiators
+  { id: 'rad_type21_600x800', name: 'Type 21 Radiator 600x800mm', category: 'hvac', unit: 'nr', tradeCost: 85.00, retailCost: 125.00, partCode: 'RAD-21-68' },
+  { id: 'rad_type21_600x1000', name: 'Type 21 Radiator 600x1000mm', category: 'hvac', unit: 'nr', tradeCost: 105.00, retailCost: 155.00, partCode: 'RAD-21-610' },
+  { id: 'rad_type21_600x1200', name: 'Type 21 Radiator 600x1200mm', category: 'hvac', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'RAD-21-612' },
+  { id: 'rad_type22_600x1000', name: 'Type 22 Radiator 600x1000mm', category: 'hvac', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'RAD-22-610' },
+  { id: 'rad_type22_600x1400', name: 'Type 22 Radiator 600x1400mm', category: 'hvac', unit: 'nr', tradeCost: 165.00, retailCost: 245.00, partCode: 'RAD-22-614' },
+  { id: 'rad_column_3col_600x600', name: 'Column Radiator 3-Col 600x600mm', category: 'hvac', unit: 'nr', tradeCost: 185.00, retailCost: 275.00, partCode: 'RAD-C3-66' },
+  { id: 'rad_towel_1200x500', name: 'Towel Radiator 1200x500mm Chrome', category: 'hvac', unit: 'nr', tradeCost: 85.00, retailCost: 125.00, partCode: 'RAD-TR-125' },
+  
+  // Boilers
+  { id: 'boiler_combi_25kw', name: 'Combi Boiler 25kW', category: 'hvac', unit: 'nr', tradeCost: 750.00, retailCost: 1100.00, partCode: 'BLR-C25' },
+  { id: 'boiler_combi_30kw', name: 'Combi Boiler 30kW', category: 'hvac', unit: 'nr', tradeCost: 850.00, retailCost: 1250.00, partCode: 'BLR-C30' },
+  { id: 'boiler_flue_horizontal', name: 'Horizontal Flue Kit 1m', category: 'hvac', unit: 'kit', tradeCost: 65.00, retailCost: 95.00, partCode: 'BLR-FLH' },
+  
+  // Underfloor Heating
+  { id: 'ufh_mat_1m2', name: 'UFH Electric Mat 1m² 150W', category: 'hvac', unit: 'm²', tradeCost: 55.00, retailCost: 82.00, partCode: 'UFH-EM1' },
+  { id: 'ufh_cable_kit_5m2', name: 'UFH Cable Kit 5m²', category: 'hvac', unit: 'kit', tradeCost: 145.00, retailCost: 215.00, partCode: 'UFH-CK5' },
+  { id: 'ufh_thermostat', name: 'UFH Thermostat Digital', category: 'hvac', unit: 'nr', tradeCost: 55.00, retailCost: 82.00, partCode: 'UFH-TH' },
+  { id: 'ufh_pipe_16mm_100m', name: 'UFH Pipe 16mm 100m Coil', category: 'hvac', unit: 'coil', tradeCost: 125.00, retailCost: 185.00, partCode: 'UFH-P16' },
+  { id: 'ufh_manifold_4port', name: 'UFH Manifold 4-Port', category: 'hvac', unit: 'nr', tradeCost: 165.00, retailCost: 245.00, partCode: 'UFH-M4' },
+  
+  // Ventilation
+  { id: 'extractor_100mm', name: 'Extractor Fan 100mm Standard', category: 'hvac', unit: 'nr', tradeCost: 18.50, retailCost: 28.00, partCode: 'EXT-100' },
+  { id: 'extractor_100mm_timer', name: 'Extractor Fan 100mm Timer', category: 'hvac', unit: 'nr', tradeCost: 32.00, retailCost: 48.00, partCode: 'EXT-100T' },
+  { id: 'extractor_100mm_humidistat', name: 'Extractor Fan 100mm Humidistat', category: 'hvac', unit: 'nr', tradeCost: 45.00, retailCost: 68.00, partCode: 'EXT-100H' },
+  { id: 'inline_fan_100mm', name: 'Inline Duct Fan 100mm', category: 'hvac', unit: 'nr', tradeCost: 42.00, retailCost: 62.00, partCode: 'ILF-100' },
+  { id: 'ducting_100mm_3m', name: 'Flexible Ducting 100mm 3m', category: 'hvac', unit: 'length', tradeCost: 8.50, retailCost: 12.50, partCode: 'DUCT-100' },
+  { id: 'wall_vent_100mm', name: 'Wall Vent Kit 100mm', category: 'hvac', unit: 'kit', tradeCost: 12.50, retailCost: 18.50, partCode: 'WV-100' },
+  
+  // Air Conditioning
+  { id: 'ac_split_2.5kw', name: 'Split AC Unit 2.5kW', category: 'hvac', unit: 'nr', tradeCost: 450.00, retailCost: 680.00, partCode: 'AC-S25' },
+  { id: 'ac_split_3.5kw', name: 'Split AC Unit 3.5kW', category: 'hvac', unit: 'nr', tradeCost: 550.00, retailCost: 820.00, partCode: 'AC-S35' },
+  { id: 'ac_split_5kw', name: 'Split AC Unit 5kW', category: 'hvac', unit: 'nr', tradeCost: 750.00, retailCost: 1120.00, partCode: 'AC-S50' },
+  
+  // TRV & Controls
+  { id: 'trv_15', name: '15mm TRV (Thermostatic)', category: 'valve', unit: 'nr', tradeCost: 18.50, retailCost: 26.00, partCode: 'TRV15' },
+  { id: 'lockshield_15', name: '15mm Lockshield Valve', category: 'valve', unit: 'nr', tradeCost: 6.50, retailCost: 9.50, partCode: 'LS15' },
+  { id: 'smart_thermostat', name: 'Smart Thermostat WiFi', category: 'hvac', unit: 'nr', tradeCost: 145.00, retailCost: 215.00, partCode: 'ST-WIFI' },
+  { id: 'room_thermostat', name: 'Room Thermostat Digital', category: 'hvac', unit: 'nr', tradeCost: 35.00, retailCost: 52.00, partCode: 'RT-DIG' },
+  { id: 'programmer_7day', name: '7-Day Programmer', category: 'hvac', unit: 'nr', tradeCost: 45.00, retailCost: 68.00, partCode: 'PROG-7D' },
+];
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 export function getAllComponentsForTrade(trade: string): DetailedComponent[] {
@@ -785,8 +903,13 @@ export function getAllComponentsForTrade(trade: string): DetailedComponent[] {
       return INSULATION_COMPONENTS;
     case 'safety':
       return SAFETY_COMPONENTS;
+    case 'glazing':
+      return GLAZING_COMPONENTS;
+    case 'hvac':
+    case 'heating':
+      return HVAC_COMPONENTS;
     default:
-      return [...PLUMBING_COMPONENTS, ...ELECTRICAL_COMPONENTS, ...CARPENTRY_COMPONENTS];
+      return [...PLUMBING_COMPONENTS, ...ELECTRICAL_COMPONENTS, ...CARPENTRY_COMPONENTS, ...GLAZING_COMPONENTS, ...HVAC_COMPONENTS];
   }
 }
 
@@ -799,6 +922,8 @@ export function getComponentById(componentId: string): DetailedComponent | undef
     ...MASONRY_COMPONENTS,
     ...INSULATION_COMPONENTS,
     ...SAFETY_COMPONENTS,
+    ...GLAZING_COMPONENTS,
+    ...HVAC_COMPONENTS,
   ];
   return allComponents.find(c => c.id === componentId);
 }
@@ -812,6 +937,8 @@ export function getComponentsByCategory(category: DetailedComponent['category'])
     ...MASONRY_COMPONENTS,
     ...INSULATION_COMPONENTS,
     ...SAFETY_COMPONENTS,
+    ...GLAZING_COMPONENTS,
+    ...HVAC_COMPONENTS,
   ];
   return allComponents.filter(c => c.category === category);
 }
@@ -827,7 +954,6 @@ export function calculateComponentsCost(
 }
 
 export function getRequiredComponentsForJob(tradeId: string, jobId: string): DetailedComponent[] {
-  // This would map specific jobs to their required components
-  // For now, return a general set based on trade
+  // Map specific jobs to their required components
   return getAllComponentsForTrade(tradeId).slice(0, 20);
 }

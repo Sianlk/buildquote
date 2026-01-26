@@ -5,12 +5,14 @@
 export interface DetailedComponent {
   id: string;
   name: string;
-  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool';
+  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool' | 'timber' | 'hardware' | 'safety' | 'insulation' | 'drainage' | 'roofing' | 'masonry' | 'glazing' | 'hvac' | 'security';
   unit: string;
   tradeCost: number;
   retailCost: number;
   supplier?: string;
   partCode?: string;
+  minOrderQty?: number;
+  leadTimeDays?: number;
 }
 
 // Plumbing Components - Comprehensive Breakdown

@@ -19,7 +19,6 @@ import {
   Clock,
   Users,
   AlertTriangle,
-  Download,
   Plus,
   GanttChart,
   Layers,
@@ -33,6 +32,7 @@ import {
   getResourcesByDay,
   type ProjectTask,
 } from "@/lib/schedules-module-data";
+import { ExportButtons } from "@/components/shared/ExportButtons";
 
 export default function Schedules() {
   const [projectType, setProjectType] = useState<string>("extension");
@@ -80,10 +80,26 @@ export default function Schedules() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+            <ExportButtons
+              data={schedule.tasks.map(t => ({
+                task_name: t.name,
+                trade: t.trade,
+                duration_days: t.duration,
+                start_day: t.startDay || 1,
+                end_day: t.endDay || t.duration,
+                dependencies: t.dependencies.join(", "),
+              }))}
+              columns={[
+                { key: "task_name", label: "Task", width: 150 },
+                { key: "trade", label: "Trade", width: 100 },
+                { key: "duration_days", label: "Duration (Days)", width: 80 },
+                { key: "start_day", label: "Start Day", width: 60 },
+                { key: "end_day", label: "End Day", width: 60 },
+                { key: "dependencies", label: "Dependencies", width: 120 },
+              ]}
+              filename={`schedule-${projectType}`}
+              title={`${projectType.charAt(0).toUpperCase() + projectType.slice(1)} Schedule`}
+            />
           </div>
         </div>
 

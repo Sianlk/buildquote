@@ -27,6 +27,10 @@ import {
   ELECTRICAL_COMPONENTS,
   CARPENTRY_COMPONENTS,
 } from "@/lib/detailed-components-data";
+import {
+  GLAZING_COMPONENTS,
+  HVAC_COMPONENTS,
+} from "@/lib/expanded-trade-components";
 
 interface SelectedComponent {
   component: DetailedComponent;
@@ -34,7 +38,7 @@ interface SelectedComponent {
 }
 
 interface ComponentSelectorProps {
-  trade: "plumbing" | "electrical" | "carpentry";
+  trade: "plumbing" | "electrical" | "carpentry" | "glazing" | "hvac";
   selectedComponents: SelectedComponent[];
   onComponentsChange: (components: SelectedComponent[]) => void;
   useTradePrices: boolean;
@@ -55,6 +59,10 @@ export function ComponentSelector({
       ? PLUMBING_COMPONENTS
       : trade === "electrical"
       ? ELECTRICAL_COMPONENTS
+      : trade === "glazing"
+      ? GLAZING_COMPONENTS
+      : trade === "hvac"
+      ? HVAC_COMPONENTS
       : CARPENTRY_COMPONENTS;
 
   const categories = ["all", ...new Set(components.map((c) => c.category))];
@@ -109,6 +117,11 @@ export function ComponentSelector({
     consumable: "Consumables",
     electrical: "Electrical",
     tool: "Tools",
+    glazing: "Windows & Doors",
+    hardware: "Hardware",
+    hvac: "HVAC",
+    timber: "Timber",
+    drainage: "Drainage",
   };
 
   return (
@@ -141,8 +154,8 @@ export function ComponentSelector({
               <Tabs value={activeCategory} onValueChange={setActiveCategory}>
                 <TabsList className="flex-wrap h-auto gap-1">
                   {categories.map((cat) => (
-                    <TabsTrigger key={cat} value={cat} className="text-xs">
-                      {categoryLabels[cat] || cat}
+                    <TabsTrigger key={String(cat)} value={String(cat)} className="text-xs">
+                      {categoryLabels[String(cat)] || String(cat)}
                     </TabsTrigger>
                   ))}
                 </TabsList>

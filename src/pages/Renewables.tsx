@@ -122,6 +122,7 @@ export default function Renewables() {
           <TabsList className="flex-wrap h-auto">
             <TabsTrigger value="epc">EPC Calculator</TabsTrigger>
             <TabsTrigger value="solar">Solar PV</TabsTrigger>
+            <TabsTrigger value="battery">Battery Storage</TabsTrigger>
             <TabsTrigger value="heatpump">Heat Pumps</TabsTrigger>
             <TabsTrigger value="grants">Grants & Funding</TabsTrigger>
             <TabsTrigger value="technologies">All Technologies</TabsTrigger>
@@ -363,6 +364,124 @@ export default function Renewables() {
                       </a>
                     </Button>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Battery Storage Tab */}
+          <TabsContent value="battery" className="mt-4 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Battery className="h-5 w-5 text-primary" />
+                    Battery Storage Calculator
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-4 rounded-lg bg-muted/50 border">
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Home batteries store excess solar energy for evening use, increasing self-consumption from ~30% to ~70%.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="p-3 rounded-lg border bg-background">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">5kWh Battery</h4>
+                          <Badge variant="outline">Popular</Badge>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div><span className="text-muted-foreground">Cost:</span> <span className="font-mono">£3,500 - £5,000</span></div>
+                          <div><span className="text-muted-foreground">Backup:</span> <span className="font-mono">4-5 hours</span></div>
+                          <div className="text-success"><span className="text-muted-foreground">Savings:</span> <span className="font-mono">£200/year</span></div>
+                          <div><span className="text-muted-foreground">Lifespan:</span> <span className="font-mono">10-15 years</span></div>
+                        </div>
+                      </div>
+                      
+                      <div className="p-3 rounded-lg border bg-background">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">10kWh Battery</h4>
+                          <Badge variant="outline">Whole Home</Badge>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div><span className="text-muted-foreground">Cost:</span> <span className="font-mono">£6,000 - £8,500</span></div>
+                          <div><span className="text-muted-foreground">Backup:</span> <span className="font-mono">8-10 hours</span></div>
+                          <div className="text-success"><span className="text-muted-foreground">Savings:</span> <span className="font-mono">£400/year</span></div>
+                          <div><span className="text-muted-foreground">Lifespan:</span> <span className="font-mono">10-15 years</span></div>
+                        </div>
+                      </div>
+                      
+                      <div className="p-3 rounded-lg border bg-background">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">13.5kWh Battery (Tesla Powerwall)</h4>
+                          <Badge>Premium</Badge>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div><span className="text-muted-foreground">Cost:</span> <span className="font-mono">£8,500 - £11,000</span></div>
+                          <div><span className="text-muted-foreground">Backup:</span> <span className="font-mono">12+ hours</span></div>
+                          <div className="text-success"><span className="text-muted-foreground">Savings:</span> <span className="font-mono">£500/year</span></div>
+                          <div><span className="text-muted-foreground">Lifespan:</span> <span className="font-mono">10-15 years</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-warning" />
+                    Smart Energy Systems
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg border">
+                      <h4 className="font-medium mb-1">Time-of-Use Tariffs</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Charge batteries when electricity is cheap (overnight) and use during peak times. 
+                        Compatible with Octopus Go, Intelligent Octopus, and similar tariffs.
+                      </p>
+                      <Badge variant="outline" className="mt-2">Saves up to 50% on bills</Badge>
+                    </div>
+                    
+                    <div className="p-3 rounded-lg border">
+                      <h4 className="font-medium mb-1">Vehicle-to-Home (V2H)</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Use your EV battery to power your home during outages or peak times. 
+                        Requires compatible EV and charger (e.g., Nissan Leaf, Ford F-150 Lightning).
+                      </p>
+                      <Badge variant="outline" className="mt-2">60-100kWh storage</Badge>
+                    </div>
+                    
+                    <div className="p-3 rounded-lg border">
+                      <h4 className="font-medium mb-1">Smart Home Integration</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Batteries integrate with smart home systems to optimise energy usage automatically.
+                        Works with Givenergy, SolarEdge, Enphase, and Tesla apps.
+                      </p>
+                    </div>
+                    
+                    <div className="p-3 rounded-lg border bg-success/10">
+                      <h4 className="font-medium mb-1 flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-success" />
+                        Grid Services Income
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Earn money by allowing your battery to support the grid during peak demand.
+                        Programs like Octopus Powerups pay £1-2/kWh for grid services.
+                      </p>
+                      <Badge variant="secondary" className="mt-2">£50-150/year potential</Badge>
+                    </div>
+                  </div>
+                  
+                  <Button variant="outline" asChild>
+                    <a href="https://www.mcs.org.uk/find-an-installer" target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Find MCS Installer
+                    </a>
+                  </Button>
                 </CardContent>
               </Card>
             </div>
