@@ -5,7 +5,7 @@
 export interface DetailedComponent {
   id: string;
   name: string;
-  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool' | 'timber' | 'hardware' | 'safety' | 'insulation' | 'drainage' | 'roofing' | 'masonry' | 'glazing' | 'hvac' | 'security';
+  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool' | 'timber' | 'hardware' | 'safety' | 'insulation' | 'drainage' | 'roofing' | 'masonry' | 'glazing' | 'hvac' | 'security' | 'renewables';
   unit: string;
   tradeCost: number;
   retailCost: number;
@@ -882,6 +882,97 @@ export const HVAC_COMPONENTS: DetailedComponent[] = [
 ];
 
 // ============================================
+// RENEWABLES COMPONENTS - Solar, Battery, Heat Pumps
+// ============================================
+export const RENEWABLES_COMPONENTS: DetailedComponent[] = [
+  // Solar PV Panels
+  { id: 'solar_panel_400w', name: 'Solar PV Panel 400W Mono', category: 'renewables', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'SPV-400M' },
+  { id: 'solar_panel_450w', name: 'Solar PV Panel 450W Mono', category: 'renewables', unit: 'nr', tradeCost: 145.00, retailCost: 215.00, partCode: 'SPV-450M' },
+  { id: 'solar_panel_500w', name: 'Solar PV Panel 500W Mono', category: 'renewables', unit: 'nr', tradeCost: 175.00, retailCost: 265.00, partCode: 'SPV-500M' },
+  { id: 'solar_panel_bifacial', name: 'Solar PV Panel 420W Bifacial', category: 'renewables', unit: 'nr', tradeCost: 165.00, retailCost: 245.00, partCode: 'SPV-420BF' },
+  
+  // Solar Mounting Systems
+  { id: 'solar_rail_2m', name: 'Solar Mounting Rail 2m', category: 'renewables', unit: 'nr', tradeCost: 22.00, retailCost: 35.00, partCode: 'SMR-2M' },
+  { id: 'solar_rail_3m', name: 'Solar Mounting Rail 3m', category: 'renewables', unit: 'nr', tradeCost: 32.00, retailCost: 48.00, partCode: 'SMR-3M' },
+  { id: 'solar_clamp_mid', name: 'Solar Mid Clamp (pair)', category: 'renewables', unit: 'pair', tradeCost: 4.50, retailCost: 7.00, partCode: 'SC-MID' },
+  { id: 'solar_clamp_end', name: 'Solar End Clamp (pair)', category: 'renewables', unit: 'pair', tradeCost: 5.50, retailCost: 8.50, partCode: 'SC-END' },
+  { id: 'solar_roof_hook', name: 'Solar Roof Hook Tile', category: 'renewables', unit: 'nr', tradeCost: 8.50, retailCost: 14.00, partCode: 'SRH-T' },
+  { id: 'solar_roof_hook_slate', name: 'Solar Roof Hook Slate', category: 'renewables', unit: 'nr', tradeCost: 12.00, retailCost: 18.00, partCode: 'SRH-S' },
+  { id: 'solar_flat_mount', name: 'Solar Flat Roof Mount Kit', category: 'renewables', unit: 'kit', tradeCost: 85.00, retailCost: 125.00, partCode: 'SFRM' },
+  { id: 'solar_ground_mount', name: 'Solar Ground Mount Frame (4 panel)', category: 'renewables', unit: 'kit', tradeCost: 285.00, retailCost: 425.00, partCode: 'SGM-4' },
+  
+  // Solar Inverters
+  { id: 'inverter_3kw', name: 'Solar Inverter 3kW String', category: 'renewables', unit: 'nr', tradeCost: 650.00, retailCost: 950.00, partCode: 'INV-3K' },
+  { id: 'inverter_4kw', name: 'Solar Inverter 4kW String', category: 'renewables', unit: 'nr', tradeCost: 780.00, retailCost: 1150.00, partCode: 'INV-4K' },
+  { id: 'inverter_5kw', name: 'Solar Inverter 5kW String', category: 'renewables', unit: 'nr', tradeCost: 920.00, retailCost: 1350.00, partCode: 'INV-5K' },
+  { id: 'inverter_6kw', name: 'Solar Inverter 6kW String', category: 'renewables', unit: 'nr', tradeCost: 1050.00, retailCost: 1550.00, partCode: 'INV-6K' },
+  { id: 'inverter_hybrid_5kw', name: 'Hybrid Inverter 5kW (Battery Ready)', category: 'renewables', unit: 'nr', tradeCost: 1450.00, retailCost: 2150.00, partCode: 'INV-H5K' },
+  { id: 'inverter_hybrid_8kw', name: 'Hybrid Inverter 8kW (Battery Ready)', category: 'renewables', unit: 'nr', tradeCost: 1850.00, retailCost: 2750.00, partCode: 'INV-H8K' },
+  { id: 'microinverter_400', name: 'Microinverter 400W', category: 'renewables', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'MI-400' },
+  { id: 'optimiser_500', name: 'Power Optimiser 500W', category: 'renewables', unit: 'nr', tradeCost: 65.00, retailCost: 95.00, partCode: 'PO-500' },
+  
+  // Battery Storage Systems
+  { id: 'battery_5kwh', name: 'Home Battery 5kWh LiFePO4', category: 'renewables', unit: 'nr', tradeCost: 2850.00, retailCost: 4250.00, partCode: 'BAT-5K' },
+  { id: 'battery_10kwh', name: 'Home Battery 10kWh LiFePO4', category: 'renewables', unit: 'nr', tradeCost: 4950.00, retailCost: 7450.00, partCode: 'BAT-10K' },
+  { id: 'battery_13kwh', name: 'Home Battery 13.5kWh Tesla PW', category: 'renewables', unit: 'nr', tradeCost: 6850.00, retailCost: 9500.00, partCode: 'BAT-TPW' },
+  { id: 'battery_module_2kwh', name: 'Battery Module 2.4kWh (stackable)', category: 'renewables', unit: 'nr', tradeCost: 1250.00, retailCost: 1850.00, partCode: 'BAT-M2' },
+  { id: 'battery_bms', name: 'Battery Management System', category: 'renewables', unit: 'nr', tradeCost: 185.00, retailCost: 275.00, partCode: 'BMS' },
+  { id: 'battery_cabinet', name: 'Battery Enclosure Cabinet', category: 'renewables', unit: 'nr', tradeCost: 145.00, retailCost: 215.00, partCode: 'BAT-CAB' },
+  
+  // Solar Cables & Connectors
+  { id: 'solar_cable_4mm', name: 'Solar DC Cable 4mm² (100m)', category: 'renewables', unit: 'roll', tradeCost: 85.00, retailCost: 125.00, partCode: 'SDC-4' },
+  { id: 'solar_cable_6mm', name: 'Solar DC Cable 6mm² (100m)', category: 'renewables', unit: 'roll', tradeCost: 115.00, retailCost: 175.00, partCode: 'SDC-6' },
+  { id: 'mc4_connector_pair', name: 'MC4 Connector Pair', category: 'renewables', unit: 'pair', tradeCost: 3.50, retailCost: 5.50, partCode: 'MC4' },
+  { id: 'mc4_branch_pair', name: 'MC4 Y-Branch Connector Pair', category: 'renewables', unit: 'pair', tradeCost: 8.50, retailCost: 13.00, partCode: 'MC4-Y' },
+  { id: 'mc4_tool', name: 'MC4 Crimping Tool', category: 'tool', unit: 'nr', tradeCost: 45.00, retailCost: 68.00, partCode: 'MC4-T' },
+  { id: 'solar_isolator_dc', name: 'DC Isolator 1000V 32A', category: 'renewables', unit: 'nr', tradeCost: 35.00, retailCost: 52.00, partCode: 'ISO-DC' },
+  { id: 'solar_isolator_ac', name: 'AC Isolator 20A', category: 'renewables', unit: 'nr', tradeCost: 18.00, retailCost: 28.00, partCode: 'ISO-AC' },
+  { id: 'solar_surge_dc', name: 'DC Surge Protector Type II', category: 'renewables', unit: 'nr', tradeCost: 65.00, retailCost: 95.00, partCode: 'SPD-DC' },
+  
+  // EV Chargers
+  { id: 'ev_charger_7kw_untethered', name: 'EV Charger 7kW Untethered', category: 'renewables', unit: 'nr', tradeCost: 485.00, retailCost: 695.00, partCode: 'EVC-7U' },
+  { id: 'ev_charger_7kw_tethered', name: 'EV Charger 7kW Tethered 5m', category: 'renewables', unit: 'nr', tradeCost: 550.00, retailCost: 795.00, partCode: 'EVC-7T' },
+  { id: 'ev_charger_22kw', name: 'EV Charger 22kW 3-Phase', category: 'renewables', unit: 'nr', tradeCost: 950.00, retailCost: 1450.00, partCode: 'EVC-22' },
+  { id: 'ev_charger_solar', name: 'EV Charger 7kW Solar Compatible', category: 'renewables', unit: 'nr', tradeCost: 650.00, retailCost: 950.00, partCode: 'EVC-SOL' },
+  { id: 'ev_cable_type2', name: 'Type 2 EV Cable 5m', category: 'renewables', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'EVC-T2' },
+  { id: 'ev_post_mount', name: 'EV Charger Post Mount', category: 'renewables', unit: 'nr', tradeCost: 145.00, retailCost: 215.00, partCode: 'EVC-PM' },
+  
+  // Heat Pump Components
+  { id: 'ashp_8kw', name: 'Air Source Heat Pump 8kW', category: 'renewables', unit: 'nr', tradeCost: 3850.00, retailCost: 5750.00, partCode: 'ASHP-8K' },
+  { id: 'ashp_12kw', name: 'Air Source Heat Pump 12kW', category: 'renewables', unit: 'nr', tradeCost: 5250.00, retailCost: 7850.00, partCode: 'ASHP-12K' },
+  { id: 'ashp_16kw', name: 'Air Source Heat Pump 16kW', category: 'renewables', unit: 'nr', tradeCost: 6450.00, retailCost: 9650.00, partCode: 'ASHP-16K' },
+  { id: 'hp_buffer_100l', name: 'Heat Pump Buffer Tank 100L', category: 'renewables', unit: 'nr', tradeCost: 385.00, retailCost: 575.00, partCode: 'HPB-100' },
+  { id: 'hp_buffer_200l', name: 'Heat Pump Buffer Tank 200L', category: 'renewables', unit: 'nr', tradeCost: 550.00, retailCost: 825.00, partCode: 'HPB-200' },
+  { id: 'hp_cylinder_210l', name: 'Heat Pump Cylinder 210L', category: 'renewables', unit: 'nr', tradeCost: 1250.00, retailCost: 1850.00, partCode: 'HPC-210' },
+  { id: 'hp_cylinder_300l', name: 'Heat Pump Cylinder 300L', category: 'renewables', unit: 'nr', tradeCost: 1650.00, retailCost: 2450.00, partCode: 'HPC-300' },
+  { id: 'hp_flow_sensor', name: 'Heat Pump Flow Sensor', category: 'renewables', unit: 'nr', tradeCost: 85.00, retailCost: 125.00, partCode: 'HP-FS' },
+  { id: 'hp_outdoor_unit_stand', name: 'ASHP Anti-Vibration Stand', category: 'renewables', unit: 'nr', tradeCost: 125.00, retailCost: 185.00, partCode: 'ASHP-ST' },
+  { id: 'hp_refrigerant_pipe_5m', name: 'Refrigerant Pipe Set 5m', category: 'renewables', unit: 'set', tradeCost: 145.00, retailCost: 215.00, partCode: 'HP-RP5' },
+  { id: 'hp_refrigerant_pipe_10m', name: 'Refrigerant Pipe Set 10m', category: 'renewables', unit: 'set', tradeCost: 250.00, retailCost: 375.00, partCode: 'HP-RP10' },
+  
+  // Smart Energy Management
+  { id: 'smart_meter_clamp', name: 'CT Clamp Energy Monitor', category: 'renewables', unit: 'nr', tradeCost: 35.00, retailCost: 52.00, partCode: 'CT-MON' },
+  { id: 'smart_energy_hub', name: 'Smart Energy Hub/Gateway', category: 'renewables', unit: 'nr', tradeCost: 185.00, retailCost: 275.00, partCode: 'SEH' },
+  { id: 'solar_diverter', name: 'Solar Immersion Diverter', category: 'renewables', unit: 'nr', tradeCost: 285.00, retailCost: 425.00, partCode: 'SDIV' },
+  { id: 'smart_thermostat_hp', name: 'Smart Thermostat Heat Pump Compatible', category: 'renewables', unit: 'nr', tradeCost: 165.00, retailCost: 245.00, partCode: 'STH-HP' },
+  { id: 'energy_monitor_3ph', name: 'Energy Monitor 3-Phase', category: 'renewables', unit: 'nr', tradeCost: 225.00, retailCost: 335.00, partCode: 'EM-3P' },
+  
+  // MVHR / Ventilation
+  { id: 'mvhr_unit', name: 'MVHR Unit 350m³/h', category: 'renewables', unit: 'nr', tradeCost: 1850.00, retailCost: 2750.00, partCode: 'MVHR-350' },
+  { id: 'mvhr_duct_160', name: 'MVHR Duct 160mm (3m)', category: 'renewables', unit: 'length', tradeCost: 28.00, retailCost: 42.00, partCode: 'MVD-160' },
+  { id: 'mvhr_vent_supply', name: 'MVHR Supply Valve', category: 'renewables', unit: 'nr', tradeCost: 22.00, retailCost: 35.00, partCode: 'MVV-S' },
+  { id: 'mvhr_vent_extract', name: 'MVHR Extract Valve', category: 'renewables', unit: 'nr', tradeCost: 22.00, retailCost: 35.00, partCode: 'MVV-E' },
+  { id: 'mvhr_silencer', name: 'MVHR Duct Silencer 160mm', category: 'renewables', unit: 'nr', tradeCost: 65.00, retailCost: 95.00, partCode: 'MVS-160' },
+  
+  // Installation Consumables
+  { id: 'solar_sealant', name: 'Solar Roof Sealant (310ml)', category: 'consumable', unit: 'nr', tradeCost: 8.50, retailCost: 12.50, partCode: 'SRS' },
+  { id: 'cable_gland_solar', name: 'Weatherproof Cable Gland', category: 'renewables', unit: 'nr', tradeCost: 4.50, retailCost: 7.00, partCode: 'CG-W' },
+  { id: 'earth_rod_1m', name: 'Earth Rod 1.2m with Clamp', category: 'renewables', unit: 'nr', tradeCost: 18.00, retailCost: 28.00, partCode: 'ER-1M' },
+  { id: 'generation_meter', name: 'Generation Meter MID Approved', category: 'renewables', unit: 'nr', tradeCost: 65.00, retailCost: 95.00, partCode: 'GM-MID' },
+  { id: 'g99_relay', name: 'G99 Protection Relay', category: 'renewables', unit: 'nr', tradeCost: 285.00, retailCost: 425.00, partCode: 'G99' },
+];
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 export function getAllComponentsForTrade(trade: string): DetailedComponent[] {
@@ -908,8 +999,13 @@ export function getAllComponentsForTrade(trade: string): DetailedComponent[] {
     case 'hvac':
     case 'heating':
       return HVAC_COMPONENTS;
+    case 'renewables':
+    case 'solar':
+    case 'battery':
+    case 'heat pump':
+      return RENEWABLES_COMPONENTS;
     default:
-      return [...PLUMBING_COMPONENTS, ...ELECTRICAL_COMPONENTS, ...CARPENTRY_COMPONENTS, ...GLAZING_COMPONENTS, ...HVAC_COMPONENTS];
+      return [...PLUMBING_COMPONENTS, ...ELECTRICAL_COMPONENTS, ...CARPENTRY_COMPONENTS, ...GLAZING_COMPONENTS, ...HVAC_COMPONENTS, ...RENEWABLES_COMPONENTS];
   }
 }
 
@@ -924,6 +1020,7 @@ export function getComponentById(componentId: string): DetailedComponent | undef
     ...SAFETY_COMPONENTS,
     ...GLAZING_COMPONENTS,
     ...HVAC_COMPONENTS,
+    ...RENEWABLES_COMPONENTS,
   ];
   return allComponents.find(c => c.id === componentId);
 }
@@ -939,6 +1036,7 @@ export function getComponentsByCategory(category: DetailedComponent['category'])
     ...SAFETY_COMPONENTS,
     ...GLAZING_COMPONENTS,
     ...HVAC_COMPONENTS,
+    ...RENEWABLES_COMPONENTS,
   ];
   return allComponents.filter(c => c.category === category);
 }
@@ -953,7 +1051,7 @@ export function calculateComponentsCost(
   }, 0);
 }
 
-export function getRequiredComponentsForJob(tradeId: string, jobId: string): DetailedComponent[] {
+export function getRequiredComponentsForJob(tradeId: string, _jobId: string): DetailedComponent[] {
   // Map specific jobs to their required components
   return getAllComponentsForTrade(tradeId).slice(0, 20);
 }

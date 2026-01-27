@@ -5,7 +5,7 @@
 export interface DetailedComponent {
   id: string;
   name: string;
-  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool' | 'timber' | 'hardware' | 'safety' | 'insulation' | 'drainage' | 'roofing' | 'masonry' | 'glazing' | 'hvac' | 'security';
+  category: 'pipe' | 'fitting' | 'valve' | 'seal' | 'fixing' | 'consumable' | 'electrical' | 'tool' | 'timber' | 'hardware' | 'safety' | 'insulation' | 'drainage' | 'roofing' | 'masonry' | 'glazing' | 'hvac' | 'security' | 'renewables';
   unit: string;
   tradeCost: number;
   retailCost: number;

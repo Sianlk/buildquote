@@ -30,6 +30,7 @@ import {
 import {
   GLAZING_COMPONENTS,
   HVAC_COMPONENTS,
+  RENEWABLES_COMPONENTS,
 } from "@/lib/expanded-trade-components";
 
 interface SelectedComponent {
@@ -38,7 +39,7 @@ interface SelectedComponent {
 }
 
 interface ComponentSelectorProps {
-  trade: "plumbing" | "electrical" | "carpentry" | "glazing" | "hvac";
+  trade: "plumbing" | "electrical" | "carpentry" | "glazing" | "hvac" | "renewables";
   selectedComponents: SelectedComponent[];
   onComponentsChange: (components: SelectedComponent[]) => void;
   useTradePrices: boolean;
@@ -63,6 +64,8 @@ export function ComponentSelector({
       ? GLAZING_COMPONENTS
       : trade === "hvac"
       ? HVAC_COMPONENTS
+      : trade === "renewables"
+      ? RENEWABLES_COMPONENTS
       : CARPENTRY_COMPONENTS;
 
   const categories = ["all", ...new Set(components.map((c) => c.category))];
@@ -122,6 +125,7 @@ export function ComponentSelector({
     hvac: "HVAC",
     timber: "Timber",
     drainage: "Drainage",
+    renewables: "Renewables",
   };
 
   return (
