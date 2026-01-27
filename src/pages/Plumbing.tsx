@@ -373,22 +373,22 @@ const Plumbing = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[600px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Outlet</th>
-                        <th className="text-left p-2">Min Flow</th>
-                        <th className="text-left p-2">Optimal Flow</th>
-                        <th className="text-left p-2">Min Pressure</th>
+                        <th className="text-left p-2 whitespace-nowrap">Outlet</th>
+                        <th className="text-left p-2 whitespace-nowrap">Min Flow</th>
+                        <th className="text-left p-2 whitespace-nowrap">Optimal Flow</th>
+                        <th className="text-left p-2 whitespace-nowrap">Min Pressure</th>
                       </tr>
                     </thead>
                     <tbody>
                       {FLOW_RATE_REQUIREMENTS.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2 font-medium">{row.outlet}</td>
-                          <td className="p-2">{row.minFlow}</td>
-                          <td className="p-2">{row.optimalFlow}</td>
-                          <td className="p-2">{row.minPressure}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.outlet}</td>
+                          <td className="p-2 whitespace-nowrap">{row.minFlow}</td>
+                          <td className="p-2 whitespace-nowrap">{row.optimalFlow}</td>
+                          <td className="p-2 whitespace-nowrap">{row.minPressure}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -444,22 +444,22 @@ const Plumbing = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[550px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Bedrooms</th>
-                        <th className="text-left p-2">Bathrooms</th>
-                        <th className="text-left p-2">Recommended Size</th>
-                        <th className="text-left p-2">Recovery Time</th>
+                        <th className="text-left p-2 whitespace-nowrap">Bedrooms</th>
+                        <th className="text-left p-2 whitespace-nowrap">Bathrooms</th>
+                        <th className="text-left p-2 whitespace-nowrap">Recommended Size</th>
+                        <th className="text-left p-2 whitespace-nowrap">Recovery Time</th>
                       </tr>
                     </thead>
                     <tbody>
                       {CYLINDER_SIZING_GUIDE.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2">{row.bedrooms}</td>
-                          <td className="p-2">{row.bathrooms}</td>
-                          <td className="p-2 font-medium">{row.recommendedSize}</td>
-                          <td className="p-2 text-muted-foreground">{row.recoveryTime}</td>
+                          <td className="p-2 whitespace-nowrap">{row.bedrooms}</td>
+                          <td className="p-2 whitespace-nowrap">{row.bathrooms}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.recommendedSize}</td>
+                          <td className="p-2 text-muted-foreground whitespace-nowrap">{row.recoveryTime}</td>
                         </tr>
                       ))}
                     </tbody>
