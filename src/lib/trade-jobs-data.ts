@@ -1987,6 +1987,306 @@ export const TRADE_CATEGORIES: TradeCategory[] = [
         safetyNotes: ['Heavy slabs - use slab lifter', 'Dust from cutting - wear mask/eye protection', 'Cement burns']
       }
     ]
+  },
+  {
+    id: 'renewables',
+    name: 'Renewables & Green Energy',
+    icon: 'Sun',
+    description: 'Solar PV, battery storage, heat pumps, EV chargers',
+    hourlyRateTrade: 55,
+    hourlyRateRetail: 68,
+    jobs: [
+      {
+        id: 'solar_pv_4kw',
+        name: 'Install 4kWp Solar PV System',
+        description: 'Full roof-mounted solar PV installation with inverter, mounting, and grid connection',
+        labourHours: 16,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Solar PV Panel 400W', unit: 'nr', quantity: 10, unitCostTrade: 145, unitCostRetail: 195, wasteFactor: 0 },
+          { name: 'Hybrid Inverter 5kW', unit: 'nr', quantity: 1, unitCostTrade: 1250, unitCostRetail: 1650, wasteFactor: 0 },
+          { name: 'Roof Mounting Kit (In-Roof)', unit: 'set', quantity: 1, unitCostTrade: 450, unitCostRetail: 620, wasteFactor: 0 },
+          { name: 'DC Cable 6mm Twin', unit: 'm', quantity: 30, unitCostTrade: 2.80, unitCostRetail: 4.20, wasteFactor: 0.10 },
+          { name: 'AC Cable 6mm', unit: 'm', quantity: 15, unitCostTrade: 3.50, unitCostRetail: 5.20, wasteFactor: 0.10 },
+          { name: 'DC Isolator', unit: 'nr', quantity: 2, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'AC Isolator', unit: 'nr', quantity: 1, unitCostTrade: 28, unitCostRetail: 42, wasteFactor: 0 },
+          { name: 'Generation Meter', unit: 'nr', quantity: 1, unitCostTrade: 85, unitCostRetail: 125, wasteFactor: 0 },
+          { name: 'MC4 Connectors', unit: 'pack', quantity: 2, unitCostTrade: 18, unitCostRetail: 28, wasteFactor: 0 },
+          { name: 'Cable Trunking', unit: 'm', quantity: 10, unitCostTrade: 4.50, unitCostRetail: 6.80, wasteFactor: 0.10 },
+          { name: 'Roof Flashings', unit: 'nr', quantity: 4, unitCostTrade: 12, unitCostRetail: 18, wasteFactor: 0 },
+        ],
+        tools: ['Scaffolding', 'Roof ladder', 'Drill', 'Multimeter', 'Cable crimpers', 'Torque wrench', 'PPE harness'],
+        instructions: [
+          '1. Erect scaffolding and secure roof access',
+          '2. Survey roof structure and confirm load capacity',
+          '3. Mark out panel positions (south-facing optimal)',
+          '4. Install mounting rails/hooks to rafters',
+          '5. Fit roof flashings around penetrations',
+          '6. Run DC cables from roof to inverter location',
+          '7. Mount panels on rails, secure with clamps',
+          '8. Wire panels in series strings (check polarity)',
+          '9. Connect MC4 connectors and test string voltage',
+          '10. Install DC isolators at roof and inverter',
+          '11. Mount inverter in suitable location (ventilated)',
+          '12. Connect DC input to inverter',
+          '13. Connect AC output to consumer unit via isolator',
+          '14. Install generation meter',
+          '15. Commission system and test all functions',
+          '16. Complete MCS documentation and DNO notification',
+          '17. Register system for Smart Export Guarantee'
+        ],
+        safetyNotes: [
+          'Working at height - scaffolding and harness required',
+          'DC voltage present in daylight - cannot isolate panels',
+          'Roof load capacity must be confirmed',
+          'MCS certification required for SEG eligibility'
+        ],
+        buildingRegsNotes: [
+          'Part L - Conservation of fuel and power',
+          'Part P - Electrical safety',
+          'DNO notification required for G99 connection',
+          'MCS registration for export tariff eligibility'
+        ]
+      },
+      {
+        id: 'solar_pv_6kw',
+        name: 'Install 6kWp Solar PV System',
+        description: 'Larger residential solar installation for 4-5 bed properties',
+        labourHours: 20,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Solar PV Panel 400W', unit: 'nr', quantity: 15, unitCostTrade: 145, unitCostRetail: 195, wasteFactor: 0 },
+          { name: 'Hybrid Inverter 6kW', unit: 'nr', quantity: 1, unitCostTrade: 1450, unitCostRetail: 1950, wasteFactor: 0 },
+          { name: 'Roof Mounting Kit (In-Roof)', unit: 'set', quantity: 1, unitCostTrade: 650, unitCostRetail: 880, wasteFactor: 0 },
+          { name: 'DC Cable 6mm Twin', unit: 'm', quantity: 45, unitCostTrade: 2.80, unitCostRetail: 4.20, wasteFactor: 0.10 },
+          { name: 'AC Cable 10mm', unit: 'm', quantity: 15, unitCostTrade: 5.20, unitCostRetail: 7.50, wasteFactor: 0.10 },
+          { name: 'DC Isolator', unit: 'nr', quantity: 3, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'AC Isolator', unit: 'nr', quantity: 1, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'Generation Meter', unit: 'nr', quantity: 1, unitCostTrade: 85, unitCostRetail: 125, wasteFactor: 0 },
+          { name: 'MC4 Connectors', unit: 'pack', quantity: 3, unitCostTrade: 18, unitCostRetail: 28, wasteFactor: 0 },
+          { name: 'Cable Trunking', unit: 'm', quantity: 15, unitCostTrade: 4.50, unitCostRetail: 6.80, wasteFactor: 0.10 },
+          { name: 'Roof Flashings', unit: 'nr', quantity: 6, unitCostTrade: 12, unitCostRetail: 18, wasteFactor: 0 },
+        ],
+        tools: ['Scaffolding', 'Roof ladder', 'Drill', 'Multimeter', 'Cable crimpers', 'Torque wrench', 'PPE harness'],
+        instructions: [
+          '1. Erect scaffolding with edge protection',
+          '2. Survey roof structure and plan array layout',
+          '3. Install mounting system to rafters',
+          '4. Weather-proof all penetrations',
+          '5. Run DC cabling in UV-rated conduit',
+          '6. Mount panels and connect strings',
+          '7. Test string voltages match design',
+          '8. Install inverter with adequate ventilation',
+          '9. Connect DC and AC circuits',
+          '10. Install metering and monitoring',
+          '11. Commission and test system performance',
+          '12. Complete MCS certification',
+          '13. Notify DNO and register for SEG'
+        ],
+        safetyNotes: [
+          'Full scaffolding required for larger installation',
+          'Multiple DC strings - label clearly',
+          'Heavier panels - two-person lift'
+        ],
+        buildingRegsNotes: [
+          'Part L - Energy efficiency',
+          'Part P - Electrical installation',
+          'G99 application may be required for 6kW+'
+        ]
+      },
+      {
+        id: 'battery_10kwh',
+        name: 'Install 10kWh Battery Storage',
+        description: 'Home battery system for solar storage and grid backup',
+        labourHours: 8,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Battery Unit 10kWh (GivEnergy/Pylontech)', unit: 'nr', quantity: 1, unitCostTrade: 4200, unitCostRetail: 5500, wasteFactor: 0 },
+          { name: 'Battery Management System', unit: 'nr', quantity: 1, unitCostTrade: 350, unitCostRetail: 480, wasteFactor: 0 },
+          { name: 'DC Cable 16mm', unit: 'm', quantity: 5, unitCostTrade: 8.50, unitCostRetail: 12, wasteFactor: 0.10 },
+          { name: 'AC Cable 6mm', unit: 'm', quantity: 10, unitCostTrade: 3.50, unitCostRetail: 5.20, wasteFactor: 0.10 },
+          { name: 'DC Isolator', unit: 'nr', quantity: 1, unitCostTrade: 45, unitCostRetail: 65, wasteFactor: 0 },
+          { name: 'Battery Mounting Bracket', unit: 'set', quantity: 1, unitCostTrade: 85, unitCostRetail: 125, wasteFactor: 0 },
+          { name: 'CT Clamp (Grid Monitoring)', unit: 'nr', quantity: 1, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+        ],
+        tools: ['Drill', 'Spirit level', 'Multimeter', 'Torque wrench', 'Cable crimpers'],
+        instructions: [
+          '1. Select installation location (garage/utility)',
+          '2. Ensure adequate ventilation and temp control',
+          '3. Mount battery bracket securely to wall',
+          '4. Install battery unit on bracket',
+          '5. Connect DC cables to hybrid inverter',
+          '6. Install DC isolator between battery and inverter',
+          '7. Connect BMS and monitoring system',
+          '8. Install CT clamp on grid supply',
+          '9. Configure inverter for battery operation',
+          '10. Set up charging schedules and modes',
+          '11. Test backup functionality',
+          '12. Configure monitoring app',
+          '13. Explain system operation to customer'
+        ],
+        safetyNotes: [
+          'Lithium batteries - fire risk if damaged',
+          'High DC voltage - isolate before work',
+          'Temperature monitoring essential',
+          'Follow manufacturer safety guidelines'
+        ],
+        buildingRegsNotes: [
+          'Part P - Electrical safety',
+          'Fire safety considerations for lithium storage',
+          'Ventilation requirements for battery room'
+        ]
+      },
+      {
+        id: 'ashp_installation',
+        name: 'Install Air Source Heat Pump (8-12kW)',
+        description: 'Full ASHP installation replacing gas/oil boiler',
+        labourHours: 32,
+        skillLevel: 'master',
+        materials: [
+          { name: 'Air Source Heat Pump 8-12kW', unit: 'nr', quantity: 1, unitCostTrade: 6500, unitCostRetail: 8500, wasteFactor: 0 },
+          { name: 'Hot Water Cylinder 200L', unit: 'nr', quantity: 1, unitCostTrade: 650, unitCostRetail: 850, wasteFactor: 0 },
+          { name: 'Buffer Tank 50L', unit: 'nr', quantity: 1, unitCostTrade: 280, unitCostRetail: 380, wasteFactor: 0 },
+          { name: 'Flow/Return Pipework Kit', unit: 'set', quantity: 1, unitCostTrade: 450, unitCostRetail: 620, wasteFactor: 0 },
+          { name: 'Expansion Vessel 24L', unit: 'nr', quantity: 1, unitCostTrade: 85, unitCostRetail: 125, wasteFactor: 0 },
+          { name: 'Glycol/Antifreeze', unit: 'litre', quantity: 20, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: 'Pump Station', unit: 'nr', quantity: 1, unitCostTrade: 385, unitCostRetail: 520, wasteFactor: 0 },
+          { name: 'Room Thermostat/Controller', unit: 'nr', quantity: 1, unitCostTrade: 145, unitCostRetail: 210, wasteFactor: 0 },
+          { name: 'Outdoor Unit Base/Anti-Vibration', unit: 'set', quantity: 1, unitCostTrade: 120, unitCostRetail: 175, wasteFactor: 0 },
+          { name: 'Electrical Supply Cable', unit: 'm', quantity: 15, unitCostTrade: 8.50, unitCostRetail: 12, wasteFactor: 0.10 },
+          { name: 'Condensate Drain Kit', unit: 'set', quantity: 1, unitCostTrade: 45, unitCostRetail: 65, wasteFactor: 0 },
+        ],
+        tools: ['Pipe cutter', 'Pipe bender', 'Blow torch', 'Vacuum pump', 'Manifold gauges', 'Multimeter', 'Flow meter'],
+        instructions: [
+          '1. Complete heat loss survey and system design',
+          '2. Check radiator sizing (may need upsizing)',
+          '3. Install outdoor unit on anti-vibration base',
+          '4. Ensure minimum clearances and airflow',
+          '5. Run refrigerant pipework to indoor unit',
+          '6. Pressure test and vacuum system',
+          '7. Release refrigerant charge',
+          '8. Install hot water cylinder in suitable location',
+          '9. Connect cylinder to heat pump circuits',
+          '10. Install buffer tank if required',
+          '11. Connect to existing radiator circuit',
+          '12. Install expansion vessel and safety valve',
+          '13. Fill and pressurise system with glycol mix',
+          '14. Connect electrical supply (dedicated circuit)',
+          '15. Install controller and room thermostat',
+          '16. Commission heat pump per manufacturer',
+          '17. Set up heating curves and schedules',
+          '18. Complete MCS documentation',
+          '19. Apply for BUS grant (£7,500)',
+          '20. Handover and customer training'
+        ],
+        safetyNotes: [
+          'F-Gas certification required for refrigerant handling',
+          'Heavy outdoor unit - mechanical lifting may be needed',
+          'Electrical work by Part P qualified',
+          'Glycol handling precautions'
+        ],
+        buildingRegsNotes: [
+          'Part L - Energy efficiency requirements',
+          'Part G - Hot water safety (TMV)',
+          'Part P - Electrical installation',
+          'MCS certification for BUS grant eligibility',
+          'Permitted development rules for ASHP siting'
+        ]
+      },
+      {
+        id: 'ev_charger_7kw',
+        name: 'Install 7kW EV Charger',
+        description: 'Home EV charging point with smart functionality',
+        labourHours: 6,
+        skillLevel: 'qualified',
+        materials: [
+          { name: 'Smart EV Charger 7kW (Ohme/Zappi)', unit: 'nr', quantity: 1, unitCostTrade: 650, unitCostRetail: 850, wasteFactor: 0 },
+          { name: '6mm SWA Cable', unit: 'm', quantity: 15, unitCostTrade: 6.50, unitCostRetail: 9.50, wasteFactor: 0.10 },
+          { name: '32A Type B RCBO', unit: 'nr', quantity: 1, unitCostTrade: 45, unitCostRetail: 65, wasteFactor: 0 },
+          { name: 'Henley Block', unit: 'nr', quantity: 1, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'Earth Electrode', unit: 'nr', quantity: 1, unitCostTrade: 28, unitCostRetail: 42, wasteFactor: 0 },
+          { name: 'SWA Glands', unit: 'nr', quantity: 2, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+          { name: 'Cable Clips/Cleats', unit: 'pack', quantity: 1, unitCostTrade: 15, unitCostRetail: 22, wasteFactor: 0 },
+        ],
+        tools: ['SDS drill', 'Cable glands', 'Multimeter', 'Earth loop tester', 'Crimping tool'],
+        instructions: [
+          '1. Survey electrical supply capacity',
+          '2. Select charger mounting location',
+          '3. Install dedicated circuit from consumer unit',
+          '4. Run SWA cable to charger location',
+          '5. Install earth electrode if PME supply',
+          '6. Mount charger unit on wall',
+          '7. Terminate SWA cable with glands',
+          '8. Connect to charger terminals',
+          '9. Install RCBO in consumer unit',
+          '10. Test earth fault loop impedance',
+          '11. Test RCD operation',
+          '12. Commission charger and set up app',
+          '13. Configure smart charging features',
+          '14. Complete electrical installation certificate',
+          '15. Register with DNO if required'
+        ],
+        safetyNotes: [
+          'Working with mains supply - isolate first',
+          'PME earthing restrictions - check regulations',
+          'Outdoor installation - IP65 rated equipment'
+        ],
+        buildingRegsNotes: [
+          'Part P - Electrical installation',
+          'Part S - EV charging (new builds)',
+          'BS 7671 requirements for EV circuits',
+          'OZEV grant may apply for landlords'
+        ]
+      },
+      {
+        id: 'mvhr_installation',
+        name: 'Install MVHR System',
+        description: 'Mechanical ventilation with heat recovery for whole house',
+        labourHours: 24,
+        skillLevel: 'master',
+        materials: [
+          { name: 'MVHR Unit (Vent-Axia/Zehnder)', unit: 'nr', quantity: 1, unitCostTrade: 1850, unitCostRetail: 2450, wasteFactor: 0 },
+          { name: 'Ducting 125mm Semi-Rigid', unit: 'm', quantity: 40, unitCostTrade: 8.50, unitCostRetail: 12, wasteFactor: 0.10 },
+          { name: 'Ducting 75mm Semi-Rigid', unit: 'm', quantity: 30, unitCostTrade: 5.50, unitCostRetail: 8, wasteFactor: 0.10 },
+          { name: 'Manifold Box', unit: 'nr', quantity: 2, unitCostTrade: 145, unitCostRetail: 210, wasteFactor: 0 },
+          { name: 'Ceiling Valves Extract', unit: 'nr', quantity: 4, unitCostTrade: 25, unitCostRetail: 38, wasteFactor: 0 },
+          { name: 'Ceiling Valves Supply', unit: 'nr', quantity: 5, unitCostTrade: 25, unitCostRetail: 38, wasteFactor: 0 },
+          { name: 'External Grilles', unit: 'nr', quantity: 2, unitCostTrade: 45, unitCostRetail: 68, wasteFactor: 0 },
+          { name: 'Condensate Drain Kit', unit: 'set', quantity: 1, unitCostTrade: 35, unitCostRetail: 52, wasteFactor: 0 },
+          { name: 'Duct Tape Aluminium', unit: 'roll', quantity: 3, unitCostTrade: 8, unitCostRetail: 12, wasteFactor: 0 },
+        ],
+        tools: ['Core drill', 'Ducting cutters', 'Holesaw set', 'Multimeter', 'Anemometer', 'Drill'],
+        instructions: [
+          '1. Design duct layout and airflow requirements',
+          '2. Locate MVHR unit (loft/utility room)',
+          '3. Core drill 125mm holes for external grilles',
+          '4. Install external intake and exhaust grilles',
+          '5. Mount MVHR unit with anti-vibration',
+          '6. Run main ducts to manifolds',
+          '7. Install manifold boxes in accessible locations',
+          '8. Run branch ducts to each room',
+          '9. Cut ceiling holes for valves',
+          '10. Install supply valves in living areas/bedrooms',
+          '11. Install extract valves in wet rooms/kitchen',
+          '12. Connect condensate drain',
+          '13. Connect electrical supply',
+          '14. Commission and balance airflows',
+          '15. Test heat recovery efficiency',
+          '16. Set up boost controls',
+          '17. Handover and filter maintenance briefing'
+        ],
+        safetyNotes: [
+          'Working at height in loft spaces',
+          'Dust from drilling - wear mask',
+          'Support ducting to prevent sagging'
+        ],
+        buildingRegsNotes: [
+          'Part F - Ventilation requirements',
+          'Part L - Energy efficiency (heat recovery)',
+          'SAE 2016 compliant installation'
+        ]
+      }
+    ]
   }
 ];
 
