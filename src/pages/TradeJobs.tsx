@@ -51,6 +51,7 @@ import {
   Printer,
   ShoppingCart,
   Loader2,
+  Sun,
 } from "lucide-react";
 import { TRADE_CATEGORIES, calculateJobCost, getJobsForTrade } from "@/lib/trade-jobs-data";
 import { MaterialsShoppingList } from "@/components/materials/MaterialsShoppingList";
@@ -74,6 +75,7 @@ const TRADE_ICONS: Record<string, any> = {
   roofing: Home,
   bricklaying: Square,
   groundworks: Shovel,
+  renewables: Sun,
 };
 
 const STATUS_CONFIG = {

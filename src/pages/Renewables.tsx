@@ -29,6 +29,8 @@ import {
   calculateEPCPathway,
   type EPCBand,
 } from "@/lib/renewables-module-data";
+import SolarPVROICalculator from "@/components/renewables/SolarPVROICalculator";
+import HeatPumpSizingWizard from "@/components/renewables/HeatPumpSizingWizard";
 
 const TECH_ICONS: Record<string, React.ReactNode> = {
   solar_pv: <Sun className="h-5 w-5" />,
@@ -119,10 +121,12 @@ export default function Renewables() {
         </div>
 
         <Tabs defaultValue="epc">
-          <TabsList className="flex-wrap h-auto">
+          <TabsList className="flex-wrap h-auto overflow-x-auto">
             <TabsTrigger value="epc">EPC Calculator</TabsTrigger>
+            <TabsTrigger value="solar-roi">Solar PV ROI</TabsTrigger>
             <TabsTrigger value="solar">Solar PV</TabsTrigger>
             <TabsTrigger value="battery">Battery Storage</TabsTrigger>
+            <TabsTrigger value="heatpump-wizard">Heat Pump Wizard</TabsTrigger>
             <TabsTrigger value="heatpump">Heat Pumps</TabsTrigger>
             <TabsTrigger value="grants">Grants & Funding</TabsTrigger>
             <TabsTrigger value="technologies">All Technologies</TabsTrigger>
@@ -270,6 +274,11 @@ export default function Renewables() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Solar PV ROI Calculator Tab */}
+          <TabsContent value="solar-roi" className="mt-4 space-y-4">
+            <SolarPVROICalculator />
           </TabsContent>
 
           {/* Solar Tab */}
@@ -485,6 +494,11 @@ export default function Renewables() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Heat Pump Sizing Wizard Tab */}
+          <TabsContent value="heatpump-wizard" className="mt-4 space-y-4">
+            <HeatPumpSizingWizard />
           </TabsContent>
 
           {/* Heat Pumps Tab */}
