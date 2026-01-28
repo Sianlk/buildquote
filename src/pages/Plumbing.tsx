@@ -69,28 +69,28 @@ const Plumbing = () => {
         <Tabs defaultValue="gas-safe" className="space-y-4">
           {/*
             Mobile fix: the tab headers were dense and could collide/overlap on small screens.
-            We switch to a horizontally-scrollable row on mobile, and keep a wrapped layout on lg+.
+            We use a horizontally-scrollable row with flex-nowrap to prevent wrapping.
           */}
-          <TabsList className="w-full justify-start gap-2 overflow-x-auto whitespace-nowrap lg:grid lg:grid-cols-5 lg:gap-2 lg:overflow-visible">
-            <TabsTrigger value="gas-safe" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <Flame className="h-4 w-4" />
-              Gas Safe
+          <TabsList className="w-full h-auto flex flex-nowrap justify-start gap-1 overflow-x-auto pb-1">
+            <TabsTrigger value="gas-safe" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Flame className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Gas Safe</span>
             </TabsTrigger>
-            <TabsTrigger value="pipe-sizing" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <Calculator className="h-4 w-4" />
-              Pipe Sizing
+            <TabsTrigger value="pipe-sizing" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Pipe Sizing</span>
             </TabsTrigger>
-            <TabsTrigger value="boiler-install" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <FileText className="h-4 w-4" />
-              Boiler Install
+            <TabsTrigger value="boiler-install" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Boiler</span>
             </TabsTrigger>
-            <TabsTrigger value="water-regs" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <Shield className="h-4 w-4" />
-              Water Regs
+            <TabsTrigger value="water-regs" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Water Regs</span>
             </TabsTrigger>
-            <TabsTrigger value="cylinders" className="inline-flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <Thermometer className="h-4 w-4" />
-              Cylinders
+            <TabsTrigger value="cylinders" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Thermometer className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Cylinders</span>
             </TabsTrigger>
           </TabsList>
 
@@ -109,16 +109,14 @@ const Plumbing = () => {
               <CardContent>
                 <div className="grid gap-4">
                   {GAS_SAFE_REGULATIONS.map((reg) => (
-                    <div key={reg.id} className="border rounded-lg p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="secondary">{reg.category}</Badge>
-                            <span className="text-sm text-muted-foreground">{reg.reference}</span>
-                          </div>
-                          <h4 className="font-semibold mb-1">{reg.requirement}</h4>
-                          <p className="text-sm text-muted-foreground">{reg.details}</p>
+                    <div key={reg.id} className="border rounded-lg p-3 sm:p-4">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">{reg.category}</Badge>
+                          <span className="text-xs sm:text-sm text-muted-foreground">{reg.reference}</span>
                         </div>
+                        <h4 className="font-semibold text-sm sm:text-base leading-tight">{reg.requirement}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{reg.details}</p>
                       </div>
                     </div>
                   ))}

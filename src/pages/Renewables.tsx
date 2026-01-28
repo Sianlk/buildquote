@@ -31,6 +31,9 @@ import {
 } from "@/lib/renewables-module-data";
 import SolarPVROICalculator from "@/components/renewables/SolarPVROICalculator";
 import HeatPumpSizingWizard from "@/components/renewables/HeatPumpSizingWizard";
+import SolarBatteryPackageCalculator from "@/components/renewables/SolarBatteryPackageCalculator";
+import GSHPSizingCalculator from "@/components/renewables/GSHPSizingCalculator";
+import SmartTariffComparison from "@/components/renewables/SmartTariffComparison";
 
 const TECH_ICONS: Record<string, React.ReactNode> = {
   solar_pv: <Sun className="h-5 w-5" />,
@@ -121,15 +124,18 @@ export default function Renewables() {
         </div>
 
         <Tabs defaultValue="epc">
-          <TabsList className="flex-wrap h-auto overflow-x-auto">
+          <TabsList className="flex-wrap h-auto overflow-x-auto gap-1">
             <TabsTrigger value="epc">EPC Calculator</TabsTrigger>
             <TabsTrigger value="solar-roi">Solar PV ROI</TabsTrigger>
+            <TabsTrigger value="solar-battery">Solar + Battery</TabsTrigger>
+            <TabsTrigger value="heatpump-wizard">Heat Pump Wizard</TabsTrigger>
+            <TabsTrigger value="gshp-sizing">GSHP Sizing</TabsTrigger>
+            <TabsTrigger value="smart-tariffs">Smart Tariffs</TabsTrigger>
             <TabsTrigger value="solar">Solar PV</TabsTrigger>
             <TabsTrigger value="battery">Battery Storage</TabsTrigger>
-            <TabsTrigger value="heatpump-wizard">Heat Pump Wizard</TabsTrigger>
             <TabsTrigger value="heatpump">Heat Pumps</TabsTrigger>
-            <TabsTrigger value="grants">Grants & Funding</TabsTrigger>
-            <TabsTrigger value="technologies">All Technologies</TabsTrigger>
+            <TabsTrigger value="grants">Grants</TabsTrigger>
+            <TabsTrigger value="technologies">All Tech</TabsTrigger>
           </TabsList>
 
           {/* EPC Calculator Tab */}
@@ -279,6 +285,21 @@ export default function Renewables() {
           {/* Solar PV ROI Calculator Tab */}
           <TabsContent value="solar-roi" className="mt-4 space-y-4">
             <SolarPVROICalculator />
+          </TabsContent>
+
+          {/* Solar + Battery Package Calculator Tab */}
+          <TabsContent value="solar-battery" className="mt-4 space-y-4">
+            <SolarBatteryPackageCalculator />
+          </TabsContent>
+
+          {/* GSHP Sizing Calculator Tab */}
+          <TabsContent value="gshp-sizing" className="mt-4 space-y-4">
+            <GSHPSizingCalculator />
+          </TabsContent>
+
+          {/* Smart Tariff Comparison Tab */}
+          <TabsContent value="smart-tariffs" className="mt-4 space-y-4">
+            <SmartTariffComparison />
           </TabsContent>
 
           {/* Solar Tab */}
