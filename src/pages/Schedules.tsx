@@ -81,24 +81,30 @@ export default function Schedules() {
             </Select>
 
             <ExportButtons
-              data={schedule.tasks.map(t => ({
+              data={schedule.tasks.map((t, idx) => ({
+                order: idx + 1,
                 task_name: t.name,
                 trade: t.trade,
                 duration_days: t.duration,
                 start_day: t.startDay || 1,
                 end_day: t.endDay || t.duration,
+                start_date: formatGanttDate(t.startDay || 1, projectStart),
+                end_date: formatGanttDate(t.endDay || t.duration, projectStart),
                 dependencies: t.dependencies.join(", "),
+                resources: t.resources.join(", ") || "None",
               }))}
               columns={[
+                { key: "order", label: "#", width: 30 },
                 { key: "task_name", label: "Task", width: 150 },
                 { key: "trade", label: "Trade", width: 100 },
-                { key: "duration_days", label: "Duration (Days)", width: 80 },
-                { key: "start_day", label: "Start Day", width: 60 },
-                { key: "end_day", label: "End Day", width: 60 },
-                { key: "dependencies", label: "Dependencies", width: 120 },
+                { key: "duration_days", label: "Days", width: 50 },
+                { key: "start_date", label: "Start", width: 80 },
+                { key: "end_date", label: "End", width: 80 },
+                { key: "dependencies", label: "Depends On", width: 120 },
+                { key: "resources", label: "Resources/Plant", width: 120 },
               ]}
               filename={`schedule-${projectType}`}
-              title={`${projectType.charAt(0).toUpperCase() + projectType.slice(1)} Schedule`}
+              title={`${projectType.charAt(0).toUpperCase() + projectType.slice(1)} Project Schedule`}
             />
           </div>
         </div>
