@@ -425,7 +425,34 @@ export default function NewProject() {
 
       if (geometryError) throw geometryError;
 
-      toast.success("Project created successfully!");
+      // Auto-generate schedule tasks based on project type
+      const { generateProjectSchedule } = await import("@/lib/auto-project-generation");
+      const schedule = generateProjectSchedule(selectedTypes[0], totalFloorArea);
+      
+      // Insert auto-generated schedule tasks
+      const scheduleInserts = schedule.tasks.map((task, index) => ({
+        project_id: project.id,
+        task_name: task.name,
+        trade: task.trade,
+        duration_days: task.duration,
+        start_day: task.startDay || 1,
+        end_day: task.endDay || task.duration,
+        dependencies: task.dependencies,
+        machinery: task.resources,
+        sort_order: index + 1,
+      }));
+
+      if (scheduleInserts.length > 0) {
+        const { error: scheduleError } = await supabase
+          .from("project_schedules")
+          .insert(scheduleInserts);
+        
+        if (scheduleError) {
+          console.warn("Failed to auto-generate schedule:", scheduleError);
+        }
+      }
+
+      toast.success("Project created with auto-generated schedule!");
       navigate(`/dashboard/projects/${project.id}`);
     } catch (error: any) {
       toast.error(error.message || "Failed to create project");

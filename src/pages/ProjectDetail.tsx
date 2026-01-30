@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
@@ -18,11 +19,23 @@ import {
   XCircle,
   AlertTriangle,
   Info,
+  Calendar,
+  Package,
+  Download,
 } from "lucide-react";
+import { ExportButtons } from "@/components/shared/ExportButtons";
+import {
+  generateProjectSchedule,
+  generateBillOfMaterials,
+  calculateBOMTotal,
+  formatBOMForExport,
+  type BOMItem,
+} from "@/lib/auto-project-generation";
 
 type Project = Tables<"projects">;
 type ProjectGeometry = Tables<"project_geometry">;
 type ComplianceReport = Tables<"compliance_reports">;
+type ProjectSchedule = Tables<"project_schedules">;
 
 const PROJECT_TYPE_LABELS: Record<string, string> = {
   single_storey_rear: "Single Storey Rear",
@@ -50,8 +63,38 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [geometry, setGeometry] = useState<ProjectGeometry | null>(null);
   const [compliance, setCompliance] = useState<ComplianceReport[]>([]);
+  const [schedules, setSchedules] = useState<ProjectSchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingCompliance, setCheckingCompliance] = useState(false);
+
+  // Auto-generate schedule and BoM based on project data
+  const generatedSchedule = useMemo(() => {
+    if (!project || !geometry) return null;
+    return generateProjectSchedule(
+      project.project_type,
+      geometry.floor_area_sqm || 25
+    );
+  }, [project, geometry]);
+
+  const generatedBoM = useMemo(() => {
+    if (!project || !geometry) return [] as BOMItem[];
+    return generateBillOfMaterials(
+      project.project_type,
+      {
+        floorArea: geometry.floor_area_sqm || 25,
+        wallArea: ((geometry.length_m || 5) + (geometry.width_m || 5)) * 2 * (geometry.height_m || 2.4),
+        height: geometry.height_m || 2.4,
+        electricalPoints: geometry.electrical_points || 16,
+        plumbingPoints: geometry.plumbing_points || 6,
+        heatingRadiators: geometry.heating_radiators || 4,
+        windowCount: Array.isArray(geometry.windows) ? geometry.windows.length : 2,
+        doorCount: Array.isArray(geometry.doors) ? geometry.doors.length : 3,
+      },
+      (project.build_quality as 'basic' | 'standard' | 'premium' | 'luxury') || 'standard'
+    );
+  }, [project, geometry]);
+
+  const bomTotals = useMemo(() => calculateBOMTotal(generatedBoM), [generatedBoM]);
 
   useEffect(() => {
     if (id) fetchProject();
@@ -88,6 +131,15 @@ export default function ProjectDetail() {
       .eq("project_id", id);
 
     if (complianceData) setCompliance(complianceData);
+
+    // Fetch project schedules
+    const { data: scheduleData } = await supabase
+      .from("project_schedules")
+      .select("*")
+      .eq("project_id", id)
+      .order("sort_order", { ascending: true });
+
+    if (scheduleData) setSchedules(scheduleData);
 
     setLoading(false);
   }
@@ -200,8 +252,16 @@ export default function ProjectDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-secondary/50">
+          <TabsList className="bg-secondary/50 flex-wrap h-auto gap-1">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="schedule" className="gap-1">
+              <Calendar className="h-3 w-3" />
+              Schedule
+            </TabsTrigger>
+            <TabsTrigger value="materials" className="gap-1">
+              <Package className="h-3 w-3" />
+              BoM
+            </TabsTrigger>
             <TabsTrigger value="costs">Cost Breakdown</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
           </TabsList>
@@ -333,6 +393,200 @@ export default function ProjectDetail() {
                     )}
                   </div>
                 )}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Schedule Tab */}
+          <TabsContent value="schedule">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold">Auto-Generated Project Schedule</h3>
+                </div>
+                {generatedSchedule && (
+                  <ExportButtons
+                    data={generatedSchedule.tasks.map((t, idx) => ({
+                      order: idx + 1,
+                      task_name: t.name,
+                      trade: t.trade,
+                      duration_days: t.duration,
+                      start_day: t.startDay || 1,
+                      end_day: t.endDay || t.duration,
+                      dependencies: t.dependencies.join(", ") || "None",
+                      resources: t.resources.join(", ") || "None",
+                    }))}
+                    columns={[
+                      { key: "order", label: "#", width: 30 },
+                      { key: "task_name", label: "Task", width: 150 },
+                      { key: "trade", label: "Trade", width: 100 },
+                      { key: "duration_days", label: "Days", width: 50 },
+                      { key: "start_day", label: "Start", width: 50 },
+                      { key: "end_day", label: "End", width: 50 },
+                      { key: "dependencies", label: "Depends On", width: 120 },
+                      { key: "resources", label: "Resources", width: 120 },
+                    ]}
+                    filename={`schedule-${project.name}`}
+                    title={`${project.name} Schedule`}
+                  />
+                )}
+              </div>
+
+              {/* Summary Cards */}
+              {generatedSchedule && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-lg bg-primary/10 border border-primary/30">
+                    <p className="text-sm text-muted-foreground">Total Duration</p>
+                    <p className="text-2xl font-bold">{generatedSchedule.totalDuration} days</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-success/10 border border-success/30">
+                    <p className="text-sm text-muted-foreground">Tasks</p>
+                    <p className="text-2xl font-bold">{generatedSchedule.tasks.length}</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-warning/10 border border-warning/30">
+                    <p className="text-sm text-muted-foreground">Trades</p>
+                    <p className="text-2xl font-bold">{new Set(generatedSchedule.tasks.map(t => t.trade)).size}</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/30">
+                    <p className="text-sm text-muted-foreground">Critical Path</p>
+                    <p className="text-2xl font-bold">{generatedSchedule.criticalPath.length} tasks</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Task List */}
+              <div className="glass-card p-6 rounded-xl">
+                <h4 className="font-medium mb-4">Task Sequence</h4>
+                {generatedSchedule ? (
+                  <div className="space-y-2">
+                    {generatedSchedule.tasks.map((task, idx) => (
+                      <div key={task.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium">{idx + 1}</span>
+                          <div>
+                            <p className="font-medium">{task.name}</p>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">{task.trade}</Badge>
+                              <span className="text-xs text-muted-foreground">{task.duration} days</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right text-sm">
+                          <p>Day {task.startDay} - Day {task.endDay}</p>
+                          {task.dependencies.length > 0 && (
+                            <p className="text-xs text-muted-foreground">After: {task.dependencies.join(", ")}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">No schedule data available</p>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Bill of Materials Tab */}
+          <TabsContent value="materials">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold">Auto-Generated Bill of Materials</h3>
+                </div>
+                {generatedBoM.length > 0 && (
+                  <ExportButtons
+                    data={formatBOMForExport(generatedBoM)}
+                    columns={[
+                      { key: "line", label: "#", width: 30 },
+                      { key: "category", label: "Category", width: 80 },
+                      { key: "part_code", label: "Part Code", width: 100 },
+                      { key: "description", label: "Description", width: 180 },
+                      { key: "quantity", label: "Qty", width: 50 },
+                      { key: "unit", label: "Unit", width: 50 },
+                      { key: "unit_cost", label: "Unit £", width: 60 },
+                      { key: "total_cost", label: "Total £", width: 70 },
+                      { key: "lead_time", label: "Lead Time", width: 70 },
+                    ]}
+                    filename={`bom-${project.name}`}
+                    title={`${project.name} Bill of Materials`}
+                  />
+                )}
+              </div>
+
+              {/* BoM Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="p-4 rounded-lg bg-primary/10 border border-primary/30">
+                  <p className="text-sm text-muted-foreground">Total Materials Cost</p>
+                  <p className="text-2xl font-bold">£{bomTotals.totalCost.toLocaleString()}</p>
+                </div>
+                <div className="p-4 rounded-lg bg-success/10 border border-success/30">
+                  <p className="text-sm text-muted-foreground">Line Items</p>
+                  <p className="text-2xl font-bold">{bomTotals.itemCount}</p>
+                </div>
+                <div className="p-4 rounded-lg bg-warning/10 border border-warning/30">
+                  <p className="text-sm text-muted-foreground">Categories</p>
+                  <p className="text-2xl font-bold">{Object.keys(bomTotals.byCategory).length}</p>
+                </div>
+                <div className="p-4 rounded-lg bg-info/10 border border-info/30">
+                  <p className="text-sm text-muted-foreground">Max Lead Time</p>
+                  <p className="text-2xl font-bold">{bomTotals.longestLeadTime} days</p>
+                </div>
+              </div>
+
+              {/* Category Breakdown */}
+              <div className="glass-card p-6 rounded-xl">
+                <h4 className="font-medium mb-4">Cost by Category</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {Object.entries(bomTotals.byCategory).sort((a, b) => b[1] - a[1]).map(([category, cost]) => (
+                    <div key={category} className="p-3 rounded-lg bg-secondary/30">
+                      <p className="text-sm text-muted-foreground">{category}</p>
+                      <p className="text-lg font-mono font-medium">£{cost.toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Full BoM List */}
+              <div className="glass-card p-6 rounded-xl">
+                <h4 className="font-medium mb-4">Complete Materials List</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-2">Part Code</th>
+                        <th className="text-left p-2">Description</th>
+                        <th className="text-right p-2">Qty</th>
+                        <th className="text-left p-2">Unit</th>
+                        <th className="text-right p-2">Unit Cost</th>
+                        <th className="text-right p-2">Total</th>
+                        <th className="text-right p-2">Lead Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {generatedBoM.map((item, idx) => (
+                        <tr key={idx} className="border-b border-border/50 hover:bg-secondary/20">
+                          <td className="p-2 font-mono text-xs">{item.partCode}</td>
+                          <td className="p-2">{item.description}</td>
+                          <td className="p-2 text-right">{item.quantity}</td>
+                          <td className="p-2">{item.unit}</td>
+                          <td className="p-2 text-right font-mono">£{item.unitCost.toFixed(2)}</td>
+                          <td className="p-2 text-right font-mono font-medium">£{item.totalCost.toFixed(2)}</td>
+                          <td className="p-2 text-right">{item.leadTimeDays ? `${item.leadTimeDays}d` : '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className="font-bold bg-secondary/30">
+                        <td colSpan={5} className="p-2 text-right">Total Materials Cost:</td>
+                        <td className="p-2 text-right font-mono">£{bomTotals.totalCost.toLocaleString()}</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
             </div>
           </TabsContent>
