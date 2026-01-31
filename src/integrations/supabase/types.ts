@@ -259,6 +259,131 @@ export type Database = {
           },
         ]
       }
+      job_quotes: {
+        Row: {
+          available_start_date: string | null
+          created_at: string | null
+          estimated_duration: string | null
+          id: string
+          job_id: string
+          message: string | null
+          quote_amount: number
+          status: string | null
+          trade_profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          available_start_date?: string | null
+          created_at?: string | null
+          estimated_duration?: string | null
+          id?: string
+          job_id: string
+          message?: string | null
+          quote_amount: number
+          status?: string | null
+          trade_profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          available_start_date?: string | null
+          created_at?: string | null
+          estimated_duration?: string | null
+          id?: string
+          job_id?: string
+          message?: string | null
+          quote_amount?: number
+          status?: string | null
+          trade_profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_quotes_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_quotes_trade_profile_id_fkey"
+            columns: ["trade_profile_id"]
+            isOneToOne: false
+            referencedRelation: "trade_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_jobs: {
+        Row: {
+          budget_max: number | null
+          budget_min: number | null
+          created_at: string | null
+          customer_id: string
+          description: string
+          expires_at: string | null
+          id: string
+          images: string[] | null
+          job_type: string
+          location: string
+          postcode: string | null
+          preferred_start_date: string | null
+          selected_trade_id: string | null
+          status: string | null
+          title: string
+          trade_required: string
+          updated_at: string | null
+          urgency: string | null
+        }
+        Insert: {
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string | null
+          customer_id: string
+          description: string
+          expires_at?: string | null
+          id?: string
+          images?: string[] | null
+          job_type: string
+          location: string
+          postcode?: string | null
+          preferred_start_date?: string | null
+          selected_trade_id?: string | null
+          status?: string | null
+          title: string
+          trade_required: string
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Update: {
+          budget_max?: number | null
+          budget_min?: number | null
+          created_at?: string | null
+          customer_id?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          images?: string[] | null
+          job_type?: string
+          location?: string
+          postcode?: string | null
+          preferred_start_date?: string | null
+          selected_trade_id?: string | null
+          status?: string | null
+          title?: string
+          trade_required?: string
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_jobs_selected_trade_id_fkey"
+            columns: ["selected_trade_id"]
+            isOneToOne: false
+            referencedRelation: "trade_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       material_orders: {
         Row: {
           created_at: string | null
@@ -806,6 +931,87 @@ export type Database = {
         }
         Relationships: []
       }
+      trade_profiles: {
+        Row: {
+          average_rating: number | null
+          business_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          day_rate: number | null
+          description: string | null
+          experience_years: number | null
+          gas_safe_number: string | null
+          hourly_rate: number | null
+          id: string
+          insurance_valid_until: string | null
+          is_verified: boolean | null
+          niceic_number: string | null
+          portfolio_images: string[] | null
+          profile_image_url: string | null
+          qualifications: string[] | null
+          service_areas: string[] | null
+          total_reviews: number | null
+          trade_type: string
+          updated_at: string | null
+          user_id: string
+          verification_date: string | null
+          website: string | null
+        }
+        Insert: {
+          average_rating?: number | null
+          business_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          day_rate?: number | null
+          description?: string | null
+          experience_years?: number | null
+          gas_safe_number?: string | null
+          hourly_rate?: number | null
+          id?: string
+          insurance_valid_until?: string | null
+          is_verified?: boolean | null
+          niceic_number?: string | null
+          portfolio_images?: string[] | null
+          profile_image_url?: string | null
+          qualifications?: string[] | null
+          service_areas?: string[] | null
+          total_reviews?: number | null
+          trade_type: string
+          updated_at?: string | null
+          user_id: string
+          verification_date?: string | null
+          website?: string | null
+        }
+        Update: {
+          average_rating?: number | null
+          business_name?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          day_rate?: number | null
+          description?: string | null
+          experience_years?: number | null
+          gas_safe_number?: string | null
+          hourly_rate?: number | null
+          id?: string
+          insurance_valid_until?: string | null
+          is_verified?: boolean | null
+          niceic_number?: string | null
+          portfolio_images?: string[] | null
+          profile_image_url?: string | null
+          qualifications?: string[] | null
+          service_areas?: string[] | null
+          total_reviews?: number | null
+          trade_type?: string
+          updated_at?: string | null
+          user_id?: string
+          verification_date?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       trade_receipts: {
         Row: {
           category: string
@@ -867,6 +1073,78 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "trade_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trade_reviews: {
+        Row: {
+          communication_rating: number | null
+          created_at: string | null
+          id: string
+          images: string[] | null
+          is_verified_job: boolean | null
+          job_id: string | null
+          rating: number
+          review_text: string | null
+          reviewer_id: string
+          title: string | null
+          trade_profile_id: string
+          trade_response: string | null
+          updated_at: string | null
+          value_rating: number | null
+          workmanship_rating: number | null
+          would_recommend: boolean | null
+        }
+        Insert: {
+          communication_rating?: number | null
+          created_at?: string | null
+          id?: string
+          images?: string[] | null
+          is_verified_job?: boolean | null
+          job_id?: string | null
+          rating: number
+          review_text?: string | null
+          reviewer_id: string
+          title?: string | null
+          trade_profile_id: string
+          trade_response?: string | null
+          updated_at?: string | null
+          value_rating?: number | null
+          workmanship_rating?: number | null
+          would_recommend?: boolean | null
+        }
+        Update: {
+          communication_rating?: number | null
+          created_at?: string | null
+          id?: string
+          images?: string[] | null
+          is_verified_job?: boolean | null
+          job_id?: string | null
+          rating?: number
+          review_text?: string | null
+          reviewer_id?: string
+          title?: string | null
+          trade_profile_id?: string
+          trade_response?: string | null
+          updated_at?: string | null
+          value_rating?: number | null
+          workmanship_rating?: number | null
+          would_recommend?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_reviews_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trade_reviews_trade_profile_id_fkey"
+            columns: ["trade_profile_id"]
+            isOneToOne: false
+            referencedRelation: "trade_profiles"
             referencedColumns: ["id"]
           },
         ]
