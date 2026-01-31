@@ -44,6 +44,7 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
 
 const queryClient = new QueryClient();
 
@@ -101,6 +102,7 @@ const App = () => (
               <Route path="/dashboard/calculators" element={<ProtectedRouteWithRef><Calculators /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/settings" element={<ProtectedRouteWithRef><Settings /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/admin" element={<ProtectedRouteWithRef><Admin /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/marketplace" element={<ProtectedRouteWithRef><Marketplace /></ProtectedRouteWithRef>} />
               
               {/* Legacy redirects */}
               <Route path="/dashboard/renters-rights" element={<ProtectedRouteWithRef><LandlordObligations /></ProtectedRouteWithRef>} />
