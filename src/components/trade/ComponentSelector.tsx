@@ -32,6 +32,7 @@ import {
   HVAC_COMPONENTS,
   RENEWABLES_COMPONENTS,
 } from "@/lib/expanded-trade-components";
+import { ALL_GLAZING_COMPONENTS } from "@/lib/glazing-trade-components";
 
 interface SelectedComponent {
   component: DetailedComponent;
@@ -61,7 +62,7 @@ export function ComponentSelector({
       : trade === "electrical"
       ? ELECTRICAL_COMPONENTS
       : trade === "glazing"
-      ? GLAZING_COMPONENTS
+      ? [...GLAZING_COMPONENTS, ...ALL_GLAZING_COMPONENTS]
       : trade === "hvac"
       ? HVAC_COMPONENTS
       : trade === "renewables"

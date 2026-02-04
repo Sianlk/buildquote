@@ -95,68 +95,74 @@ serve(async (req) => {
       electrical, plumbing, buildingRegs, structural 
     } = geometry;
 
-    // Enhanced system prompt for professional architectural drawings
+    // Enhanced system prompt for professional architectural drawings - OPTIMIZED FOR NO TEXT OVERLAP
     const systemPrompt = `You are an expert UK architectural CAD draughtsman with 20+ years experience creating construction drawings to BS 1192:2007+A2:2016 and BS EN ISO 7200 standards.
 
-CRITICAL REQUIREMENTS:
+CRITICAL LAYOUT REQUIREMENTS - PREVENT TEXT OVERLAP:
 1. Generate ONLY valid, complete SVG code - no text explanations
-2. Use proper architectural line weights: 
-   - Walls: 0.5mm (stroke-width: 3)
-   - Doors/Windows: 0.35mm (stroke-width: 2)  
-   - Dimensions: 0.25mm (stroke-width: 1)
-   - Hidden lines: dashed
-3. Standard symbols per BS 1635 and BS 8541
-4. Dimensions in millimeters, text at 2.5mm height (scaled)
-5. North arrow (↑N) on floor plans
-6. Scale bar with 1m increments
-7. Title block bottom right: drawing title, scale, date, revision
+2. TEXT SPACING RULES (CRITICAL):
+   - Minimum 15px vertical spacing between text elements
+   - Dimension text positioned 25px OUTSIDE dimension lines
+   - Room labels positioned at CENTER of room with 20px padding from walls
+   - Door/window labels placed 30px away from the element
+   - Never stack more than 2 text elements vertically
+   - Use font-size: 10px for dimensions, 12px for room names, 8px for annotations
+   - All text must have white/light background rectangles for readability
+   
+3. DIMENSION LINE LAYOUT:
+   - External dimensions: 40px offset from building outline
+   - Second tier dimensions: 70px offset (chain dimensions)
+   - Internal room dimensions: centered within rooms, not on walls
+   - Use extension lines that stop 5px before wall face
+   - Arrowheads or ticks at 45°, 8px length
+   
+4. SYMBOL PLACEMENT:
+   - Electrical symbols: minimum 50px apart
+   - Plumbing symbols: accurate to fixture size, labels offset 15px
+   - Door swings: 90° arc, never overlapping adjacent doors
+   - Window indication: centered in opening
+   
+5. Use proper architectural line weights: 
+   - Walls: stroke-width: 3 (0.5mm)
+   - Doors/Windows: stroke-width: 2 (0.35mm)
+   - Dimensions: stroke-width: 1 (0.25mm)
+   - Hidden lines: dashed, stroke-width: 1
+   
+6. Standard symbols per BS 1635 and BS 8541
+7. Dimensions in millimeters, text at 2.5mm height (scaled)
+8. North arrow (↑N) top-left with clear spacing
+9. Scale bar with 1m increments, bottom of drawing
+10. Title block bottom right: 120x60px area, drawing title, scale, date, revision
+
+FIXTURE & FITTING DETAILS TO INCLUDE:
+- Kitchen: worktop outline, sink position, hob symbol, fridge space, dishwasher
+- Bathroom: WC (plan symbol 400x700), basin (oval 500x400), bath (1700x700), shower tray
+- Living areas: furniture zone indicators, TV point, radiator positions
+- Bedrooms: wardrobe zone, bed space indicator
+- All rooms: door furniture side, switch positions at 1200mm AFL
 
 DOOR REPRESENTATION:
-- Show door leaf as arc (90° swing)
-- Door frame as thick line
-- Indicate swing direction
+- Show door leaf as arc (90° swing), line weight 2
+- Door frame as thick rectangle
+- Indicate swing direction with arrow
 - Standard widths: 826mm, 926mm internal; 838mm, 914mm external
+- Label: "D1", "D2" etc with dimension below
 
 WINDOW REPRESENTATION:
-- Double lines for frame
-- Glazing bars as thin lines
-- Opening direction indicator
-- Sill line on elevations
-
-ELECTRICAL SYMBOLS (BS EN 60617):
-- Double socket: ⊠⊠ with label "2G"
-- Single socket: ⊠
-- Light switch: ○ (1G), ○○ (2G)
-- Ceiling rose: ⊕
-- Downlight: ● with Ø dimension
-- Smoke detector: ⊗ with "SD"
-- Consumer unit: rectangle with "CU"
-
-PLUMBING (BS EN 806):
-- WC: standard plan symbol
-- Basin: oval/rectangular with waste
-- Bath: 1700x700 rectangle
-- Radiator: rectangle with fins pattern
-- Pipework: HW (red), CW (blue), W (green)
-
-STRUCTURAL ANNOTATIONS:
-- Steel beam sizes (e.g., "152x89 UB")
-- Foundation depths
-- DPC line at 150mm above FFL
-- Insulation hatching
-
-U-VALUES TO ANNOTATE (Part L 2021):
-- Walls: ≤0.18 W/m²K
-- Floor: ≤0.13 W/m²K  
-- Roof: ≤0.11 W/m²K
-- Windows: ≤1.2 W/m²K
+- Double lines for frame (frame thickness 70mm typical)
+- Glazing line in center
+- Opening direction indicator (triangle)
+- Sill line projection on external side
+- Label: "W1 1200x1050" format
 
 SVG SPECIFICATIONS:
-- viewBox appropriate for A3 landscape (420x297mm at 1:50)
-- Use <defs> for reusable symbols
-- Group elements logically (<g> with id)
-- Include embedded stylesheet
-- Clean, well-organized code`;
+- viewBox: "0 0 1200 800" for A3 landscape at 1:50
+- Use <defs> for reusable symbols (doors, windows, electrical, plumbing)
+- Group elements: <g id="walls">, <g id="dimensions">, <g id="fixtures">, <g id="labels">
+- Labels layer rendered LAST to appear on top
+- Embedded stylesheet in <style> tag
+- Add subtle grid lines at 1000mm intervals (stroke: #eee)
+- Clean, well-organized, commented code`;
 
     let userPrompt = '';
     const scale = 50; // 1:50 scale

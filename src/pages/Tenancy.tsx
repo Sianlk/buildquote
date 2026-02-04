@@ -225,44 +225,50 @@ IMPORTANT:
         </div>
 
         <Tabs defaultValue="templates">
-          <TabsList className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 w-full h-auto gap-1">
-            <TabsTrigger value="templates" className="text-xs px-2 py-1.5">
-              <FileText className="h-3 w-3 mr-1 hidden sm:inline" />
-              Templates
-            </TabsTrigger>
-            <TabsTrigger value="compliance" className="text-xs px-2 py-1.5">
-              <ClipboardCheck className="h-3 w-3 mr-1 hidden sm:inline" />
-              Checklist
-            </TabsTrigger>
-            <TabsTrigger value="hmo" className="text-xs px-2 py-1.5">
-              <Users className="h-3 w-3 mr-1 hidden sm:inline" />
-              HMO
-            </TabsTrigger>
-            <TabsTrigger value="fire" className="text-xs px-2 py-1.5">
-              <Flame className="h-3 w-3 mr-1 hidden sm:inline" />
-              Fire Safety
-            </TabsTrigger>
-            <TabsTrigger value="hhsrs" className="text-xs px-2 py-1.5">
-              <Shield className="h-3 w-3 mr-1 hidden sm:inline" />
-              HHSRS
-            </TabsTrigger>
-            <TabsTrigger value="epc" className="text-xs px-2 py-1.5">
-              <Thermometer className="h-3 w-3 mr-1 hidden sm:inline" />
-              EPC
-            </TabsTrigger>
-            <TabsTrigger value="finance" className="text-xs px-2 py-1.5">
-              <Banknote className="h-3 w-3 mr-1 hidden sm:inline" />
-              Finance
-            </TabsTrigger>
-            <TabsTrigger value="pathways" className="text-xs px-2 py-1.5">
-              <Building className="h-3 w-3 mr-1 hidden sm:inline" />
-              Pathways
-            </TabsTrigger>
-            <TabsTrigger value="section8" className="text-xs px-2 py-1.5">
-              <Scale className="h-3 w-3 mr-1 hidden sm:inline" />
-              Section 8
-            </TabsTrigger>
-          </TabsList>
+          <ScrollArea className="w-full">
+            <TabsList className="flex w-max gap-1 h-auto p-1">
+              <TabsTrigger value="templates" className="text-xs px-2 py-1.5">
+                <FileText className="h-3 w-3 mr-1 hidden sm:inline" />
+                Templates
+              </TabsTrigger>
+              <TabsTrigger value="court-forms" className="text-xs px-2 py-1.5">
+                <Scale className="h-3 w-3 mr-1 hidden sm:inline" />
+                Court Forms
+              </TabsTrigger>
+              <TabsTrigger value="compliance" className="text-xs px-2 py-1.5">
+                <ClipboardCheck className="h-3 w-3 mr-1 hidden sm:inline" />
+                Checklist
+              </TabsTrigger>
+              <TabsTrigger value="hmo" className="text-xs px-2 py-1.5">
+                <Users className="h-3 w-3 mr-1 hidden sm:inline" />
+                HMO
+              </TabsTrigger>
+              <TabsTrigger value="fire" className="text-xs px-2 py-1.5">
+                <Flame className="h-3 w-3 mr-1 hidden sm:inline" />
+                Fire Safety
+              </TabsTrigger>
+              <TabsTrigger value="hhsrs" className="text-xs px-2 py-1.5">
+                <Shield className="h-3 w-3 mr-1 hidden sm:inline" />
+                HHSRS
+              </TabsTrigger>
+              <TabsTrigger value="epc" className="text-xs px-2 py-1.5">
+                <Thermometer className="h-3 w-3 mr-1 hidden sm:inline" />
+                EPC
+              </TabsTrigger>
+              <TabsTrigger value="finance" className="text-xs px-2 py-1.5">
+                <Banknote className="h-3 w-3 mr-1 hidden sm:inline" />
+                Finance
+              </TabsTrigger>
+              <TabsTrigger value="pathways" className="text-xs px-2 py-1.5">
+                <Building className="h-3 w-3 mr-1 hidden sm:inline" />
+                Pathways
+              </TabsTrigger>
+              <TabsTrigger value="section8" className="text-xs px-2 py-1.5">
+                <Scale className="h-3 w-3 mr-1 hidden sm:inline" />
+                Section 8
+              </TabsTrigger>
+            </TabsList>
+          </ScrollArea>
 
           <TabsContent value="templates" className="mt-4 space-y-4">
             {/* Quick Generate */}
@@ -705,6 +711,137 @@ IMPORTANT:
                 </ScrollArea>
               </DialogContent>
             </Dialog>
+          </TabsContent>
+
+          <TabsContent value="court-forms" className="mt-4 space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Scale className="h-5 w-5" />
+                  Court Form Templates
+                </CardTitle>
+                <CardDescription>
+                  Official court forms for possession claims and rent arrears. Download, fill in-app, and submit to court.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="border-primary/30">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Form N5 - Claim for Possession</CardTitle>
+                      <CardDescription className="text-xs">
+                        Standard possession claim for residential property
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Use when: Section 8 notice has expired and tenant hasn't vacated
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Court fee: £355 (online) / £395 (paper)
+                      </p>
+                      <div className="flex gap-2 mt-3">
+                        <Button size="sm" variant="outline" asChild>
+                          <a href="https://www.gov.uk/government/publications/form-n5-claim-form-for-possession-of-property" target="_blank" rel="noopener noreferrer">
+                            <Download className="h-3 w-3 mr-1" />
+                            Gov.uk Form
+                          </a>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-primary/30">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Form N119 - Rent Arrears Claim</CardTitle>
+                      <CardDescription className="text-xs">
+                        Particulars of claim for possession (rent arrears)
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Use with: Form N5 when claiming possession for rent arrears
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Requires: Rent statement, tenancy agreement, Section 8 notice
+                      </p>
+                      <div className="flex gap-2 mt-3">
+                        <Button size="sm" variant="outline" asChild>
+                          <a href="https://www.gov.uk/government/publications/form-n119-particulars-of-claim-for-possession-rented-residential-premises" target="_blank" rel="noopener noreferrer">
+                            <Download className="h-3 w-3 mr-1" />
+                            Gov.uk Form
+                          </a>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Form N325 - Request for Warrant</CardTitle>
+                      <CardDescription className="text-xs">
+                        Request bailiff enforcement after court order
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Use when: Tenant hasn't left after possession order date
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Court fee: £130
+                      </p>
+                      <Button size="sm" variant="outline" asChild>
+                        <a href="https://www.gov.uk/government/publications/form-n325-request-for-warrant-of-possession-of-land" target="_blank" rel="noopener noreferrer">
+                          <Download className="h-3 w-3 mr-1" />
+                          Gov.uk Form
+                        </a>
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Section 13 Form 4 - Rent Increase</CardTitle>
+                      <CardDescription className="text-xs">
+                        Prescribed form for periodic tenancy rent increases
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Notice period: 1 month (monthly) / 6 months (yearly)
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Tenant can challenge at First-tier Tribunal
+                      </p>
+                      <Button size="sm" variant="outline" asChild>
+                        <a href="https://www.gov.uk/government/publications/form-4-notice-of-a-new-rent-under-an-assured-periodic-tenancy" target="_blank" rel="noopener noreferrer">
+                          <Download className="h-3 w-3 mr-1" />
+                          Gov.uk Form
+                        </a>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card className="bg-muted/30">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-warning" />
+                      Important Court Guidance
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm text-muted-foreground space-y-2">
+                    <ul className="list-disc pl-5 space-y-1 text-xs">
+                      <li>Always keep dated proof of service for all notices</li>
+                      <li>Court claims must be filed at the court serving the property's location</li>
+                      <li>Ensure all prescribed information was served with tenancy (deposit, How to Rent, EPC, Gas Safety)</li>
+                      <li>Consider seeking legal advice for complex cases or if tenant disputes the claim</li>
+                      <li>Processing times vary: expect 4-8 weeks for straightforward claims</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="compliance" className="mt-4 space-y-4">
