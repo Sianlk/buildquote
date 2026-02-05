@@ -78,26 +78,27 @@ const Carpentry = () => {
         </Alert>
 
         <Tabs defaultValue="joist-calc" className="space-y-4">
-          <TabsList className="grid grid-cols-2 lg:grid-cols-5 gap-2">
-            <TabsTrigger value="joist-calc" className="flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Joist Calculator
+          {/* Mobile fix: scrollable tabs to prevent text overlap */}
+          <TabsList className="w-full h-auto flex flex-nowrap justify-start gap-1 overflow-x-auto pb-1">
+            <TabsTrigger value="joist-calc" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Joist Calc</span>
             </TabsTrigger>
-            <TabsTrigger value="span-tables" className="flex items-center gap-2">
-              <Ruler className="h-4 w-4" />
-              Span Tables
+            <TabsTrigger value="span-tables" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Ruler className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Span Tables</span>
             </TabsTrigger>
-            <TabsTrigger value="building-regs" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Building Regs
+            <TabsTrigger value="building-regs" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Building Regs</span>
             </TabsTrigger>
-            <TabsTrigger value="stud-walls" className="flex items-center gap-2">
-              <Hammer className="h-4 w-4" />
-              Stud Walls
+            <TabsTrigger value="stud-walls" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <Hammer className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Stud Walls</span>
             </TabsTrigger>
-            <TabsTrigger value="checklist" className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
-              Checklist
+            <TabsTrigger value="checklist" className="flex-shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span>Checklist</span>
             </TabsTrigger>
           </TabsList>
 
@@ -253,24 +254,24 @@ const Carpentry = () => {
                 )}
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[600px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Element</th>
-                        <th className="text-left p-2">Notching Zone</th>
-                        <th className="text-left p-2">Max Notch</th>
-                        <th className="text-left p-2">Drilling Zone</th>
-                        <th className="text-left p-2">Max Hole</th>
+                        <th className="text-left p-2 whitespace-nowrap">Element</th>
+                        <th className="text-left p-2 whitespace-nowrap">Notching Zone</th>
+                        <th className="text-left p-2 whitespace-nowrap">Max Notch</th>
+                        <th className="text-left p-2 whitespace-nowrap">Drilling Zone</th>
+                        <th className="text-left p-2 whitespace-nowrap">Max Hole</th>
                       </tr>
                     </thead>
                     <tbody>
                       {NOTCHING_DRILLING_RULES.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2 font-medium">{row.element}</td>
-                          <td className="p-2">{row.notchingZone}</td>
-                          <td className="p-2">{row.maxNotchDepth}</td>
-                          <td className="p-2">{row.drillingZone}</td>
-                          <td className="p-2">{row.maxHoleDiameter}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.element}</td>
+                          <td className="p-2 whitespace-nowrap">{row.notchingZone}</td>
+                          <td className="p-2 whitespace-nowrap">{row.maxNotchDepth}</td>
+                          <td className="p-2 whitespace-nowrap">{row.drillingZone}</td>
+                          <td className="p-2 whitespace-nowrap">{row.maxHoleDiameter}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -289,22 +290,22 @@ const Carpentry = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[500px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Joist Size</th>
-                        <th className="text-left p-2">400mm Centres</th>
-                        <th className="text-left p-2">450mm Centres</th>
-                        <th className="text-left p-2">600mm Centres</th>
+                        <th className="text-left p-2 whitespace-nowrap">Joist Size</th>
+                        <th className="text-left p-2 whitespace-nowrap">400mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">450mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">600mm</th>
                       </tr>
                     </thead>
                     <tbody>
                       {FLOOR_JOIST_SPANS_C16.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2 font-medium">{row.joistSize}</td>
-                          <td className="p-2">{row.spacing400mm}</td>
-                          <td className="p-2">{row.spacing450mm}</td>
-                          <td className="p-2">{row.spacing600mm}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.joistSize}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing400mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing450mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing600mm}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -320,22 +321,22 @@ const Carpentry = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[500px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Joist Size</th>
-                        <th className="text-left p-2">400mm Centres</th>
-                        <th className="text-left p-2">450mm Centres</th>
-                        <th className="text-left p-2">600mm Centres</th>
+                        <th className="text-left p-2 whitespace-nowrap">Joist Size</th>
+                        <th className="text-left p-2 whitespace-nowrap">400mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">450mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">600mm</th>
                       </tr>
                     </thead>
                     <tbody>
                       {FLOOR_JOIST_SPANS_C24.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2 font-medium">{row.joistSize}</td>
-                          <td className="p-2">{row.spacing400mm}</td>
-                          <td className="p-2">{row.spacing450mm}</td>
-                          <td className="p-2">{row.spacing600mm}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.joistSize}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing400mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing450mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing600mm}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -351,22 +352,22 @@ const Carpentry = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[500px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Joist Size</th>
-                        <th className="text-left p-2">400mm Centres</th>
-                        <th className="text-left p-2">450mm Centres</th>
-                        <th className="text-left p-2">600mm Centres</th>
+                        <th className="text-left p-2 whitespace-nowrap">Joist Size</th>
+                        <th className="text-left p-2 whitespace-nowrap">400mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">450mm</th>
+                        <th className="text-left p-2 whitespace-nowrap">600mm</th>
                       </tr>
                     </thead>
                     <tbody>
                       {CEILING_JOIST_SPANS_C16.map((row, idx) => (
                         <tr key={idx} className="border-b">
-                          <td className="p-2 font-medium">{row.joistSize}</td>
-                          <td className="p-2">{row.spacing400mm}</td>
-                          <td className="p-2">{row.spacing450mm}</td>
-                          <td className="p-2">{row.spacing600mm}</td>
+                          <td className="p-2 font-medium whitespace-nowrap">{row.joistSize}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing400mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing450mm}</td>
+                          <td className="p-2 whitespace-nowrap">{row.spacing600mm}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -382,14 +383,14 @@ const Carpentry = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[600px] text-sm">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Timber Size</th>
-                        <th className="text-left p-2">C16 Span</th>
-                        <th className="text-left p-2">C24 Span</th>
-                        <th className="text-left p-2">Max Centres</th>
-                        <th className="text-left p-2">Application</th>
+                        <th className="text-left p-2 whitespace-nowrap">Timber Size</th>
+                        <th className="text-left p-2 whitespace-nowrap">C16 Span</th>
+                        <th className="text-left p-2 whitespace-nowrap">C24 Span</th>
+                        <th className="text-left p-2 whitespace-nowrap">Max Centres</th>
+                        <th className="text-left p-2 whitespace-nowrap">Application</th>
                       </tr>
                     </thead>
                     <tbody>
