@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Droplet, Flame, AlertTriangle, CheckCircle2, Calculator, FileText, Shield, Thermometer } from "lucide-react";
 import {
   GAS_SAFE_REGULATIONS,
@@ -218,28 +219,30 @@ const Plumbing = () => {
                 <CardDescription>Standard pipe sizes based on flow rates</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[760px] text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-2 whitespace-nowrap">Flow Rate (L/min)</th>
-                        <th className="text-left p-2 whitespace-nowrap">Copper</th>
-                        <th className="text-left p-2 whitespace-nowrap">Plastic</th>
-                        <th className="text-left p-2">Application</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {PIPE_SIZING_TABLE.map((row, idx) => (
-                        <tr key={idx} className="border-b">
-                          <td className="p-2 whitespace-nowrap">{row.flowRate}</td>
-                          <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
-                          <td className="p-2 font-medium whitespace-nowrap">{row.plasticSize}</td>
-                          <td className="p-2 text-muted-foreground">{row.application}</td>
+                <ScrollArea className="w-full">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[760px] text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-2 whitespace-nowrap">Flow Rate (L/min)</th>
+                          <th className="text-left p-2 whitespace-nowrap">Copper</th>
+                          <th className="text-left p-2 whitespace-nowrap">Plastic</th>
+                          <th className="text-left p-2 whitespace-nowrap min-w-[180px]">Application</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {PIPE_SIZING_TABLE.map((row, idx) => (
+                          <tr key={idx} className="border-b">
+                            <td className="p-2 whitespace-nowrap">{row.flowRate}</td>
+                            <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
+                            <td className="p-2 font-medium whitespace-nowrap">{row.plasticSize}</td>
+                            <td className="p-2 text-muted-foreground whitespace-nowrap">{row.application}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </ScrollArea>
               </CardContent>
             </Card>
 
@@ -249,28 +252,30 @@ const Plumbing = () => {
                 <CardDescription>Based on pipe length and maximum load</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[680px] text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-2 whitespace-nowrap">Pipe Length</th>
-                        <th className="text-left p-2 whitespace-nowrap">Max Load</th>
-                        <th className="text-left p-2 whitespace-nowrap">Copper</th>
-                        <th className="text-left p-2 whitespace-nowrap">CSWA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {GAS_PIPE_SIZING.map((row, idx) => (
-                        <tr key={idx} className="border-b">
-                          <td className="p-2 whitespace-nowrap">{row.pipeLength}</td>
-                          <td className="p-2 whitespace-nowrap">{row.maxLoad}</td>
-                          <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
-                          <td className="p-2 font-medium whitespace-nowrap">{row.cswaPipeSize}</td>
+                <ScrollArea className="w-full">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[680px] text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-2 whitespace-nowrap">Pipe Length</th>
+                          <th className="text-left p-2 whitespace-nowrap">Max Load</th>
+                          <th className="text-left p-2 whitespace-nowrap">Copper</th>
+                          <th className="text-left p-2 whitespace-nowrap">CSWA</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {GAS_PIPE_SIZING.map((row, idx) => (
+                          <tr key={idx} className="border-b">
+                            <td className="p-2 whitespace-nowrap">{row.pipeLength}</td>
+                            <td className="p-2 whitespace-nowrap">{row.maxLoad}</td>
+                            <td className="p-2 font-medium whitespace-nowrap">{row.copperSize}</td>
+                            <td className="p-2 font-medium whitespace-nowrap">{row.cswaPipeSize}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </ScrollArea>
               </CardContent>
             </Card>
           </TabsContent>

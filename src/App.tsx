@@ -33,6 +33,7 @@ const TaxReturns = lazy(() => import("./pages/TaxReturns"));
 const Electrical = lazy(() => import("./pages/Electrical"));
 const Plumbing = lazy(() => import("./pages/Plumbing"));
 const Carpentry = lazy(() => import("./pages/Carpentry"));
+const Glazing = lazy(() => import("./pages/Glazing"));
 const Schedules = lazy(() => import("./pages/Schedules"));
 const Tenancy = lazy(() => import("./pages/Tenancy"));
 const LandlordObligations = lazy(() => import("./pages/LandlordObligations"));
@@ -94,6 +95,7 @@ const App = () => (
               <Route path="/dashboard/electrical" element={<ProtectedRouteWithRef><Electrical /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/plumbing" element={<ProtectedRouteWithRef><Plumbing /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/carpentry" element={<ProtectedRouteWithRef><Carpentry /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/glazing" element={<ProtectedRouteWithRef><Glazing /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/schedules" element={<ProtectedRouteWithRef><Schedules /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/tenancy" element={<ProtectedRouteWithRef><Tenancy /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/landlord-obligations" element={<ProtectedRouteWithRef><LandlordObligations /></ProtectedRouteWithRef>} />

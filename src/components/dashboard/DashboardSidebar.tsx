@@ -22,6 +22,8 @@ import {
   Crown,
   Leaf,
   PiggyBank,
+  SquareStack,
+  Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -37,14 +39,16 @@ const mainNavItems = [
 
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
+  { icon: Users, label: "Marketplace", href: "/dashboard/marketplace" },
   { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
   { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
   { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
+  { icon: SquareStack, label: "Glazing", href: "/dashboard/glazing" },
+  { icon: Leaf, label: "Renewables & EPC", href: "/dashboard/renewables" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
   { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
-  { icon: Leaf, label: "Renewables & EPC", href: "/dashboard/renewables" },
   { icon: PiggyBank, label: "Property Finance", href: "/dashboard/finance" },
 ];
 
