@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSubscription } from "@/hooks/useSubscription";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ const TRADE_TYPES = [
 export default function Marketplace() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { canPostMarketplaceJobs } = useSubscription();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('find-trades');
   const [showJobDialog, setShowJobDialog] = useState(false);
@@ -142,6 +144,7 @@ export default function Marketplace() {
   const createJobMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('Must be logged in');
+      if (!canPostMarketplaceJobs) throw new Error('Subscribe to Core (£5.99/mo) to post jobs on the marketplace');
       const { error } = await supabase.from('marketplace_jobs').insert({
         customer_id: user.id,
         title: jobForm.title,
@@ -196,6 +199,7 @@ export default function Marketplace() {
   const submitBidMutation = useMutation({
     mutationFn: async () => {
       if (!user || !myProfile || !selectedJobId) throw new Error('Missing required data');
+      if (!canPostMarketplaceJobs) throw new Error('Subscribe to Core (£5.99/mo) to submit bids');
       const { error } = await supabase.from('job_quotes').insert({
         job_id: selectedJobId,
         trade_profile_id: myProfile.id,

@@ -48,6 +48,7 @@ import {
   type QuoteData,
   type CompanyBranding,
 } from "@/lib/pdf-generator";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface QuoteGeneratorProps {
   initialItems?: QuoteLineItem[];
@@ -69,6 +70,7 @@ export function QuoteGenerator({
   const [open, setOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [sending, setSending] = useState(false);
+  const { canDownload, canUseBrandedExports, incrementDownload, isSubscribed } = useSubscription();
   
   const [company, setCompany] = useState<CompanyDetails>(DEFAULT_COMPANY);
   const [items, setItems] = useState<QuoteLineItem[]>(initialItems);
@@ -176,6 +178,10 @@ export function QuoteGenerator({
   };
 
   const handleDownload = () => {
+    if (!canDownload) {
+      toast.error("Free trial download limit reached. Subscribe for £5.99/mo for unlimited downloads.", { duration: 5000 });
+      return;
+    }
     if (items.length === 0) {
       toast.error("Add at least one line item");
       return;
@@ -186,17 +192,18 @@ export function QuoteGenerator({
     }
     const quoteData = buildQuoteData();
     const branding: CompanyBranding = {
-      name: company.name,
-      address: company.address,
-      phone: company.phone,
-      email: company.email,
-      website: company.website,
-      vatNumber: company.vatNumber,
-      companyNumber: company.companyNumber,
+      name: canUseBrandedExports ? company.name : "BuildQuote",
+      address: canUseBrandedExports ? company.address : "",
+      phone: canUseBrandedExports ? company.phone : "",
+      email: canUseBrandedExports ? company.email : "",
+      website: canUseBrandedExports ? company.website : undefined,
+      vatNumber: canUseBrandedExports ? company.vatNumber : undefined,
+      companyNumber: canUseBrandedExports ? company.companyNumber : undefined,
     };
     const doc = generateQuotePDF(quoteData, branding);
     downloadPDF(doc, `Quote-${quoteData.quoteNumber}.pdf`);
-    toast.success("Quote PDF downloaded");
+    incrementDownload();
+    toast.success(isSubscribed ? "Quote PDF downloaded" : `Quote PDF downloaded (${2 - (canDownload ? 1 : 0)} free downloads remaining)`);
   };
 
   const handleSendEmail = async () => {
