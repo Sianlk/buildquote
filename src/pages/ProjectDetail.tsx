@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +10,6 @@ import { Tables } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 import {
   ArrowLeft,
-  FileText,
   ClipboardCheck,
   Calculator,
   Loader2,
@@ -21,7 +20,7 @@ import {
   Info,
   Calendar,
   Package,
-  Download,
+  Pencil,
 } from "lucide-react";
 import { ExportButtons } from "@/components/shared/ExportButtons";
 import {
@@ -31,6 +30,7 @@ import {
   formatBOMForExport,
   type BOMItem,
 } from "@/lib/auto-project-generation";
+import { sanitizeSvg } from "@/lib/svg-sanitizer";
 
 type Project = Tables<"projects">;
 type ProjectGeometry = Tables<"project_geometry">;
@@ -63,9 +63,12 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [geometry, setGeometry] = useState<ProjectGeometry | null>(null);
   const [compliance, setCompliance] = useState<ComplianceReport[]>([]);
-  const [schedules, setSchedules] = useState<ProjectSchedule[]>([]);
+  const [_schedules, setSchedules] = useState<ProjectSchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingCompliance, setCheckingCompliance] = useState(false);
+  const [cadSvg, setCadSvg] = useState<string | null>(null);
+  const [cadLoading, setCadLoading] = useState(false);
+  const [cadDrawingType, setCadDrawingType] = useState("floor_plan");
 
   // Auto-generate schedule and BoM based on project data
   const generatedSchedule = useMemo(() => {
@@ -198,6 +201,50 @@ export default function ProjectDetail() {
     }
   };
 
+  async function generateCAD() {
+    if (!project || !geometry) {
+      toast.error("Project geometry required for CAD generation");
+      return;
+    }
+    setCadLoading(true);
+    setCadSvg(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-cad", {
+        body: {
+          projectId: project.id,
+          drawingType: cadDrawingType,
+          geometry: {
+            project_type: project.project_type,
+            length_m: geometry.length_m,
+            width_m: geometry.width_m,
+            height_m: geometry.height_m,
+            floor_area_sqm: geometry.floor_area_sqm,
+            wall_type: geometry.wall_type,
+            wall_thickness: geometry.wall_type === "cavity" ? 300 : 200,
+            roof_type: geometry.roof_type,
+            foundation_type: geometry.foundation_type,
+            windows: geometry.windows,
+            doors: geometry.doors,
+            rooms: geometry.rooms,
+            electrical_points: geometry.electrical_points,
+            plumbing_points: geometry.plumbing_points,
+          },
+        },
+      });
+      if (error) throw error;
+      if (data?.svg) {
+        setCadSvg(sanitizeSvg(data.svg));
+        toast.success("CAD drawing generated");
+      } else if (data?.error) {
+        throw new Error(data.error);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to generate CAD");
+    } finally {
+      setCadLoading(false);
+    }
+  }
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -264,6 +311,10 @@ export default function ProjectDetail() {
             </TabsTrigger>
             <TabsTrigger value="costs">Cost Breakdown</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
+            <TabsTrigger value="cad" className="gap-1">
+              <Pencil className="h-3 w-3" />
+              CAD Drawings
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -755,6 +806,67 @@ export default function ProjectDetail() {
                       );
                     }
                   )}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* CAD Drawings Tab */}
+          <TabsContent value="cad">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-2">
+                  <Pencil className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold">AI-Generated CAD Drawings</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={cadDrawingType}
+                    onChange={(e) => setCadDrawingType(e.target.value)}
+                    className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="floor_plan">Floor Plan (1:50)</option>
+                    <option value="elevation_front">Front Elevation</option>
+                    <option value="elevation_side">Side Elevation</option>
+                    <option value="section">Building Section</option>
+                    <option value="electrical_layout">Electrical Layout</option>
+                    <option value="plumbing_layout">Plumbing & Heating</option>
+                    <option value="structural_details">Structural Details</option>
+                    <option value="site_plan">Site Plan (1:200)</option>
+                  </select>
+                  <Button onClick={generateCAD} disabled={cadLoading}>
+                    {cadLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Pencil className="h-4 w-4 mr-2" />
+                    )}
+                    Generate Drawing
+                  </Button>
+                </div>
+              </div>
+
+              <div className="glass-card p-4 rounded-xl text-xs text-muted-foreground">
+                <strong>Disclaimer:</strong> Preliminary drawings for estimating and planning purposes only. 
+                Not a substitute for professional architectural drawings. All drawings should be verified by a qualified architect or structural engineer before use in planning applications or construction.
+              </div>
+
+              {cadSvg ? (
+                <div className="glass-card p-6 rounded-xl">
+                  <div
+                    className="w-full overflow-auto bg-white rounded-lg border"
+                    dangerouslySetInnerHTML={{ __html: cadSvg }}
+                  />
+                </div>
+              ) : (
+                <div className="glass-card p-12 rounded-xl text-center">
+                  <Pencil className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-semibold mb-2">No drawings generated yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Select a drawing type and click "Generate Drawing" to create BS 1192 compliant architectural drawings from your project geometry.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Available: Floor Plans, Elevations, Sections, Electrical, Plumbing, Structural Details, Site Plans
+                  </p>
                 </div>
               )}
             </div>
