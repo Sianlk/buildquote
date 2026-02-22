@@ -23,6 +23,11 @@ import {
   Droplets,
   Wrench,
   Coins,
+  Crown,
+  Leaf,
+  PiggyBank,
+  SquareStack,
+  Users,
 } from "lucide-react";
 
 const mainNavItems = [
@@ -33,13 +38,17 @@ const mainNavItems = [
 
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
+  { icon: Users, label: "Marketplace", href: "/dashboard/marketplace" },
   { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
   { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
   { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
+  { icon: SquareStack, label: "Glazing", href: "/dashboard/glazing" },
+  { icon: Leaf, label: "Renewables & EPC", href: "/dashboard/renewables" },
   { icon: Calendar, label: "Schedules", href: "/dashboard/schedules" },
   { icon: ClipboardCheck, label: "Building Regs", href: "/dashboard/compliance" },
   { icon: Package, label: "Materials", href: "/dashboard/materials" },
   { icon: Calculator, label: "Calculators", href: "/dashboard/calculators" },
+  { icon: PiggyBank, label: "Property Finance", href: "/dashboard/finance" },
 ];
 
 const financeNavItems = [
@@ -55,7 +64,7 @@ const legalNavItems = [
 
 const bottomNavItems = [
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-  { icon: HelpCircle, label: "Help", href: "/dashboard/settings" },
+  { icon: HelpCircle, label: "Help & Contact", href: "/contact" },
 ];
 
 interface MobileSidebarProps {
