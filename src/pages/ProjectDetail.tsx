@@ -232,8 +232,8 @@ export default function ProjectDetail() {
         },
       });
       if (error) throw error;
-      if (data?.svg) {
-        setCadSvg(sanitizeSvg(data.svg));
+      if (data?.svgContent) {
+        setCadSvg(sanitizeSvg(data.svgContent));
         toast.success("CAD drawing generated");
       } else if (data?.error) {
         throw new Error(data.error);
