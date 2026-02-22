@@ -1,4 +1,5 @@
 // Quote PDF Generator - Professional customer-facing quotes with branding
+import { escapeHtml } from './html-utils';
 
 export interface QuoteLineItem {
   description: string;
@@ -157,15 +158,15 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
   <div class="page">
     <div class="header">
       <div class="company-info">
-        <h1>${company.name}</h1>
-        <p>${company.address}</p>
-        <p>Tel: ${company.phone} | Email: ${company.email}</p>
-        ${company.website ? `<p>Web: ${company.website}</p>` : ""}
-        ${company.vatNumber ? `<p>VAT No: ${company.vatNumber}</p>` : ""}
+        <h1>${escapeHtml(company.name)}</h1>
+        <p>${escapeHtml(company.address)}</p>
+        <p>Tel: ${escapeHtml(company.phone)} | Email: ${escapeHtml(company.email)}</p>
+        ${company.website ? `<p>Web: ${escapeHtml(company.website)}</p>` : ""}
+        ${company.vatNumber ? `<p>VAT No: ${escapeHtml(company.vatNumber)}</p>` : ""}
       </div>
       <div class="quote-title">
         <h2>QUOTATION</h2>
-        <p class="quote-number">${quote.quoteNumber}</p>
+        <p class="quote-number">${escapeHtml(quote.quoteNumber)}</p>
         <p>Date: ${formatDate(quote.quoteDate)}</p>
         <p>Valid Until: ${formatDate(quote.validUntil)}</p>
       </div>
@@ -174,20 +175,20 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
     <div class="addresses">
       <div class="address-block">
         <h3>Quote For</h3>
-        <p><strong>${quote.customerName}</strong></p>
-        <p>${quote.customerAddress.replace(/\n/g, "<br>")}</p>
-        ${quote.customerPhone ? `<p>Tel: ${quote.customerPhone}</p>` : ""}
-        ${quote.customerEmail ? `<p>Email: ${quote.customerEmail}</p>` : ""}
+        <p><strong>${escapeHtml(quote.customerName)}</strong></p>
+        <p>${escapeHtml(quote.customerAddress).replace(/\n/g, "<br>")}</p>
+        ${quote.customerPhone ? `<p>Tel: ${escapeHtml(quote.customerPhone)}</p>` : ""}
+        ${quote.customerEmail ? `<p>Email: ${escapeHtml(quote.customerEmail)}</p>` : ""}
       </div>
       <div class="address-block">
         <h3>Site Address</h3>
-        <p>${quote.customerAddress.replace(/\n/g, "<br>")}</p>
+        <p>${escapeHtml(quote.customerAddress).replace(/\n/g, "<br>")}</p>
       </div>
     </div>
 
     <div class="project-description">
       <h3>Project Description</h3>
-      <p>${quote.projectDescription}</p>
+      <p>${escapeHtml(quote.projectDescription)}</p>
     </div>
 
     <table>
@@ -203,9 +204,9 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
       <tbody>
         ${quote.items.map(item => `
           <tr>
-            <td>${item.description}</td>
+            <td>${escapeHtml(item.description)}</td>
             <td class="text-right">${item.quantity}</td>
-            <td class="text-right">${item.unit}</td>
+            <td class="text-right">${escapeHtml(item.unit)}</td>
             <td class="text-right">${formatCurrency(item.unitPrice)}</td>
             <td class="text-right">${formatCurrency(item.total)}</td>
           </tr>
@@ -231,7 +232,7 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
     ${quote.notes ? `
     <div class="notes">
       <h3>Notes</h3>
-      <p>${quote.notes}</p>
+      <p>${escapeHtml(quote.notes || '')}</p>
     </div>
     ` : ""}
 
@@ -249,8 +250,8 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
     </div>
 
     <div class="footer">
-      <p>${company.name} | ${company.address} | ${company.phone}</p>
-      ${company.companyNumber ? `<p>Company Registration: ${company.companyNumber}</p>` : ""}
+      <p>${escapeHtml(company.name)} | ${escapeHtml(company.address)} | ${escapeHtml(company.phone)}</p>
+      ${company.companyNumber ? `<p>Company Registration: ${escapeHtml(company.companyNumber)}</p>` : ""}
     </div>
   </div>
 </body>
