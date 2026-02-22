@@ -35,6 +35,7 @@ import {
   Package,
 } from "lucide-react";
 import jsPDF from "jspdf";
+import { escapeHtml } from "@/lib/html-utils";
 
 interface InvoiceLineItem {
   description: string;
@@ -379,13 +380,13 @@ export function InvoiceGenerator({
           to: customer.email,
           subject: `Invoice ${generateInvoiceNumber()} from ${company.name}`,
           html: `
-            <h1>Invoice from ${company.name}</h1>
-            <p>Dear ${customer.name},</p>
-            <p>Please find attached your invoice for ${description || 'services rendered'}.</p>
+            <h1>Invoice from ${escapeHtml(company.name)}</h1>
+            <p>Dear ${escapeHtml(customer.name)},</p>
+            <p>Please find attached your invoice for ${escapeHtml(description || 'services rendered')}.</p>
             <p><strong>Total Due: ${formatCurrency(total)}</strong></p>
             <p>Payment Terms: ${paymentTerms} days</p>
             <p>Thank you for your business.</p>
-            <p>Best regards,<br/>${company.name}</p>
+            <p>Best regards,<br/>${escapeHtml(company.name)}</p>
           `,
           replyTo: company.email,
         },

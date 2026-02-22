@@ -67,6 +67,39 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
+    // Validate email format and reject header injection
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(to) || /[\r\n]/.test(to)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email address format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate subject (no header injection, max length)
+    if (subject.length > 200 || /[\r\n]/.test(subject)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid subject line" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Limit HTML content size (100KB)
+    if (html.length > 100000) {
+      return new Response(
+        JSON.stringify({ error: "Email content too large" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate replyTo if provided
+    if (replyTo && (!emailRegex.test(replyTo) || /[\r\n]/.test(replyTo))) {
+      return new Response(
+        JSON.stringify({ error: "Invalid reply-to email address" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const emailPayload: any = {
       from: from || "BuildQuote Pro <onboarding@resend.dev>",
       to: [to],

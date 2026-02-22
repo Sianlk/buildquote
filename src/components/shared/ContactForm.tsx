@@ -16,6 +16,7 @@ import { Loader2, MessageCircle, MapPin, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { SYSTEM_SETTINGS } from "@/lib/system-settings";
+import { escapeHtml } from "@/lib/html-utils";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -65,12 +66,12 @@ export function ContactForm({ className }: ContactFormProps) {
           subject: `BuildQuote Contact: ${formData.subject}`,
           html: `
             <h2>New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${formData.name}</p>
-            <p><strong>Email:</strong> ${formData.email}</p>
-            <p><strong>Phone:</strong> ${formData.phone || "Not provided"}</p>
-            <p><strong>Subject:</strong> ${formData.subject}</p>
+            <p><strong>Name:</strong> ${escapeHtml(formData.name)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(formData.email)}</p>
+            <p><strong>Phone:</strong> ${escapeHtml(formData.phone || "Not provided")}</p>
+            <p><strong>Subject:</strong> ${escapeHtml(formData.subject)}</p>
             <h3>Message:</h3>
-            <p>${formData.message.replace(/\n/g, "<br>")}</p>
+            <p>${escapeHtml(formData.message).replace(/\n/g, "<br>")}</p>
           `,
           replyTo: formData.email,
         },
