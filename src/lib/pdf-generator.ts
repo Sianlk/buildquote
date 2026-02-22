@@ -148,9 +148,14 @@ function addFooter(doc: jsPDF, branding: CompanyBranding, pageNumber: number, to
   
   doc.setFontSize(8);
   doc.setTextColor(120, 120, 120);
-  doc.text(branding.name, 15, pageHeight - 12);
-  doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth / 2, pageHeight - 12, { align: "center" });
-  doc.text(new Date().toLocaleDateString("en-GB"), pageWidth - 15, pageHeight - 12, { align: "right" });
+  doc.text(branding.name, 15, pageHeight - 15);
+  doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth / 2, pageHeight - 15, { align: "center" });
+  doc.text(new Date().toLocaleDateString("en-GB"), pageWidth - 15, pageHeight - 15, { align: "right" });
+  
+  // Viral branding footer
+  doc.setFontSize(6);
+  doc.setTextColor(160, 160, 160);
+  doc.text("Created with BuildQuote \u2013 UK Construction Compliance Software \u2022 buildquote.lovable.app", pageWidth / 2, pageHeight - 8, { align: "center" });
 }
 
 export function generateInvoicePDF(invoice: InvoiceData, branding: CompanyBranding = DEFAULT_BRANDING): jsPDF {

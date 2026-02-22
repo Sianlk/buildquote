@@ -10,6 +10,7 @@ import { PWAInstallPrompt } from "@/components/shared/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
 import { GlobalSearch } from "@/components/shared/GlobalSearch";
 import { AIChatWidget } from "@/components/shared/AIChatWidget";
+import { SEOHead } from "@/components/shared/SEOHead";
 import { Loader2 } from "lucide-react";
 
 // Eagerly loaded pages (critical path)
@@ -68,6 +69,7 @@ const App = () => (
       <OfflineIndicator />
       <BrowserRouter>
         <AuthProvider>
+          <SEOHead />
           <GlobalSearch />
           <AIChatWidget />
           <Suspense fallback={<PageLoader />}>
