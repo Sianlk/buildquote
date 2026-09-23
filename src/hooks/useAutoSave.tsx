@@ -13,7 +13,7 @@ export function useAutoSave<T>({
   debounceMs = 2000,
   enabled = true,
 }: UseAutoSaveOptions<T>) {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousDataRef = useRef<string>("");
   const isSavingRef = useRef(false);
 
