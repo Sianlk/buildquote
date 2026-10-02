@@ -259,6 +259,44 @@ export type Database = {
           },
         ]
       }
+      job_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          job_id: string
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          job_id: string
+          read_at?: string | null
+          recipient_id: string
+          sender_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_messages_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_quotes: {
         Row: {
           available_start_date: string | null
@@ -508,6 +546,7 @@ export type Database = {
           created_at: string | null
           credits_remaining: number | null
           email: string | null
+          estimator_rates: Json
           full_name: string | null
           id: string
           phone: string | null
@@ -522,6 +561,7 @@ export type Database = {
           created_at?: string | null
           credits_remaining?: number | null
           email?: string | null
+          estimator_rates?: Json
           full_name?: string | null
           id?: string
           phone?: string | null
@@ -536,6 +576,7 @@ export type Database = {
           created_at?: string | null
           credits_remaining?: number | null
           email?: string | null
+          estimator_rates?: Json
           full_name?: string | null
           id?: string
           phone?: string | null
