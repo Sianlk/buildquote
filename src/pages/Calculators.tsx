@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FullEstimator } from "@/components/calculators/FullEstimator";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,7 @@ type Region = keyof typeof REGIONAL_MULTIPLIERS;
 const formatCurrency = (value: number) => `£${value.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
 export default function Calculators() {
-  const [activeTab, setActiveTab] = useState("brickwork");
+  const [activeTab, setActiveTab] = useState("estimator");
   const [region, setRegion] = useState<Region>("south_east");
   const [pricingType, setPricingType] = useState<"trade" | "retail">("retail");
 
@@ -221,7 +222,8 @@ export default function Calculators() {
         <LiabilityDisclaimer variant="compact" context="calculation" />
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full">
+          <TabsList className="grid grid-cols-4 md:grid-cols-7 w-full">
+            <TabsTrigger value="estimator" className="gap-2"><Calculator className="h-4 w-4" /><span className="hidden md:inline">Estimator</span></TabsTrigger>
             <TabsTrigger value="brickwork" className="gap-2">
               <Blocks className="h-4 w-4" />
               <span className="hidden md:inline">Brickwork</span>
@@ -249,6 +251,7 @@ export default function Calculators() {
           </TabsList>
 
           {/* Brickwork Calculator */}
+          <TabsContent value="estimator" className="mt-6"><FullEstimator /></TabsContent>
           <TabsContent value="brickwork" className="mt-6">
             <div className="grid md:grid-cols-2 gap-6">
               <Card>

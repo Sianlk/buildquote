@@ -58,7 +58,7 @@ export function FullEstimator() {
   });
   const matTotal = bom.reduce((s, b) => s + b.total, 0);
   const delta = matTotal - est.materials;
-  const subtotal = est.subtotal + delta * 1.23 + (est.subtotal - est.subtotal);
+  const subtotal = est.subtotal + delta * 1.23;
   const vat = subtotal * est.vatRate / 100;
   const total = subtotal + vat;
 
