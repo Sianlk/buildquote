@@ -57,7 +57,11 @@ export default function Quotes() {
 
   const load = async () => {
     const { data } = await supabase.from("quotes").select("*").order("created_at", { ascending: false });
-    setList((data || []) as unknown as Quote[]);
+    const rows = (data || []) as unknown as Quote[];
+    setList(rows);
+    const open = new URLSearchParams(window.location.search).get("open");
+    const hit = open && rows.find((r) => r.id === open);
+    if (hit) setQ(hit);
   };
   useEffect(() => { if (user) load(); }, [user]);
 

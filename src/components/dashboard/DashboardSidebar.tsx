@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { MapPin, ClipboardList } from "lucide-react";
+import { MapPin, ClipboardList, HardHat } from "lucide-react";
 import {
   LayoutDashboard,
   FolderOpen,
@@ -36,6 +36,7 @@ const mainNavItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: FolderOpen, label: "Projects", href: "/dashboard/projects" },
   { icon: Calculator, label: "New Quote", href: "/dashboard/new-project" },
+  { icon: HardHat, label: "Builder Dashboard", href: "/dashboard/builder" },
   { icon: ClipboardList, label: "Quotes & Invoices", href: "/dashboard/quotes" },
 ];
 

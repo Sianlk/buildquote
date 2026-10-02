@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiabilityDisclaimer } from "@/components/shared/LiabilityDisclaimer";
+import { CouncilFeeCalculator, defaultFeeApp } from "@/components/planning/CouncilFeeCalculator";
 import { Loader2, MapPin, AlertTriangle, CheckCircle, Info, ExternalLink } from "lucide-react";
 
 type House = "detached" | "semi" | "terrace" | "flat";
@@ -46,7 +47,7 @@ function assess(work: Work, house: House, depth: number, height: number, volume:
       const pd = attached ? 3 : 4, pa = attached ? 6 : 8;
       if (height > 4) needPP("Single-storey rear extensions over 4m high are not permitted development.");
       else if (depth <= pd) reasons.push(`Within the ${pd}m depth limit for a ${house} house (max 4m high, eaves ≤3m within 2m of a boundary).`);
-      else if (depth <= pa && !art22) { route = "Prior approval (larger home extension)"; tone = "warn"; reasons.push(`${depth}m is over ${pd}m but within ${pa}m — needs the neighbour-consultation prior approval process (42 days).`); fees.push(["Prior approval fee (England)", "£120–£258"]); likelihood -= 5; }
+      else if (depth <= pa && !art22) { route = "Prior approval (larger home extension)"; tone = "warn"; reasons.push(`${depth}m is over ${pd}m but within ${pa}m — needs the neighbour-consultation prior approval process (42 days).`); fees.push(["Prior approval fee (England)", "£240"]); likelihood -= 5; }
       else needPP(`${depth}m exceeds the ${art22 ? pd : pa}m limit${art22 ? " (larger home extension scheme doesn't apply in designated areas)" : ""}.`);
       design.push("Keep eaves ≤3m within 2m of the boundary", "Flat roof with lantern or low-pitch roof is rarely refused", "Match or complement existing brick");
       break;
@@ -96,11 +97,11 @@ function assess(work: Work, house: House, depth: number, height: number, volume:
     case "office_to_resi":
       route = "Prior approval (Class MA)"; tone = "warn";
       reasons.push("Class E to residential needs prior approval: building vacant 3 months, homes must meet Nationally Described Space Standards and have adequate natural light. Not available in listed buildings or (for some parts) conservation areas.");
-      fees.push(["Class MA prior approval fee", "£120 per home (approx.)"]);
+      fees.push(["Class MA prior approval fee", "£250 per home"]);
       break;
     case "new_dwelling":
       needPP("New dwellings always need full planning permission (or Permission in Principle for small sites).");
-      fees.push(["Full application fee (England, 1–9 homes)", "£578 per home"], ["Biodiversity net gain assessment", "£1,000–£3,000"], ["CIL (if the council charges it)", "£0–£400 per m²"]);
+      fees.push(["Full application fee (England, 1–9 homes)", "£588 per home"], ["Biodiversity net gain assessment", "£1,000–£3,000"], ["CIL (if the council charges it)", "£0–£400 per m²"]);
       design.push("Match the prevailing building line and plot widths", "21m back-to-back distance between facing habitable windows", "Meet NDSS internal space and parking standards");
       break;
   }
@@ -110,7 +111,7 @@ function assess(work: Work, house: House, depth: number, height: number, volume:
   if (has("conservation-area")) design.push("Use traditional materials (timber/aluminium flush windows, natural slate)", "A Heritage Statement is required with applications");
 
   if (route.startsWith("Listed")) fees.unshift(["Listed Building Consent", "Free (no fee)"], ["Householder planning fee (England)", "£528"], ["Heritage statement", "£500–£1,500"]);
-  else if (route.startsWith("Planning")) fees.unshift(["Householder planning fee (England, from Dec 2024)", "£528"]);
+  else if (route.startsWith("Planning")) fees.unshift(["Householder planning fee (England)", "£528"]);
   else if (route.startsWith("Permitted")) fees.unshift(["Lawful Development Certificate (recommended, proves PD)", "£264"]);
   fees.push(["Planning / measured drawings", "£800–£2,500"], ["Building Regulations (full plans or building notice)", "£600–£1,500"], ["Structural engineer calcs", "£400–£1,000"]);
   if (attached && ["rear_single", "rear_double", "side", "loft_dormer", "loft_hip", "new_dwelling"].includes(work)) fees.push(["Party Wall surveyor (per neighbour, if needed)", "£900–£1,500"]);
@@ -207,6 +208,7 @@ export default function PlanningChecker() {
             </Card>
           </div>
         )}
+        {place && v && <CouncilFeeCalculator council={place.council} country={place.country} isLondon={place.region === "London"} initialApp={defaultFeeApp(work, v.route)} />}
       </div>
     </DashboardLayout>
   );
