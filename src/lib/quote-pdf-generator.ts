@@ -158,6 +158,7 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
   <div class="page">
     <div class="header">
       <div class="company-info">
+        ${company.logo && /^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(company.logo) ? `<img src="${company.logo}" alt="logo" style="max-height:70px;max-width:220px;margin-bottom:8px;display:block" />` : ""}
         <h1>${escapeHtml(company.name)}</h1>
         <p>${escapeHtml(company.address)}</p>
         <p>Tel: ${escapeHtml(company.phone)} | Email: ${escapeHtml(company.email)}</p>
