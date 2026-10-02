@@ -76,7 +76,7 @@ export default function Marketplace() {
   });
   const { canPostMarketplaceJobs } = useSubscription();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('find-trades');
+  const [activeTab, setActiveTab] = useState(new URLSearchParams(window.location.search).get('tab') || 'find-trades');
   const [showJobDialog, setShowJobDialog] = useState(false);
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [showBidDialog, setShowBidDialog] = useState(false);
