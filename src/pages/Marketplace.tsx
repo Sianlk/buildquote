@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSubscription } from "@/hooks/useSubscription";
+import { TradeVerification } from "@/components/trade/TradeVerification";
+import { TradeReviews } from "@/components/trade/TradeReviews";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -443,7 +445,12 @@ export default function Marketplace() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="font-medium">£{rate}/hr</span>
-                      <Button size="sm">Contact</Button>
+                      <div className="flex gap-2">
+                        <TradeReviews tradeProfileId={trade.id} ownerId={(trade as any).user_id} businessName={businessName} rating={avgRating} count={reviewCount} />
+                        {(trade as any).contact_email || (trade as any).contact_phone ? (
+                          <Button size="sm" asChild><a href={(trade as any).contact_email ? `mailto:${(trade as any).contact_email}` : `tel:${(trade as any).contact_phone}`}>Contact</a></Button>
+                        ) : <Button size="sm" disabled>Contact</Button>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -586,6 +593,7 @@ export default function Marketplace() {
                     </div>
                   </CardContent>
                 </Card>
+                <TradeVerification profile={myProfile} onChange={() => queryClient.invalidateQueries({ queryKey: ['my-trade-profile', user?.id] })} />
               </div>
             ) : (
               <Card>
