@@ -259,6 +259,44 @@ export type Database = {
           },
         ]
       }
+      job_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          job_id: string
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          job_id: string
+          read_at?: string | null
+          recipient_id: string
+          sender_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_messages_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_quotes: {
         Row: {
           available_start_date: string | null
@@ -508,6 +546,7 @@ export type Database = {
           created_at: string | null
           credits_remaining: number | null
           email: string | null
+          estimator_rates: Json
           full_name: string | null
           id: string
           phone: string | null
@@ -522,6 +561,7 @@ export type Database = {
           created_at?: string | null
           credits_remaining?: number | null
           email?: string | null
+          estimator_rates?: Json
           full_name?: string | null
           id?: string
           phone?: string | null
@@ -536,6 +576,7 @@ export type Database = {
           created_at?: string | null
           credits_remaining?: number | null
           email?: string | null
+          estimator_rates?: Json
           full_name?: string | null
           id?: string
           phone?: string | null
@@ -802,6 +843,87 @@ export type Database = {
           },
         ]
       }
+      quotes: {
+        Row: {
+          cis_amount: number
+          cis_rate: number
+          created_at: string
+          customer_address: string | null
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          due_date: string | null
+          id: string
+          invoice_number: string | null
+          invoiced_at: string | null
+          items: Json
+          notes: string | null
+          paid_at: string | null
+          project_description: string | null
+          quote_number: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+          user_id: string
+          valid_until: string | null
+          vat_amount: number
+          vat_rate: number
+        }
+        Insert: {
+          cis_amount?: number
+          cis_rate?: number
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          due_date?: string | null
+          id?: string
+          invoice_number?: string | null
+          invoiced_at?: string | null
+          items?: Json
+          notes?: string | null
+          paid_at?: string | null
+          project_description?: string | null
+          quote_number: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          user_id?: string
+          valid_until?: string | null
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Update: {
+          cis_amount?: number
+          cis_rate?: number
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          due_date?: string | null
+          id?: string
+          invoice_number?: string | null
+          invoiced_at?: string | null
+          items?: Json
+          notes?: string | null
+          paid_at?: string | null
+          project_description?: string | null
+          quote_number?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          user_id?: string
+          valid_until?: string | null
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Relationships: []
+      }
       tax_records: {
         Row: {
           created_at: string
@@ -935,6 +1057,7 @@ export type Database = {
         Row: {
           average_rating: number | null
           business_name: string
+          company_number: string | null
           contact_email: string | null
           contact_phone: string | null
           created_at: string | null
@@ -949,18 +1072,22 @@ export type Database = {
           niceic_number: string | null
           portfolio_images: string[] | null
           profile_image_url: string | null
+          public_liability_cover: number | null
           qualifications: string[] | null
           service_areas: string[] | null
           total_reviews: number | null
           trade_type: string
           updated_at: string | null
           user_id: string
+          vat_number: string | null
           verification_date: string | null
+          verification_status: string
           website: string | null
         }
         Insert: {
           average_rating?: number | null
           business_name: string
+          company_number?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string | null
@@ -975,18 +1102,22 @@ export type Database = {
           niceic_number?: string | null
           portfolio_images?: string[] | null
           profile_image_url?: string | null
+          public_liability_cover?: number | null
           qualifications?: string[] | null
           service_areas?: string[] | null
           total_reviews?: number | null
           trade_type: string
           updated_at?: string | null
           user_id: string
+          vat_number?: string | null
           verification_date?: string | null
+          verification_status?: string
           website?: string | null
         }
         Update: {
           average_rating?: number | null
           business_name?: string
+          company_number?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string | null
@@ -1001,13 +1132,16 @@ export type Database = {
           niceic_number?: string | null
           portfolio_images?: string[] | null
           profile_image_url?: string | null
+          public_liability_cover?: number | null
           qualifications?: string[] | null
           service_areas?: string[] | null
           total_reviews?: number | null
           trade_type?: string
           updated_at?: string | null
           user_id?: string
+          vat_number?: string | null
           verification_date?: string | null
+          verification_status?: string
           website?: string | null
         }
         Relationships: []
@@ -1142,6 +1276,59 @@ export type Database = {
           },
           {
             foreignKeyName: "trade_reviews_trade_profile_id_fkey"
+            columns: ["trade_profile_id"]
+            isOneToOne: false
+            referencedRelation: "trade_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trade_verification_documents: {
+        Row: {
+          created_at: string
+          doc_type: string
+          expires_on: string | null
+          file_path: string
+          id: string
+          reference_number: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string
+          trade_profile_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doc_type: string
+          expires_on?: string | null
+          file_path: string
+          id?: string
+          reference_number?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          trade_profile_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string
+          expires_on?: string | null
+          file_path?: string
+          id?: string
+          reference_number?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          trade_profile_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_verification_documents_trade_profile_id_fkey"
             columns: ["trade_profile_id"]
             isOneToOne: false
             referencedRelation: "trade_profiles"

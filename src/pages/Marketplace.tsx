@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSubscription } from "@/hooks/useSubscription";
+import { Link, useNavigate } from "react-router-dom";
+import { TradeVerification } from "@/components/trade/TradeVerification";
+import { TradeReviews } from "@/components/trade/TradeReviews";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,9 +60,23 @@ const TRADE_TYPES = [
 export default function Marketplace() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { data: myJobs } = useQuery({
+    queryKey: ['my-jobs', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from('marketplace_jobs').select('*').eq('customer_id', user!.id).order('created_at', { ascending: false });
+      return data || [];
+    },
+    enabled: !!user,
+  });
+  const { data: isAdmin } = useQuery({
+    queryKey: ['is-admin', user?.id],
+    queryFn: async () => (await supabase.rpc('has_role', { _user_id: user!.id, _role: 'admin' })).data === true,
+    enabled: !!user,
+  });
   const { canPostMarketplaceJobs } = useSubscription();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('find-trades');
+  const [activeTab, setActiveTab] = useState(new URLSearchParams(window.location.search).get('tab') || 'find-trades');
   const [showJobDialog, setShowJobDialog] = useState(false);
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [showBidDialog, setShowBidDialog] = useState(false);
@@ -144,8 +161,7 @@ export default function Marketplace() {
   const createJobMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('Must be logged in');
-      if (!canPostMarketplaceJobs) throw new Error('Subscribe to Core (£5.99/mo) to post jobs on the marketplace');
-      const { error } = await supabase.from('marketplace_jobs').insert({
+      const { data: created, error } = await supabase.from('marketplace_jobs').insert({
         customer_id: user.id,
         title: jobForm.title,
         description: jobForm.description,
@@ -156,11 +172,13 @@ export default function Marketplace() {
         budget_min: parseFloat(jobForm.budget_min) || null,
         budget_max: parseFloat(jobForm.budget_max) || null,
         urgency: jobForm.urgency,
-      });
+      }).select('id').single();
       if (error) throw error;
+      return created.id as string;
     },
-    onSuccess: () => {
-      toast.success('Job posted successfully!');
+    onSuccess: (id: string) => {
+      toast.success('Job posted — trades can now send quotes and messages');
+      navigate(`/dashboard/marketplace/jobs/${id}`);
       setShowJobDialog(false);
       setJobForm({ title: '', description: '', trade_required: '', location: '', postcode: '', budget_min: '', budget_max: '', urgency: 'normal' });
       queryClient.invalidateQueries({ queryKey: ['marketplace-jobs'] });
@@ -314,6 +332,8 @@ export default function Marketplace() {
               </DialogContent>
             </Dialog>
             
+            <Button variant="outline" asChild><Link to="/dashboard/trades"><CheckCircle className="h-4 w-4 mr-2" />Verified trades</Link></Button>
+            {isAdmin && <Button variant="outline" asChild><Link to="/dashboard/admin">Approve trades</Link></Button>}
             <Dialog open={showJobDialog} onOpenChange={setShowJobDialog}>
               <DialogTrigger asChild>
                 <Button>
@@ -400,6 +420,7 @@ export default function Marketplace() {
             <TabsTrigger value="find-trades" className="flex-shrink-0">Find Trades</TabsTrigger>
             <TabsTrigger value="browse-jobs" className="flex-shrink-0">Browse Jobs</TabsTrigger>
             <TabsTrigger value="my-profile" className="flex-shrink-0">My Profile</TabsTrigger>
+            <TabsTrigger value="my-jobs" className="flex-shrink-0">My Jobs ({myJobs?.length || 0})</TabsTrigger>
             <TabsTrigger value="analytics" className="flex-shrink-0">Analytics</TabsTrigger>
           </TabsList>
 
@@ -443,13 +464,28 @@ export default function Marketplace() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="font-medium">£{rate}/hr</span>
-                      <Button size="sm">Contact</Button>
+                      <div className="flex gap-2">
+                        <TradeReviews tradeProfileId={trade.id} ownerId={(trade as any).user_id} businessName={businessName} rating={avgRating} count={reviewCount} />
+                        {(trade as any).contact_email || (trade as any).contact_phone ? (
+                          <Button size="sm" asChild><a href={(trade as any).contact_email ? `mailto:${(trade as any).contact_email}` : `tel:${(trade as any).contact_phone}`}>Contact</a></Button>
+                        ) : <Button size="sm" disabled>Contact</Button>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
                 );
               })}
             </div>
+          </TabsContent>
+
+          <TabsContent value="my-jobs" className="mt-4 space-y-3">
+            {(myJobs || []).length === 0 && <p className="text-sm text-muted-foreground">You haven't posted any jobs yet. Use "Post a Job" above — it's free.</p>}
+            {(myJobs || []).map((j: any) => (
+              <Card key={j.id}><CardContent className="p-4 flex flex-wrap items-center justify-between gap-2">
+                <div><p className="font-medium">{j.title}</p><p className="text-sm text-muted-foreground">{j.trade_required} • {j.location} • {new Date(j.created_at).toLocaleDateString('en-GB')}</p></div>
+                <div className="flex items-center gap-2"><Badge variant="outline" className="capitalize">{(j.status || 'open').replace('_', ' ')}</Badge>
+                  <Button size="sm" asChild><Link to={`/dashboard/marketplace/jobs/${j.id}`}>Quotes & messages</Link></Button></div>
+              </CardContent></Card>))}
           </TabsContent>
 
           <TabsContent value="browse-jobs" className="mt-4">
@@ -508,9 +544,10 @@ export default function Marketplace() {
                         </p>
                         <p className="text-sm font-medium">Budget: {budget}</p>
                       </div>
-                      <Button onClick={() => { setSelectedJobId(job.id); setShowBidDialog(true); }}>
-                        Submit Quote
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        {/^[0-9a-f-]{36}$/.test(String(job.id)) && <Button variant="outline" asChild><Link to={`/dashboard/marketplace/jobs/${job.id}`}>View & message</Link></Button>}
+                        {jt.customer_id !== user?.id && <Button onClick={() => { if (!myProfile) { toast.error('Create a trade profile first (My Profile tab)'); return; } setSelectedJobId(job.id); setShowBidDialog(true); }}>Submit Quote</Button>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -586,6 +623,7 @@ export default function Marketplace() {
                     </div>
                   </CardContent>
                 </Card>
+                <TradeVerification profile={myProfile} onChange={() => queryClient.invalidateQueries({ queryKey: ['my-trade-profile', user?.id] })} />
               </div>
             ) : (
               <Card>

@@ -25,6 +25,11 @@ export interface QuoteDetails {
   total: number;
   notes?: string;
   paymentTerms: string;
+  docType?: 'QUOTATION' | 'INVOICE';
+  dueDate?: string;
+  cisRate?: number;
+  cisAmount?: number;
+  bankDetails?: string;
 }
 
 export interface CompanyDetails {
@@ -117,7 +122,7 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quote ${quote.quoteNumber}</title>
+  <title>${quote.docType === 'INVOICE' ? 'Invoice' : 'Quote'} ${escapeHtml(quote.quoteNumber)}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; color: #1a1a1a; line-height: 1.5; }
@@ -166,10 +171,10 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
         ${company.vatNumber ? `<p>VAT No: ${escapeHtml(company.vatNumber)}</p>` : ""}
       </div>
       <div class="quote-title">
-        <h2>QUOTATION</h2>
+        <h2>${quote.docType || 'QUOTATION'}</h2>
         <p class="quote-number">${escapeHtml(quote.quoteNumber)}</p>
         <p>Date: ${formatDate(quote.quoteDate)}</p>
-        <p>Valid Until: ${formatDate(quote.validUntil)}</p>
+        ${quote.docType === 'INVOICE' ? (quote.dueDate ? `<p>Payment due: ${formatDate(quote.dueDate)}</p>` : '') : `<p>Valid Until: ${formatDate(quote.validUntil)}</p>`}
       </div>
     </div>
 
@@ -228,6 +233,8 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
         <span>Total</span>
         <span>${formatCurrency(quote.total)}</span>
       </div>
+      ${quote.cisAmount ? `<div class="totals-row"><span>Less CIS deduction (${quote.cisRate}% of labour)</span><span>-${formatCurrency(quote.cisAmount)}</span></div>
+      <div class="totals-row total"><span>Amount payable</span><span>${formatCurrency(quote.total - quote.cisAmount)}</span></div>` : ''}
     </div>
 
     ${quote.notes ? `
@@ -237,13 +244,14 @@ export function generateQuoteHTML(quote: QuoteDetails, company: CompanyDetails):
     </div>
     ` : ""}
 
+    ${quote.docType === 'INVOICE' ? `<div class="notes"><h3>Payment</h3><p>${escapeHtml(quote.paymentTerms)}</p>${quote.bankDetails ? `<p>${escapeHtml(quote.bankDetails)}</p>` : ''}</div>` : `
     <div class="acceptance">
       <h3>To Accept This Quote</h3>
       <p>Please sign below and return to confirm acceptance. A deposit of 20% (${formatCurrency(quote.total * 0.2)}) is required to secure your booking.</p>
       <br>
       <p>Signed: <span class="signature-line"></span> Date: <span class="signature-line"></span></p>
       <p style="margin-top: 10px;">Print Name: <span class="signature-line"></span></p>
-    </div>
+    </div>`}
 
     <div class="terms">
       <h3>Terms & Conditions</h3>

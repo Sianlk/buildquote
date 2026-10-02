@@ -47,6 +47,10 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
+const JobDetail = lazy(() => import("./pages/JobDetail"));
+const VerifiedTrades = lazy(() => import("./pages/VerifiedTrades"));
+const Quotes = lazy(() => import("./pages/Quotes"));
+const PlanningChecker = lazy(() => import("./pages/PlanningChecker"));
 
 const queryClient = new QueryClient();
 
@@ -106,6 +110,10 @@ const App = () => (
               <Route path="/dashboard/calculators" element={<ProtectedRouteWithRef><Calculators /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/settings" element={<ProtectedRouteWithRef><Settings /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/admin" element={<ProtectedRouteWithRef><Admin /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/marketplace/jobs/:id" element={<ProtectedRouteWithRef><JobDetail /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/trades" element={<ProtectedRouteWithRef><VerifiedTrades /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/quotes" element={<ProtectedRouteWithRef><Quotes /></ProtectedRouteWithRef>} />
+              <Route path="/dashboard/planning" element={<ProtectedRouteWithRef><PlanningChecker /></ProtectedRouteWithRef>} />
               <Route path="/dashboard/marketplace" element={<ProtectedRouteWithRef><Marketplace /></ProtectedRouteWithRef>} />
               
               {/* Legacy redirects */}

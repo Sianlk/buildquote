@@ -41,7 +41,11 @@ export interface EstimateInput {
   windows: number; externalDoors: number; internalDoors: number;
   rooflights: number; includeKitchen: boolean; includeDecoration: boolean;
   contingencyPct: number; vatRegistered: boolean;
+  rates?: MyRates;
 }
+
+/** User's own local rates. Day rates replace the regional averages (no region multiplier applied). */
+export interface MyRates { day?: Record<string, number>; materialAdjustPct?: number; profitPct?: number; prelimsPct?: number }
 
 export interface BOMLine { category: string; item: string; qty: number; unit: string; rate: number; total: number }
 export interface LabourLine { trade: string; days: number; dayRate: number; total: number }
@@ -226,8 +230,9 @@ export function calculateEstimate(i: EstimateInput): Estimate {
   add("Sundries", "Skips 8yd", Math.max(1, Math.ceil(area / 20)), "skip", 340);
   add("Sundries", "Fixings, sealants, PPE & consumables", Math.ceil(area / 10), "pack", 22);
 
-  const materials = r2(bom.reduce((s, b) => s + b.total, 0) * sm);
-  bom.forEach((b) => { b.rate = r2(b.rate * sm); b.total = r2(b.qty * b.rate); });
+  const matAdj = 1 + (i.rates?.materialAdjustPct ?? 0) / 100;
+  bom.forEach((b) => { b.rate = r2(b.rate * sm * matAdj); b.total = r2(b.qty * b.rate); });
+  const materials = r2(bom.reduce((s, b) => s + b.total, 0));
 
   // Labour (days) — productivity based
   const ld: Record<string, number> = {};
@@ -248,15 +253,16 @@ export function calculateEstimate(i: EstimateInput): Estimate {
   L("Labourer", area * 0.1);
   const labMult = i.spec === "high" ? 1.2 : i.spec === "low" ? 0.92 : 1;
   const labour: LabourLine[] = Object.entries(ld).map(([trade, d]) => {
-    const days = Math.ceil(d * labMult * 2) / 2; const dayRate = r2(DAY_RATES[trade] * reg);
+    const days = Math.ceil(d * labMult * 2) / 2; const own = i.rates?.day?.[trade];
+    const dayRate = own && own > 0 ? r2(own) : r2(DAY_RATES[trade] * reg);
     return { trade, days, dayRate, total: r2(days * dayRate) };
   });
   const labourTotal = r2(labour.reduce((s, l) => s + l.total, 0));
   const direct = materials + labourTotal;
-  const prelims = r2(direct * 0.08);
+  const prelims = r2(direct * (i.rates?.prelimsPct ?? 8) / 100);
   const fees = r2(Math.max(1200, direct * (bt.newStructure ? 0.08 : 0.05))); // architect/engineer/BC/planning
   const contingency = r2((direct + prelims) * i.contingencyPct / 100);
-  const profit = r2((direct + prelims) * 0.15);
+  const profit = r2((direct + prelims) * (i.rates?.profitPct ?? 15) / 100);
   const subtotal = r2(direct + prelims + fees + contingency + profit);
   const vatRate = !i.vatRegistered ? 0 : bt.vatZero ? 0 : 20;
   const vat = r2(subtotal * vatRate / 100);
