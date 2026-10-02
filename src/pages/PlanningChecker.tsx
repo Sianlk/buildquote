@@ -153,7 +153,7 @@ export default function PlanningChecker() {
       <div className="p-4 md:p-8 space-y-6">
         <div><h1 className="text-2xl md:text-3xl font-bold">Planning Checker</h1>
           <p className="text-muted-foreground">Enter a postcode and your plans — see the council, local protections, whether you need permission, what design is most likely approved, and the costs.</p></div>
-        <LiabilityDisclaimer variant="compact" context="compliance" />
+        <LiabilityDisclaimer variant="compact" context="legal" />
 
         <Card>
           <CardContent className="pt-6 grid gap-3 md:grid-cols-4 items-end">

@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { MapPin, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -34,11 +35,13 @@ const mainNavItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: FolderOpen, label: "Projects", href: "/dashboard/projects" },
   { icon: Calculator, label: "New Quote", href: "/dashboard/new-project" },
+  { icon: ClipboardList, label: "Quotes & Invoices", href: "/dashboard/quotes" },
 ];
 
 const moduleNavItems = [
   { icon: Wrench, label: "Trade Jobs", href: "/dashboard/trade-jobs" },
   { icon: Users, label: "Marketplace", href: "/dashboard/marketplace" },
+  { icon: MapPin, label: "Planning Checker", href: "/dashboard/planning" },
   { icon: Zap, label: "Electrical", href: "/dashboard/electrical" },
   { icon: Droplets, label: "Plumbing", href: "/dashboard/plumbing" },
   { icon: Hammer, label: "Carpentry", href: "/dashboard/carpentry" },
