@@ -33,7 +33,7 @@ function assess(work: Work, house: House, depth: number, height: number, volume:
   const art22 = has("conservation-area") || has("area-of-outstanding-natural-beauty") || has("national-park") || has("world-heritage-site");
   const reasons: string[] = []; const design: string[] = []; const fees: [string, string][] = [];
   let route = "Permitted development (no planning application)"; let tone: Verdict["tone"] = "ok"; let likelihood = 85;
-  const needPP = (why: string) => { route = "Planning permission needed"; tone = "warn"; reasons.push(why); likelihood -= 15; };
+  const needPP = (why: string) => { if (tone !== "stop") { route = "Planning permission needed"; tone = "warn"; } reasons.push(why); likelihood -= 15; };
 
   if (country !== "England") reasons.push(`Rules here follow England's GPDO. ${country} has its own permitted development rules and fees — confirm with the council.`);
   if (house === "flat" && !["hmo_small", "hmo_large", "office_to_resi", "new_dwelling"].includes(work)) needPP("Flats and maisonettes have no householder permitted development rights.");
@@ -109,7 +109,8 @@ function assess(work: Work, house: House, depth: number, height: number, volume:
   if (has("green-belt")) { reasons.push("Green belt: extensions must not be 'disproportionate' — typically councils cap at 30–50% over the original volume."); likelihood -= 15; }
   if (has("conservation-area")) design.push("Use traditional materials (timber/aluminium flush windows, natural slate)", "A Heritage Statement is required with applications");
 
-  if (route.startsWith("Planning")) fees.unshift(["Householder planning fee (England, from Dec 2024)", "£528"]);
+  if (route.startsWith("Listed")) fees.unshift(["Listed Building Consent", "Free (no fee)"], ["Householder planning fee (England)", "£528"], ["Heritage statement", "£500–£1,500"]);
+  else if (route.startsWith("Planning")) fees.unshift(["Householder planning fee (England, from Dec 2024)", "£528"]);
   else if (route.startsWith("Permitted")) fees.unshift(["Lawful Development Certificate (recommended, proves PD)", "£264"]);
   fees.push(["Planning / measured drawings", "£800–£2,500"], ["Building Regulations (full plans or building notice)", "£600–£1,500"], ["Structural engineer calcs", "£400–£1,000"]);
   if (attached && ["rear_single", "rear_double", "side", "loft_dormer", "loft_hip", "new_dwelling"].includes(work)) fees.push(["Party Wall surveyor (per neighbour, if needed)", "£900–£1,500"]);

@@ -1,0 +1,3 @@
+- Trade verification fields on trade_profiles (is_verified, verification_status, verification_date) are guarded by the protect_trade_verification trigger; only admins approve via the trade_verification_documents queue — never let clients set them.
+- Quotes and invoices share one `quotes` table (invoice = quote with invoice_number set) so a quote converts to an invoice without copying data.
+- The planning checker reads live postcode data (postcodes.io) and England constraint data (planning.data.gov.uk) straight from the browser; rules live in PlanningChecker.tsx.
