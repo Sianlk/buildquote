@@ -91,7 +91,7 @@ export function FullEstimator() {
   });
   const matTotal = bom.reduce((s, b) => s + b.total, 0);
   const delta = matTotal - est.materials;
-  const subtotal = est.subtotal + delta * 1.23;
+  const subtotal = est.subtotal + delta;
   const vat = subtotal * est.vatRate / 100;
   const total = subtotal + vat;
 
@@ -119,7 +119,7 @@ export function FullEstimator() {
       { description: "Preliminaries (site set-up, welfare, scaffold)", quantity: 1, unit: "item", unitPrice: est.prelims, total: est.prelims },
       { description: "Professional fees (design, engineer, Building Control)", quantity: 1, unit: "item", unitPrice: est.fees, total: est.fees },
       { description: `Contingency ${contingency}%`, quantity: 1, unit: "item", unitPrice: est.contingency, total: est.contingency },
-      { description: "Overheads & profit", quantity: 1, unit: "item", unitPrice: est.profit + delta * 0.23, total: est.profit + delta * 0.23 },
+      { description: "Overheads & profit", quantity: 1, unit: "item", unitPrice: est.profit, total: est.profit },
     ];
     const today = new Date(); const valid = new Date(Date.now() + 30 * 864e5);
     printQuote({
