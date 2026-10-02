@@ -12,6 +12,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { REGIONAL_MULTIPLIERS } from "@/lib/construction-rates";
 import {
   BUILD_TYPES, SPEC_LABEL, calculateEstimate, defaultsFromArea,
+  DAY_RATES, type MyRates,
   type BuildType, type Spec, type Region, type EstimateInput, type BOMLine,
 } from "@/lib/full-estimator";
 import { printQuote, generateQuoteNumber, DEFAULT_COMPANY, type CompanyDetails } from "@/lib/quote-pdf-generator";
@@ -51,6 +52,22 @@ export function FullEstimator() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [rooms, setRooms] = useState({ openPlan: true, lounge: false, bedrooms: 0, bathrooms: 1, ensuites: 0, utility: false, wc: false });
+  const [myRates, setMyRates] = useState<MyRates>({});
+  const [useMine, setUseMine] = useState(false);
+  const [showRates, setShowRates] = useState(false);
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("estimator_rates").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      const r = (data?.estimator_rates || {}) as MyRates;
+      setMyRates(r); if (Object.keys(r).length) setUseMine(true);
+    });
+  }, [user]);
+  const saveRates = async () => {
+    if (!user) return;
+    const { error } = await supabase.from("profiles").update({ estimator_rates: myRates as never }).eq("user_id", user.id);
+    if (error) toast({ title: "Could not save rates", description: error.message, variant: "destructive" });
+    else { setUseMine(true); toast({ title: "Your rates are saved", description: "Every estimate and quote now uses them." }); }
+  };
   const [edits, setEdits] = useState<Record<number, Partial<BOMLine>>>({});
 
   useEffect(() => { localStorage.setItem(COMPANY_KEY, JSON.stringify(company)); }, [company]);
@@ -63,9 +80,9 @@ export function FullEstimator() {
       windows: 0, externalDoors: 0, internalDoors: 0, rooflights: 0, ...d,
       ...(mode === "easy" ? { kitchens: rooms.openPlan ? 1 : 0, bedrooms: rooms.bedrooms, bathrooms: rooms.bathrooms + rooms.ensuites + (rooms.wc ? 1 : 0),
         internalDoors: rooms.bedrooms + rooms.bathrooms + rooms.ensuites + (rooms.wc ? 1 : 0) + (rooms.utility ? 1 : 0) + (rooms.lounge ? 1 : 0) } : c),
-      includeKitchen: incKitchen && (mode === "complex" || rooms.openPlan), includeDecoration: incDeco, contingencyPct: contingency, vatRegistered: vatReg,
+      includeKitchen: incKitchen && (mode === "complex" || rooms.openPlan), includeDecoration: incDeco, contingencyPct: contingency, vatRegistered: vatReg, rates: useMine ? myRates : undefined,
     } as EstimateInput;
-  }, [area, buildType, spec, region, mode, c, rooms, incKitchen, incDeco, contingency, vatReg]);
+  }, [area, buildType, spec, region, mode, c, rooms, useMine, myRates, incKitchen, incDeco, contingency, vatReg]);
 
   const est = useMemo(() => calculateEstimate(input), [input]);
   const bom = est.bom.map((b, i) => {
@@ -202,6 +219,25 @@ export function FullEstimator() {
             <label className="flex items-center gap-2"><Switch checked={vatReg} onCheckedChange={setVatReg} />Charge VAT (VAT registered)</label>
           </div>
           <p className="text-xs text-muted-foreground border-l-2 border-primary pl-3">{est.notes}</p>
+          <div className="border border-border rounded-md p-3 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="flex items-center gap-2 text-sm font-medium"><Switch checked={useMine} onCheckedChange={setUseMine} />Use my own local rates {useMine ? "" : "(currently UK 2026 averages × region)"}</label>
+              <Button size="sm" variant="ghost" onClick={() => setShowRates((v) => !v)}>{showRates ? "Hide" : "Edit my rates"}</Button>
+            </div>
+            {showRates && <>
+              <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
+                {Object.keys(DAY_RATES).map((t) => (
+                  <div key={t}><Label className="text-xs">{t} £/day</Label>
+                    <Input type="number" placeholder={String(Math.round(DAY_RATES[t] * REGIONAL_MULTIPLIERS[region]))} value={myRates.day?.[t] ?? ""}
+                      onChange={(e) => setMyRates((r) => ({ ...r, day: { ...r.day, [t]: parseFloat(e.target.value) || 0 } }))} /></div>))}
+                <div><Label className="text-xs">Materials vs list price %</Label><Input type="number" placeholder="0 (e.g. -15 trade discount)" value={myRates.materialAdjustPct ?? ""} onChange={(e) => setMyRates((r) => ({ ...r, materialAdjustPct: parseFloat(e.target.value) || 0 }))} /></div>
+                <div><Label className="text-xs">Overheads & profit %</Label><Input type="number" placeholder="15" value={myRates.profitPct ?? ""} onChange={(e) => setMyRates((r) => ({ ...r, profitPct: e.target.value === "" ? undefined : parseFloat(e.target.value) }))} /></div>
+                <div><Label className="text-xs">Preliminaries %</Label><Input type="number" placeholder="8" value={myRates.prelimsPct ?? ""} onChange={(e) => setMyRates((r) => ({ ...r, prelimsPct: e.target.value === "" ? undefined : parseFloat(e.target.value) }))} /></div>
+              </div>
+              <p className="text-xs text-muted-foreground">Leave a box blank to keep the regional average shown in grey. Your day rates are used exactly as entered.</p>
+              <Button size="sm" onClick={saveRates}>Save my rates</Button>
+            </>}
+          </div>
         </CardContent>
       </Card>
 
